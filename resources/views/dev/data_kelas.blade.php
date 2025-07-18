@@ -1,0 +1,381 @@
+<x-app-layout>
+    <div class="w-full h-16 bg-slate-100 px-3 py-2">
+        <div class="flex justify-between items-center">
+            <div class="flex justify-start items-center">
+                <div>
+                    <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'buat_kelas' }))">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-slate-400 hover:text-slate-600">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="ml-5">
+                    <button>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-slate-400 hover:text-slate-600">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="flex justify-end items-center">
+                <div class="flex justify-center items-center">
+                    <input type="text" id="searchInput" class="rounded-lg py-2.5 focus:border-blue-500 hover:bg-slate-200 shadow-none border-gray-300" placeholder="cari">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full overflow-y-scroll md:block hidden max-h-[470px]">
+        <table class="table-auto" id="data_kelas">
+            <thead class="bg-gray-100 sticky top-0">
+            <tr>
+                <th class="px-3 py-2 font-medium border">No</th>
+                <th class="px-3 py-2 font-medium border">NIS</th>
+                <th class="px-3 py-2 font-medium border">Nama Lengkap</th>
+                <th class="px-3 py-2 font-medium border">Kelas Sekarang</th>
+                <th class="px-3 py-2 font-medium border">Kelas Sebelumnya</th>
+                <th class="px-3 py-2 font-medium border">Nama Wali Kelas Sekarang</th>
+                <th class="px-3 py-2 font-medium border">Nama Wali Kelas Sebelumnya</th>
+                <th class="px-3 py-2 font-medium border">Keterangan</th>
+                <th class="px-3 py-2 font-medium border">Aksi</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white">
+            @php
+                $no = 1;
+            @endphp
+            @foreach ($data_kelas as $d_kelas)
+                <tr>
+                    <td class="px-3 py-2 border">{{$no++}}</td>
+                    <td class="px-3 py-2 border">{{$d_kelas->nis}}</td>
+                    <td class="px-3 py-2 border">{{$d_kelas->nama}}</td>
+                    <td class="px-3 py-2 border">
+                        @php
+                            $nama_kelas = '';
+                            if ($d_kelas->id_kelas_xi == null && $d_kelas->id_kelas_xii == null) {
+                                $nama_kelas = $d_kelas->kelas_x; 
+                            }elseif ($d_kelas->id_kelas_xii == null) {
+                                $nama_kelas = $d_kelas->kelas_xi;
+                            }else {
+                                $nama_kelas = $d_kelas->kelas_xii;
+                            }
+                        @endphp
+                        {{$nama_kelas}}
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap border">
+                        @php
+                            $n_kelas = '';
+                            if ($d_kelas->id_kelas_x != null) {
+                                $n_kelas = $d_kelas->kelas_xi; 
+                            }elseif ($d_kelas->id_kelas_xii != null) {
+                                $n_kelas = $d_kelas->kelas_xii;
+                            }else {
+                                $n_kelas = $d_kelas->kelas_x;
+                            }
+                        @endphp
+                        {{$n_kelas}}
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap border">
+                        @php
+                            $wali_kelas = '';
+                            if ($d_kelas->id_kelas_xi == null && $d_kelas->id_kelas_xii == null) {
+                                $wali_kelas = $d_kelas->nama_wali_kelas_x; 
+                            }elseif ($d_kelas->id_kelas_xii == null) {
+                                $wali_kelas = $d_kelas->nama_wali_kelas_xi;
+                            }else {
+                                $wali_kelas = $d_kelas->nama_wali_kelas_xii;
+                            }
+                        @endphp
+                        {{$wali_kelas}}
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap border">
+                        @php
+                            $w_kelas = '';
+                            if ($d_kelas->id_kelas_x != null) {
+                                $w_kelas = $d_kelas->nama_wali_kelas_xi; 
+                            }elseif ($d_kelas->id_kelas_xii != null) {
+                                $w_kelas = $d_kelas->nama_wali_kelas_xii;
+                            }else {
+                                $w_kelas = $d_kelas->nama_wali_kelas_x;
+                            }
+                        @endphp
+                        {{$w_kelas}}
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap border">{{$d_kelas->keterangan}}</td>
+                    <td class="px-3 py-2 whitespace-nowrap border">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <a href="{{route('update_data_kelas', $d_kelas->id)}}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-blue-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                    </svg>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{route('deleted_data_kelas', $d_kelas->id)}}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-red-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+            <!-- Duplikasikan baris di atas sesuai kebutuhan -->
+            </tbody>
+        </table>
+    </div>
+    <div id="data_kelas" class="md:hidden block overflow-auto h-[650px] p-3">
+        @foreach ($data_kelas as $class)
+            <div class="grid grid-cols-5 gap-0 justify-center items-start bg-white rounded-lg p-1 mb-1">
+                <div class="flex justify-center items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16 text-slate-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                </div>
+                <div class="col-span-4">
+                    <div class="grid grid-cols-[auto_min-content_1fr] gap-x-2 text-sm w-full max-w-md">
+                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                            <div class="w-1/3 font-medium">NIS</div>
+                            <div class="mx-2">:</div>
+                            <div class="flex-1 break-words">{{$class->nis}}</div>
+                        </div>
+
+
+                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                            <div class="w-1/3 font-medium">Nama</div>
+                            <div class="mx-2">:</div>
+                            <div class="flex-1 break-words">{{$class->nama}}</div>
+                        </div>
+
+                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                            <div class="w-1/3 font-medium">Kelas</div>
+                            <div class="mx-2">:</div>
+                            <div class="flex-1 break-words">
+                                 @php
+                                    $nama_kelas = '';
+                                    if ($d_kelas->id_kelas_xi == null && $d_kelas->id_kelas_xii == null) {
+                                        $nama_kelas = $d_kelas->kelas_x; 
+                                    }elseif ($d_kelas->id_kelas_xii == null) {
+                                        $nama_kelas = $d_kelas->kelas_xi;
+                                    }else {
+                                        $nama_kelas = $d_kelas->kelas_xii;
+                                    }
+                                @endphp
+                                {{$nama_kelas}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center">
+                        <div>
+                            <a href="{{route('deleted_data_kelas', $class->id)}}" class="py-0.5 px-1.5 text-xs bg-red-400 hover:bg-red-500 rounded">Delete</a>
+                        </div>
+                        <div class="ml-2">
+                            <a href="{{route('update_data_kelas', $class->id)}}" class="py-0.5 px-1.5 text-xs bg-blue-400 hover:bg-blue-500 rounded">Update</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+     <!-- Modal Insert -->
+     @php
+                            //misal url yang di dapat
+        if($update_kelas == null){
+            $url = 'guru/update/data/kelas';
+        }else{
+            $url = url("guru/update/data/kelas/$update_kelas->id");
+        }
+         $ambil_url = url()->current();
+         if($ambil_url == $url) {
+            $show = true;
+            $action = route('updated_data_kelas', $update_kelas->id);
+            $method = method_field('patch'); 
+            $id = $update_kelas->id;
+            $nis = $update_kelas->nis;
+            $kelas_x = $update_kelas->kelas_x;
+            $nama_wali_kelas_x = $update_kelas->nama_wali_kelas_x;
+            $id_kelas_x = $update_kelas->id_kelas_x;
+            $kelas_xi = $update_kelas->kelas_xi;
+            $nama_wali_kelas_xi = $update_kelas->nama_wali_kelas_xi;
+            $id_kelas_xi = $update_kelas->id_kelas_xi;
+            $kelas_xii = $update_kelas->kelas_xii;
+            $nama_wali_kelas_xii = $update_kelas->nama_wali_kelas_xii;
+            $id_kelas_xii = $update_kelas->id_kelas_xii;
+            $total_siswa = $update_kelas->total_siswa;
+            $jlh_siswa = $update_kelas->jlh_siswa;
+            $jlh_siswi = $update_kelas->jlh_siswi;
+            $keterangan = $update_kelas->keterangan;
+         }else{
+            $show = false;
+            $action = route('create_data_kelas');
+            $method = "";
+            $id = '';
+            $nis = '';
+            $kelas_x = '';
+            $nama_wali_kelas_x = '';
+            $id_kelas_x = '';
+            $kelas_xi = '';
+            $nama_wali_kelas_xi = '';
+            $id_kelas_xi = '';
+            $kelas_xii = '';
+            $nama_wali_kelas_xii = '';
+            $id_kelas_xii = '';
+            $total_siswa = '';
+            $jlh_siswa = '';
+            $jlh_siswi = '';
+            $keterangan = '';
+         }
+         
+     @endphp
+    <x-modal name="buat_kelas" :show="$show" max-width="lg">
+        <form method="POST" action="{{$action}}">
+            @csrf
+            {{$method}}
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                    Data Kelas
+                </h2>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">NIS</label>
+                    <input type="text" list="dataSiswa" name="nis" value="{{$nis}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                    <datalist id="dataSiswa">
+                        @foreach ($data_siswa as $siswaku)
+                            <option value="{{$siswaku->nis}} - {{$siswaku->nama}} - {{$siswaku->alamat}}">{{$siswaku->nis}} - {{$siswaku->nama}} - {{$siswaku->alamat}}</option>
+                        @endforeach
+                    </datalist>
+                </div>
+                <div class="mb-4 groupX">
+                    <div class="grid grid-cols-2 gap-1 justify-between items-center">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Kelas X</label>
+                            <select name="kelas_x" id="kelasX" onchange="handleSelectChange('X')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                                <option value="{{$kelas_x}}">{{$kelas_x}}</option>
+                                <option value="X MPLBB">X MPLBB</option>
+                                <option value="X PM">X PM</option>
+                                <option value="X TJKT">X TJKT</option>
+                                <option value="X DKV">X DKV</option>
+                            </select>
+                            <input type="hidden" name="id_kelas_x" value="{{$id_kelas_x}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                        </div>
+                        <div>
+                            <label class="from-walikelas block text-sm font-medium text-gray-200">Kelas X</label>
+                            <select name="nama_wali_kelas_x" id="walikelasX" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                                <option value="{{$kelas_x}}">{{$kelas_x}}</option>
+                                @foreach ($data_guru as $gurux)
+                                    <option value="{{$gurux->nama_pegawai}}">{{$gurux->nama_pegawai}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4 groupXI">
+                    <div class="grid grid-cols-2 gap-1 justify-between items-center">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Kelas XI</label>
+                            <select name="kelas_xi"  id="kelasXI" onchange="handleSelectChange('XI')"class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                                <option value="{{$kelas_xi}}">{{$kelas_xi}}</option>
+                                <option value="XI MPLBB">XI MPLBB</option>
+                                <option value="XI PM">XI PM</option>
+                                <option value="XI TJKT">XI TJKT</option>
+                                <option value="XI DKV">XI DKV</option>
+                            </select>
+                            <input type="hidden" name="id_kelas_xi" value="{{$id_kelas_xi}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Kelas X</label>
+                            <select name="nama_wali_kelas_xi" id="walikelasXI" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                                <option value="{{$kelas_xi}}">{{$kelas_xi}}</option>
+                                @foreach ($data_guru as $guruxi)
+                                    <option value="{{$guruxi->nama_pegawai}}">{{$guruxi->nama_pegawai}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>     
+                </div>
+                <div class="mb-4 groupXII">
+                    <div class="grid grid-cols-2 gap-1 justify-between items-center">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Kelas XII</label>
+                            <select name="kelas_xii" id="kelasXII" onchange="handleSelectChange('XII')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                                <option value="{{$kelas_xii}}">{{$kelas_xii}}</option>
+                                <option value="XII MPLBB">XII MPLBB</option>
+                                <option value="XII PM">XII PM</option>
+                                <option value="XII TJKT">XII TJKT</option>
+                                <option value="XII DKV">XII DKV</option>
+                            </select>
+                            <input type="hidden" name="id_kelas_xii" value="{{$id_kelas_xii}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Kelas X</label>
+                            <select name="nama_wali_kelas_xii" id="walikelasXII" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                                <option value="{{$kelas_xii}}">{{$kelas_xii}}</option>
+                                @foreach ($data_guru as $guruxii)
+                                    <option value="{{$guruxii->nama_pegawai}}">{{$guruxii->nama_pegawai}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>    
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">Keterangan</label>
+                    <select name="keterangan" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                        <option value="{{$keterangan}}">{{$keterangan}}</option>
+                        <option value="Naik Kelas">Naik Kelas</option>
+                        <option value="Tinggal Kelas">Tinggal Kelas</option>
+                        <option value="Dikeluarkan">DiKeluarkan</option>
+                        <option value="Pindah Sekolah">Pindah Sekolah</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">Jumlah Siswa</label>
+                    <input type="number" name="jlh_siswa" value="{{$jlh_siswa}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">Jumlah Siswi</label>
+                    <input type="number" name="jlh_siswi" value="{{$jlh_siswi}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('close-modal', { detail: 'tambah_siswa' }))" class="mr-2 px-4 py-2 border rounded">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+                        Simpan
+                    </button>
+                </div>
+            </div>
+        </form>
+    </x-modal>
+    <script>
+        function handleSelectChange(selectedGroup) {
+            const groups = ['X','XI', 'XII'];
+
+            groups.forEach(group => {
+                const kelas = document.getElementById(`kelas${group}`);
+                const wali = document.getElementById(`walikelas${group}`);
+
+                if (group !== selectedGroup) {
+                    // Disable jika grup yang dipilih punya value
+                    const selectedVal = document.getElementById(`kelas${selectedGroup}`).value;
+                    const disable = selectedVal !== "";
+
+                    kelas.disabled = disable;
+                    wali.disabled = disable;
+                } else {
+                    // Jika dikosongkan, aktifkan semuanya
+                    if (kelas.value === "") {
+                        groups.forEach(grp => {
+                            document.getElementById(`kelas${grp}`).disabled = false;
+                            document.getElementById(`walikelas${grp}`).disabled = false;
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+
+</x-app-layout>
