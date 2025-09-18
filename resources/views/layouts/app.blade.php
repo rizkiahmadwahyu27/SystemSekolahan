@@ -10,13 +10,14 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     <style>[x-cloak] { display: none !important; }</style>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="font-mono bg-orange-600 min-h-screen">
+<body class="font-sans bg-orange-600 min-h-screen">
     @include('layouts.navigation')
 
     <!-- Sidebar for Desktop -->
@@ -152,6 +153,7 @@
 
     @vite(['resources/js/script.js'])
     @livewireScripts
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
         function toggleAccordion(panelId, iconId) {
             const panel = document.getElementById(panelId);

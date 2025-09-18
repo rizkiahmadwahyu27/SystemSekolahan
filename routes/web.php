@@ -49,6 +49,13 @@ Route::middleware(['auth', 'isGuru'])->group(function () {
     Route::get('/guru/update/data/kelas/{id}', [DataKelasController::class, 'update_data_kelas'])->name('update_data_kelas');
     Route::patch('/guru/updated/data/kelas/{id}', [DataKelasController::class, 'updated_data_kelas'])->name('updated_data_kelas');
     Route::get('/guru/deleted/data/kelas/{id}', [DataKelasController::class, 'deleted_data_kelas'])->name('deleted_data_kelas');
+
+    //kelas untuk siswa
+    Route::post('/guru/create/data/kelas/siswa', [DataKelasController::class, 'create_data_kelas_siswa'])->name('create_data_kelas_siswa');
+    Route::get('/guru/update/data/kelas/siswa/{id}', [DataKelasController::class, 'update_data_kelas_siswa'])->name('update_data_kelas_siswa');
+    Route::patch('/guru/updated/data/kelas/siswa/{id}', [DataKelasController::class, 'updated_data_kelas_siswa'])->name('updated_data_kelas_siswa');
+    Route::get('/guru/deleted/data/kelas/siswa/{id}', [DataKelasController::class, 'deleted_data_kelas_siswa'])->name('deleted_data_kelas_siswa');
+
     Route::get('/guru/scan/absen/post/{nis}', [DevController::class, 'scan_post'])->name('scan_post');
     Route::get('/guru/data/absen', [DevController::class, 'data_absen'])->name('data_absen');
     Route::post('/guru/create/data/absen', [DevController::class, 'create_data_absen'])->name('create_data_absen');

@@ -16,6 +16,13 @@
                         </svg>
                     </button>
                 </div>
+                <div class="ml-5">
+                    <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'tambah_kelas' }))">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-slate-400 hover:text-slate-600">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+                        </svg>                          
+                    </button>
+                </div>
             </div>
             <div class="flex justify-end items-center">
                 <div class="flex justify-center items-center">
@@ -25,84 +32,33 @@
         </div>
     </div>
 
-    <div class="w-full overflow-y-scroll md:block hidden max-h-[470px]">
+    <div class="w-full md:block hidden mt-6 rounded-xl p-3 shadow-lg bg-gray-50 overflow-scroll max-[450px] appearance-none">
         <table class="table-auto" id="data_kelas">
-            <thead class="bg-gray-100 sticky top-0">
+            <thead class="sticky top-0 bg-slate-300">
             <tr>
                 <th class="px-3 py-2 font-medium border">No</th>
                 <th class="px-3 py-2 font-medium border">NIS</th>
                 <th class="px-3 py-2 font-medium border">Nama Lengkap</th>
-                <th class="px-3 py-2 font-medium border">Kelas Sekarang</th>
-                <th class="px-3 py-2 font-medium border">Kelas Sebelumnya</th>
-                <th class="px-3 py-2 font-medium border">Nama Wali Kelas Sekarang</th>
-                <th class="px-3 py-2 font-medium border">Nama Wali Kelas Sebelumnya</th>
+                <th class="px-3 py-2 font-medium border">Kode Kelas</th>
+                <th class="px-3 py-2 font-medium border">Nama Kelas</th>
+                <th class="px-3 py-2 font-medium border">Nama Wali Kelas</th>
                 <th class="px-3 py-2 font-medium border">Keterangan</th>
                 <th class="px-3 py-2 font-medium border">Aksi</th>
             </tr>
             </thead>
-            <tbody class="bg-white">
+            <tbody class="">
             @php
                 $no = 1;
             @endphp
-            @foreach ($data_kelas as $d_kelas)
+            @foreach ($d_kelas_siswa as $d_kelas)
                 <tr>
                     <td class="px-3 py-2 border">{{$no++}}</td>
                     <td class="px-3 py-2 border">{{$d_kelas->nis}}</td>
                     <td class="px-3 py-2 border">{{$d_kelas->nama}}</td>
+                    <td class="px-3 py-2 border">{{$d_kelas->kode_kelas}}</td>
+                    <td class="px-3 py-2 border">{{$d_kelas->nama_kelas}}</td>
+                    <td class="px-3 py-2 border">{{$d_kelas->keterangan}}</td>
                     <td class="px-3 py-2 border">
-                        @php
-                            $nama_kelas = '';
-                            if ($d_kelas->id_kelas_xi == null && $d_kelas->id_kelas_xii == null) {
-                                $nama_kelas = $d_kelas->kelas_x; 
-                            }elseif ($d_kelas->id_kelas_xii == null) {
-                                $nama_kelas = $d_kelas->kelas_xi;
-                            }else {
-                                $nama_kelas = $d_kelas->kelas_xii;
-                            }
-                        @endphp
-                        {{$nama_kelas}}
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap border">
-                        @php
-                            $n_kelas = '';
-                            if ($d_kelas->id_kelas_x != null) {
-                                $n_kelas = $d_kelas->kelas_xi; 
-                            }elseif ($d_kelas->id_kelas_xii != null) {
-                                $n_kelas = $d_kelas->kelas_xii;
-                            }else {
-                                $n_kelas = $d_kelas->kelas_x;
-                            }
-                        @endphp
-                        {{$n_kelas}}
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap border">
-                        @php
-                            $wali_kelas = '';
-                            if ($d_kelas->id_kelas_xi == null && $d_kelas->id_kelas_xii == null) {
-                                $wali_kelas = $d_kelas->nama_wali_kelas_x; 
-                            }elseif ($d_kelas->id_kelas_xii == null) {
-                                $wali_kelas = $d_kelas->nama_wali_kelas_xi;
-                            }else {
-                                $wali_kelas = $d_kelas->nama_wali_kelas_xii;
-                            }
-                        @endphp
-                        {{$wali_kelas}}
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap border">
-                        @php
-                            $w_kelas = '';
-                            if ($d_kelas->id_kelas_x != null) {
-                                $w_kelas = $d_kelas->nama_wali_kelas_xi; 
-                            }elseif ($d_kelas->id_kelas_xii != null) {
-                                $w_kelas = $d_kelas->nama_wali_kelas_xii;
-                            }else {
-                                $w_kelas = $d_kelas->nama_wali_kelas_x;
-                            }
-                        @endphp
-                        {{$w_kelas}}
-                    </td>
-                    <td class="px-3 py-2 whitespace-nowrap border">{{$d_kelas->keterangan}}</td>
-                    <td class="px-3 py-2 whitespace-nowrap border">
                         <div class="flex justify-between items-center">
                             <div>
                                 <a href="{{route('update_data_kelas', $d_kelas->id)}}">
@@ -127,7 +83,7 @@
         </table>
     </div>
     <div id="data_kelas" class="md:hidden block overflow-auto h-[650px] p-3">
-        @foreach ($data_kelas as $class)
+        @foreach ($d_kelas_siswa as $class)
             <div class="grid grid-cols-5 gap-0 justify-center items-start bg-white rounded-lg p-1 mb-1">
                 <div class="flex justify-center items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16 text-slate-500">
@@ -153,17 +109,7 @@
                             <div class="w-1/3 font-medium">Kelas</div>
                             <div class="mx-2">:</div>
                             <div class="flex-1 break-words">
-                                 @php
-                                    $nama_kelas = '';
-                                    if ($d_kelas->id_kelas_xi == null && $d_kelas->id_kelas_xii == null) {
-                                        $nama_kelas = $d_kelas->kelas_x; 
-                                    }elseif ($d_kelas->id_kelas_xii == null) {
-                                        $nama_kelas = $d_kelas->kelas_xi;
-                                    }else {
-                                        $nama_kelas = $d_kelas->kelas_xii;
-                                    }
-                                @endphp
-                                {{$nama_kelas}}
+                                 
                             </div>
                         </div>
                     </div>
@@ -193,39 +139,15 @@
             $action = route('updated_data_kelas', $update_kelas->id);
             $method = method_field('patch'); 
             $id = $update_kelas->id;
-            $nis = $update_kelas->nis;
-            $kelas_x = $update_kelas->kelas_x;
-            $nama_wali_kelas_x = $update_kelas->nama_wali_kelas_x;
-            $id_kelas_x = $update_kelas->id_kelas_x;
-            $kelas_xi = $update_kelas->kelas_xi;
-            $nama_wali_kelas_xi = $update_kelas->nama_wali_kelas_xi;
-            $id_kelas_xi = $update_kelas->id_kelas_xi;
-            $kelas_xii = $update_kelas->kelas_xii;
-            $nama_wali_kelas_xii = $update_kelas->nama_wali_kelas_xii;
-            $id_kelas_xii = $update_kelas->id_kelas_xii;
-            $total_siswa = $update_kelas->total_siswa;
-            $jlh_siswa = $update_kelas->jlh_siswa;
-            $jlh_siswi = $update_kelas->jlh_siswi;
-            $keterangan = $update_kelas->keterangan;
+            $nama_kelas = $update_kelas->nama_kelas;
+            $nama_wali_kelas = $update_kelas->nama_wali_kelas;
          }else{
             $show = false;
             $action = route('create_data_kelas');
             $method = "";
             $id = '';
-            $nis = '';
-            $kelas_x = '';
-            $nama_wali_kelas_x = '';
-            $id_kelas_x = '';
-            $kelas_xi = '';
-            $nama_wali_kelas_xi = '';
-            $id_kelas_xi = '';
-            $kelas_xii = '';
-            $nama_wali_kelas_xii = '';
-            $id_kelas_xii = '';
-            $total_siswa = '';
-            $jlh_siswa = '';
-            $jlh_siswi = '';
-            $keterangan = '';
+            $nama_kelas = '';
+            $nama_wali_kelas = '';
          }
          
      @endphp
@@ -235,112 +157,42 @@
             {{$method}}
             <div class="p-6">
                 <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-                    Data Kelas
-                </h2>
-
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">NIS</label>
-                    <input type="text" list="dataSiswa" name="nis" value="{{$nis}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
-                    <datalist id="dataSiswa">
-                        @foreach ($data_siswa as $siswaku)
-                            <option value="{{$siswaku->nis}} - {{$siswaku->nama}} - {{$siswaku->alamat}}">{{$siswaku->nis}} - {{$siswaku->nama}} - {{$siswaku->alamat}}</option>
+                    Data Kelas Siswa
+                </h2>            
+                <div class="mb-6">
+                    <label for="siswaSearch" class="block text-slate-200 text-sm font-bold mb-2">Pilih Siswa</label>
+                    <select id="siswaSearch" class="block w-full" placeholder="Ketik untuk cari siswa">
+                        <option value="">Pilih Nama Siswa</option>
+                        @foreach ($data_siswa as $siswa)
+                            <option value="{{$siswa->nisn}} - {{$siswa->nis}} - {{$siswa->nama}}">{{$siswa->nisn}} - {{$siswa->nis}} - {{$siswa->nama}}</option>
                         @endforeach
-                    </datalist>
-                </div>
-                <div class="mb-4 groupX">
-                    <div class="grid grid-cols-2 gap-1 justify-between items-center">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-200">Kelas X</label>
-                            <select name="kelas_x" id="kelasX" onchange="handleSelectChange('X')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                                <option value="{{$kelas_x}}">{{$kelas_x}}</option>
-                                <option value="X MPLBB">X MPLBB</option>
-                                <option value="X PM">X PM</option>
-                                <option value="X TJKT">X TJKT</option>
-                                <option value="X DKV">X DKV</option>
-                            </select>
-                            <input type="hidden" name="id_kelas_x" value="{{$id_kelas_x}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                        </div>
-                        <div>
-                            <label class="from-walikelas block text-sm font-medium text-gray-200">Kelas X</label>
-                            <select name="nama_wali_kelas_x" id="walikelasX" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                                <option value="{{$kelas_x}}">{{$kelas_x}}</option>
-                                @foreach ($data_guru as $gurux)
-                                    <option value="{{$gurux->nama_pegawai}}">{{$gurux->nama_pegawai}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mb-4 groupXI">
-                    <div class="grid grid-cols-2 gap-1 justify-between items-center">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-200">Kelas XI</label>
-                            <select name="kelas_xi"  id="kelasXI" onchange="handleSelectChange('XI')"class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                                <option value="{{$kelas_xi}}">{{$kelas_xi}}</option>
-                                <option value="XI MPLBB">XI MPLBB</option>
-                                <option value="XI PM">XI PM</option>
-                                <option value="XI TJKT">XI TJKT</option>
-                                <option value="XI DKV">XI DKV</option>
-                            </select>
-                            <input type="hidden" name="id_kelas_xi" value="{{$id_kelas_xi}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-200">Kelas X</label>
-                            <select name="nama_wali_kelas_xi" id="walikelasXI" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                                <option value="{{$kelas_xi}}">{{$kelas_xi}}</option>
-                                @foreach ($data_guru as $guruxi)
-                                    <option value="{{$guruxi->nama_pegawai}}">{{$guruxi->nama_pegawai}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>     
-                </div>
-                <div class="mb-4 groupXII">
-                    <div class="grid grid-cols-2 gap-1 justify-between items-center">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-200">Kelas XII</label>
-                            <select name="kelas_xii" id="kelasXII" onchange="handleSelectChange('XII')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                                <option value="{{$kelas_xii}}">{{$kelas_xii}}</option>
-                                <option value="XII MPLBB">XII MPLBB</option>
-                                <option value="XII PM">XII PM</option>
-                                <option value="XII TJKT">XII TJKT</option>
-                                <option value="XII DKV">XII DKV</option>
-                            </select>
-                            <input type="hidden" name="id_kelas_xii" value="{{$id_kelas_xii}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-200">Kelas X</label>
-                            <select name="nama_wali_kelas_xii" id="walikelasXII" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                                <option value="{{$kelas_xii}}">{{$kelas_xii}}</option>
-                                @foreach ($data_guru as $guruxii)
-                                    <option value="{{$guruxii->nama_pegawai}}">{{$guruxii->nama_pegawai}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>    
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Keterangan</label>
-                    <select name="keterangan" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
-                        <option value="{{$keterangan}}">{{$keterangan}}</option>
-                        <option value="Naik Kelas">Naik Kelas</option>
-                        <option value="Tinggal Kelas">Tinggal Kelas</option>
-                        <option value="Dikeluarkan">DiKeluarkan</option>
-                        <option value="Pindah Sekolah">Pindah Sekolah</option>
                     </select>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Jumlah Siswa</label>
-                    <input type="number" name="jlh_siswa" value="{{$jlh_siswa}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Jumlah Siswi</label>
-                    <input type="number" name="jlh_siswi" value="{{$jlh_siswi}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                <div class="mb-6">
+                    <label for="kelasSearch" class="block text-slate-200 text-sm font-bold mb-2">Pilih Kelas</label>
+                    <select id="kelasSearch" class="block w-full" placeholder="Ketik untuk cari kelas">
+                        <option value="">Pilih Nama Kelas</option>
+                        @foreach ($data_kelas as $kelas)
+                            <option value="{{$kelas->kode_kelas}} - {{$kelas->nama_kelas}}">{{$kelas->kode_kelas}} - {{$kelas->nama_kelas}}</option>
+                        @endforeach
+                    </select>
                 </div>
 
+                <div>
+                    <label class="block text-sm font-medium text-gray-200">Keterangan</label>
+                    <select name="keterangan" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                        {{-- <option value="{{$keterangan}}">{{$keterangan}}</option> --}}
+                        <option value="Siswa Baru">Siswa Baru</option>
+                        <option value="Naik Kelas">Naik Kelas</option>
+                        <option value="Tinggal Kelas">Tinggal Kelas</option>
+                        <option value="Pindahan">Pindahan</option>
+                        <option value="Pindah">Pindah</option>
+                        <option value="Keluar">Keluar</option>
+                        <option value="Lainnya...">Lainnya...</option>
+                    </select>
+                </div>
                 <div class="mt-6 flex justify-end">
-                    <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('close-modal', { detail: 'tambah_siswa' }))" class="mr-2 px-4 py-2 border rounded">
+                    <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('close-modal', { detail: 'buat_kelas' }))" class="mr-2 px-4 py-2 border rounded">
                         Batal
                     </button>
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
@@ -350,7 +202,229 @@
             </div>
         </form>
     </x-modal>
+    <x-modal name="tambah_kelas" :show="$show" max-width="2xl">
+        <form method="POST" action="{{$action}}">
+            @csrf
+            {{$method}}
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                    Data Kelas & Wali Kelas
+                </h2>
+                <div class="mb-4 groupX">
+                    <div class="grid grid-cols-2 gap-1 justify-between items-center">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Pilih Kelas</label>
+                            <select name="nama_kelas" id="kelasX" onchange="handleSelectChange('X')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                                <option value="{{$nama_kelas}}">{{$nama_kelas}}</option>
+                                <option value="X MPLBB">X MPLBB</option>
+                                <option value="X PM">X PM</option>
+                                <option value="X TJKT">X TJKT</option>
+                                <option value="X DKV">X DKV</option>
+                                <option value="XI MPLBB">XI MPLBB</option>
+                                <option value="XI PM">XI PM</option>
+                                <option value="XI TJKT">XI TJKT</option>
+                                <option value="XI DKV">XI DKV</option>
+                                <option value="XII MPLBB">XII MPLBB</option>
+                                <option value="XII PM">XII PM</option>
+                                <option value="XII TJKT">XII TJKT</option>
+                                <option value="XII DKV">XII DKV</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="from-walikelas block text-sm font-medium text-gray-200">Pilih Wali Kelas</label>
+                            <select name="nama_wali_kelas" id="walikelasX" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                                <option value="{{$nama_wali_kelas}}">{{$nama_wali_kelas}}</option>
+                                @foreach ($data_guru as $gurux)
+                                    <option value="{{$gurux->nama_pegawai}}">{{$gurux->nama_pegawai}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+                <div class="mt-6 flex justify-end">
+                    <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('close-modal', { detail: 'tambah_kelas' }))" class="mr-2 px-4 py-2 border rounded">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+                        Simpan
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="p-2">
+            <div class="w-full overflow-y-scroll md:block hidden max-h-[270px]">
+                <table class="table-auto text-lg text-slate-300 rounded-lg" id="data_kelas">
+                    <thead class="sticky top-0">
+                    <tr>
+                        <th class="px-3 py-2 font-medium border">No</th>
+                        <th class="px-3 py-2 font-medium border">Kode Kelas</th>
+                        <th class="px-3 py-2 font-medium border">Nama Kelas</th>
+                        <th class="px-3 py-2 font-medium border">Nama Wali Kelas</th>
+                        <th class="px-3 py-2 font-medium border">Aksi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @php
+                        $no = 1;
+                    @endphp
+                    @foreach ($data_kelas as $d_kelas)
+                        <tr>
+                            <td class="px-3 py-2 border">{{$no++}}</td>
+                            <td class="px-3 py-2 border">{{$d_kelas->kode_kelas}}</td>
+                            <td class="px-3 py-2 border">{{$d_kelas->nama_kelas}}</td>
+                            <td class="px-3 py-2 border">{{$d_kelas->nama_wali_kelas}}</td>
+                            <td class="px-3 py-2 whitespace-nowrap border">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <a href="{{route('update_data_kelas', $d_kelas->id)}}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-blue-500">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="{{route('deleted_data_kelas', $d_kelas->id)}}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-red-500">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                    <!-- Duplikasikan baris di atas sesuai kebutuhan -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </x-modal>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi Tom Select
+            new TomSelect("#siswaSearch", {
+                create: false, // Izinkan membuat opsi baru jika tidak ada yang cocok (default: false)
+                sortField: {
+                    field: "text", // Urutkan berdasarkan teks opsi
+                    direction: "asc" // Urutan menaik
+                },
+                // Styling dengan Tailwind CSS
+                // Ini adalah kunci untuk mengintegrasikan Tom Select dengan styling Tailwind Anda
+                plugins: ['dropdown_input'], // Memastikan input pencarian muncul di dropdown
+                wrapperClass: 'relative', // Untuk posisi absolute elemen turunan
+                inputClass: 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent', // Gaya untuk input pencarian
+                dropdownClass: 'absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1', // Gaya untuk dropdown
+                optionClass: 'px-4 py-2 hover:bg-blue-100 cursor-pointer', // Gaya untuk setiap opsi
+                itemClass: 'flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md bg-blue-500 text-white', // Gaya untuk item yang dipilih (jika multi-select)
+                controlInput: null // Penting untuk memastikan input pencarian yang di-styling
+            });
+
+            // Opsional: Menampilkan nilai yang dipilih
+            const siswaSearch = document.getElementById('siswaSearch');
+
+            siswaSearch.addEventListener('change', function() {
+                selectedValueSpan.textContent = this.options[this.selectedIndex].text;
+            });
+
+            new TomSelect("#kelasSearch", {
+                create: false, // Izinkan membuat opsi baru jika tidak ada yang cocok (default: false)
+                sortField: {
+                    field: "text", // Urutkan berdasarkan teks opsi
+                    direction: "asc" // Urutan menaik
+                },
+                // Styling dengan Tailwind CSS
+                // Ini adalah kunci untuk mengintegrasikan Tom Select dengan styling Tailwind Anda
+                plugins: ['dropdown_input'], // Memastikan input pencarian muncul di dropdown
+                wrapperClass: 'relative', // Untuk posisi absolute elemen turunan
+                inputClass: 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent', // Gaya untuk input pencarian
+                dropdownClass: 'absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1', // Gaya untuk dropdown
+                optionClass: 'px-4 py-2 hover:bg-blue-100 cursor-pointer', // Gaya untuk setiap opsi
+                itemClass: 'flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md bg-blue-500 text-white', // Gaya untuk item yang dipilih (jika multi-select)
+                controlInput: null // Penting untuk memastikan input pencarian yang di-styling
+            });
+
+            // Opsional: Menampilkan nilai yang dipilih
+            const kelasSearch = document.getElementById('kelasSearch');
+
+            kelasSearch.addEventListener('change', function() {
+                selectedValueSpan.textContent = this.options[this.selectedIndex].text;
+            });
+        });
+    </script>
+    {{-- <div class="mb-4 groupX">
+        <div class="grid grid-cols-2 gap-1 justify-between items-center">
+            <div>
+                <label class="block text-sm font-medium text-gray-200">Kelas X</label>
+                <select name="kelas_x" id="kelasX" onchange="handleSelectChange('X')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                    <option value="{{$kelas_x}}">{{$kelas_x}}</option>
+                    <option value="X MPLBB">X MPLBB</option>
+                    <option value="X PM">X PM</option>
+                    <option value="X TJKT">X TJKT</option>
+                    <option value="X DKV">X DKV</option>
+                </select>
+                <input type="hidden" name="id_kelas_x" value="{{$id_kelas_x}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
+            </div>
+            <div>
+                <label class="from-walikelas block text-sm font-medium text-gray-200">Wali Kelas X</label>
+                <select name="nama_wali_kelas_x" id="walikelasX" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                    <option value="{{$nama_wali_kelas_x}}">{{$nama_wali_kelas_x}}</option>
+                    @foreach ($data_guru as $gurux)
+                        <option value="{{$gurux->nama_pegawai}}">{{$gurux->nama_pegawai}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mb-4 groupXI">
+        <div class="grid grid-cols-2 gap-1 justify-between items-center">
+            <div>
+                <label class="block text-sm font-medium text-gray-200">Kelas XI</label>
+                <select name="kelas_xi"  id="kelasXI" onchange="handleSelectChange('XI')"class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                    <option value="{{$kelas_xi}}">{{$kelas_xi}}</option>
+                    <option value="XI MPLBB">XI MPLBB</option>
+                    <option value="XI PM">XI PM</option>
+                    <option value="XI TJKT">XI TJKT</option>
+                    <option value="XI DKV">XI DKV</option>
+                </select>
+                <input type="hidden" name="id_kelas_xi" value="{{$id_kelas_xi}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-200">Wali Kelas XI</label>
+                <select name="nama_wali_kelas_xi" id="walikelasXI" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                    <option value="{{$nama_wali_kelas_xi}}">{{$nama_wali_kelas_xi}}</option>
+                    @foreach ($data_guru as $guruxi)
+                        <option value="{{$guruxi->nama_pegawai}}">{{$guruxi->nama_pegawai}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>     
+    </div>
+    <div class="mb-4 groupXII">
+        <div class="grid grid-cols-2 gap-1 justify-between items-center">
+            <div>
+                <label class="block text-sm font-medium text-gray-200">Kelas XII</label>
+                <select name="kelas_xii" id="kelasXII" onchange="handleSelectChange('XII')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                    <option value="{{$kelas_xii}}">{{$kelas_xii}}</option>
+                    <option value="XII MPLBB">XII MPLBB</option>
+                    <option value="XII PM">XII PM</option>
+                    <option value="XII TJKT">XII TJKT</option>
+                    <option value="XII DKV">XII DKV</option>
+                </select>
+                <input type="hidden" name="id_kelas_xii" value="{{$id_kelas_xii}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" >
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-200">Wali Kelas XII</label>
+                <select name="nama_wali_kelas_xii" id="walikelasXII" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
+                    <option value="{{$nama_wali_kelas_xii}}">{{$nama_wali_kelas_xii}}</option>
+                    @foreach ($data_guru as $guruxii)
+                        <option value="{{$guruxii->nama_pegawai}}">{{$guruxii->nama_pegawai}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>    
+    </div> --}}
+    {{-- <script>
         function handleSelectChange(selectedGroup) {
             const groups = ['X','XI', 'XII'];
 
@@ -376,6 +450,6 @@
                 }
             });
         }
-    </script>
+    </script> --}}
 
 </x-app-layout>

@@ -178,7 +178,12 @@
             $tugas_tambahan = $pegawai_update->tugas_tambahan;
             $nama_instansi = $pegawai_update->nama_instansi;
             $nama_instansi_cab = $pegawai_update->nama_instansi_cab;
-            $mata_pelajaran = $pegawai_update->mata_pelajaran;
+            $mata_pelajaran_1 = $pegawai_update->mata_pelajaran_1;
+            $mata_pelajaran_2 = $pegawai_update->mata_pelajaran_2;
+            $mata_pelajaran_3 = $pegawai_update->mata_pelajaran_3;
+            $mata_pelajaran_4 = $pegawai_update->mata_pelajaran_4;
+            $mata_pelajaran_5 = $pegawai_update->mata_pelajaran_5;
+            $mata_pelajaran_6 = $pegawai_update->mata_pelajaran_6;
             $no_hp = $pegawai_update->no_hp;
             $alamat = $pegawai_update->alamat;
          }else{
@@ -202,7 +207,12 @@
             $tugas_tambahan = '';
             $nama_instansi = '';
             $nama_instansi_cab = '';
-            $mata_pelajaran = '';
+            $mata_pelajaran_1 = '';
+            $mata_pelajaran_2 = '';
+            $mata_pelajaran_3 = '';
+            $mata_pelajaran_4 = '';
+            $mata_pelajaran_5 = '';
+            $mata_pelajaran_6 = '';
             $no_hp = '';
             $alamat = '';
          }
@@ -218,12 +228,12 @@
                 </h2>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">NIK</label>
+                    <label class="block text-sm font-medium text-gray-200">NUPTK</label>
                     <input type="number" name="nuptk" value="{{$nuptk}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                     <input type="hidden" name="id" value="{{$id}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">NIK</label>
+                    <label class="block text-sm font-medium text-gray-200">NIP</label>
                     <input type="number" name="nip" value="{{$nip}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                     <input type="hidden" name="id" value="{{$id}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
@@ -312,10 +322,29 @@
                     <input type="text" name="nama_instansi_cab" value="{{$nama_instansi_cab}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Mata Pelajaran</label>
-                    <input type="text" name="mata_pelajaran" value="{{$mata_pelajaran}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                    <label class="block text-sm font-medium text-gray-200">Mata Pelajaran Satu</label>
+                    <input type="text" name="mata_pelajaran_1" value="{{$mata_pelajaran_1}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
-                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">Mata Pelajaran Dua</label>
+                    <input type="text" name="mata_pelajaran_2" value="{{$mata_pelajaran_2}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">Mata Pelajaran Tiga</label>
+                    <input type="text" name="mata_pelajaran_3" value="{{$mata_pelajaran_3}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">Mata Pelajaran Empat</label>
+                    <input type="text" name="mata_pelajaran_4" value="{{$mata_pelajaran_4}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">Mata Pelajaran Lima</label>
+                    <input type="text" name="mata_pelajaran_5" value="{{$mata_pelajaran_5}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-200">Mata Pelajaran Enam</label>
+                    <input type="text" name="mata_pelajaran_6" value="{{$mata_pelajaran_6}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-200">NO HP</label>
                     <input type="number" name="no_hp" value="{{$no_hp}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>

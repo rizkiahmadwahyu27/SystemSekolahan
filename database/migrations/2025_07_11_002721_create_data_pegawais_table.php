@@ -31,7 +31,12 @@ return new class extends Migration
             $table->string('tugas_tambahan');
             $table->string('nama_instansi');
             $table->string('nama_instansi_cab');
-            $table->string('mata_pelajaran');
+            $table->text('mata_pelajaran_1');
+            $table->text('mata_pelajaran_2');
+            $table->text('mata_pelajaran_3');
+            $table->text('mata_pelajaran_4');
+            $table->text('mata_pelajaran_5');
+            $table->text('mata_pelajaran_6');
             $table->string('no_hp');
             $table->text('alamat');
             $table->string('user_input');
