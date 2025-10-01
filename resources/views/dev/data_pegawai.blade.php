@@ -1,24 +1,24 @@
 <x-app-layout>
     <div class="w-full h-16 bg-slate-100 px-3 py-2">
         <div class="flex justify-between items-center">
-            <div class="flex justify-start items-center">
+            <div class="flex justify-start items-center mr-2">
                 <div>
                     <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'tambah_pegawai' }))">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-slate-400 hover:text-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 md:size-8 text-slate-400 hover:text-slate-600">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                         </svg>
                     </button>
                 </div>
                 <div class="ml-5">
                     <button>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-slate-400 hover:text-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 md:size-8 text-slate-400 hover:text-slate-600">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                         </svg>
                     </button>
                 </div>
                 <div class="ml-5">
                     <a href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 text-slate-400 hover:text-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 md:size-8 text-slate-400 hover:text-slate-600">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
                         </svg>
@@ -27,7 +27,7 @@
             </div>
             <div class="flex justify-end items-center">
                 <div class="flex justify-center items-center">
-                    <input type="text" id="searchInput" class="rounded-lg py-2.5 focus:border-blue-500 hover:bg-slate-200 shadow-none border-gray-300" placeholder="cari">
+                    <input type="text" id="searchInput" class="rounded-lg w-full py-1.5 md:py-2.5 focus:border-blue-500 hover:bg-slate-200 shadow-none border-gray-300" placeholder="cari">
                 </div>
             </div>
         </div>
@@ -90,59 +90,57 @@
     </div>
     <div id="data_pegawai" class="md:hidden block overflow-auto h-[650px] p-3">
         @foreach ($data_pegawai as $d_pegawai)
-            <div class="grid grid-cols-5 gap-0 justify-center items-start bg-white rounded-lg p-1 mb-1">
+            <div class="w-full rounded-lg bg-white p-1">
                 <div class="flex justify-center items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16 text-slate-500">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     </svg>
                 </div>
-                <div class="col-span-4">
-                    <div class="grid grid-cols-[auto_min-content_1fr] gap-x-2 text-sm w-full max-w-md">
-                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
-                            <div class="w-1/3 font-medium">ID Pegawai</div>
-                            <div class="mx-2">:</div>
-                            <div class="flex-1 break-words">{{$d_pegawai->id_pegawai}}</div>
-                        </div>
+                <div class="grid grid-cols-[auto_min-content_1fr] gap-x-2 text-sm w-full max-w-md">
+                    <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                        <div class="w-1/3 font-medium">ID Pegawai</div>
+                        <div class="mx-2">:</div>
+                        <div class="flex-1 break-words">{{$d_pegawai->id_pegawai}}</div>
+                    </div>
 
-                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
-                            <div class="w-1/3 font-medium">NUPTK</div>
-                            <div class="mx-2">:</div>
-                            <div class="flex-1 break-words">{{$d_pegawai->nuptk}}</div>
-                        </div>
+                    <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                        <div class="w-1/3 font-medium">NUPTK</div>
+                        <div class="mx-2">:</div>
+                        <div class="flex-1 break-words">{{$d_pegawai->nuptk}}</div>
+                    </div>
 
-                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
-                            <div class="w-1/3 font-medium">NIP</div>
-                            <div class="mx-2">:</div>
-                            <div class="flex-1 break-words">{{$d_pegawai->nip}}</div>
-                        </div>
+                    <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                        <div class="w-1/3 font-medium">NIP</div>
+                        <div class="mx-2">:</div>
+                        <div class="flex-1 break-words">{{$d_pegawai->nip}}</div>
+                    </div>
 
-                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
-                            <div class="w-1/3 font-medium">Nama Lengkap</div>
-                            <div class="mx-2">:</div>
-                            <div class="flex-1 break-words">{{$d_pegawai->nama_pegawai}}</div>
-                        </div>
+                    <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                        <div class="w-1/3 font-medium">Nama Lengkap</div>
+                        <div class="mx-2">:</div>
+                        <div class="flex-1 break-words">{{$d_pegawai->nama_pegawai}}</div>
+                    </div>
 
-                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
-                            <div class="w-1/3 font-medium">Jabatan</div>
-                            <div class="mx-2">:</div>
-                            <div class="flex-1 break-words">{{$d_pegawai->jabatan}}</div>
-                        </div>
+                    <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                        <div class="w-1/3 font-medium">Jabatan</div>
+                        <div class="mx-2">:</div>
+                        <div class="flex-1 break-words">{{$d_pegawai->jabatan}}</div>
+                    </div>
 
-                        <div class="col-span-3 border-b border-gray-300 pb-1 flex">
-                            <div class="w-1/3 font-medium">Alamat</div>
-                            <div class="mx-2">:</div>
-                            <div class="flex-1 break-words">
-                                {{$d_pegawai->alamat}}
-                            </div>
+                    <div class="col-span-3 border-b border-gray-300 pb-1 flex">
+                        <div class="w-1/3 font-medium">Alamat</div>
+                        <div class="mx-2">:</div>
+                        <div class="flex-1 break-words">
+                            {{$d_pegawai->alamat}}
                         </div>
                     </div>
-                    <div class="flex justify-center items-center">
-                        <div>
-                            <a href="{{route('deleted_data_pegawai', $d_pegawai->id)}}" class="py-0.5 px-1.5 text-xs bg-red-400 hover:bg-red-500 rounded">Delete</a>
-                        </div>
-                        <div class="ml-2">
-                            <a href="{{route('update_data_pegawai', $d_pegawai->id)}}" class="py-0.5 px-1.5 text-xs bg-blue-400 hover:bg-blue-500 rounded">Update</a>
-                        </div>
+                </div>
+                <div class="flex justify-center items-center">
+                    <div>
+                        <a href="{{route('deleted_data_pegawai', $d_pegawai->id)}}" class="py-0.5 px-1.5 text-xs bg-red-400 hover:bg-red-500 rounded">Delete</a>
+                    </div>
+                    <div class="ml-2">
+                        <a href="{{route('update_data_pegawai', $d_pegawai->id)}}" class="py-0.5 px-1.5 text-xs bg-blue-400 hover:bg-blue-500 rounded">Update</a>
                     </div>
                 </div>
             </div>

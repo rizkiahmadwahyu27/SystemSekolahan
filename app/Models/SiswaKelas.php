@@ -16,5 +16,8 @@ class SiswaKelas extends Model
         'kode_kelas',
         'nama_kelas',
         'keterangan',
+        'user_create',
+        'edit_user',
+        'id_user',
     ];
 }

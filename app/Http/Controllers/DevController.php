@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DataSiswa;
 use App\Models\DataKelas;
+use App\Models\SiswaKelas;
+use App\Models\DataPegawai;
 use App\Models\Absensi;
-
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 class DevController extends Controller
@@ -60,28 +62,94 @@ class DevController extends Controller
 
     public function data_absen(){
         $data_absen = Absensi::all();
+        $absen_siswa = SiswaKelas::where('nama_kelas', '10')->get();
         $update_absen = null;
-        return view('dev.data_absen', compact('data_absen', 'update_absen'));
+        $data_kelas = DataKelas::get('nama_kelas');
+        $data_pegawai = DataPegawai::get('nama_pegawai');
+        $mapel_pegawai = DataPegawai::all()->map(function ($mapel) {
+             $mapel->mapel = collect([
+                $mapel->mata_pelajaran_1,
+                $mapel->mata_pelajaran_2,
+                $mapel->mata_pelajaran_3,
+                $mapel->mata_pelajaran_4,
+                $mapel->mata_pelajaran_5,
+                $mapel->mata_pelajaran_6,
+            ])
+            ->filter(fn ($m) => $m !== '-' && !empty($m)) // buang "-" dan kosong
+            ->unique() // buang duplikat
+            ->values() // reset index array
+            ->toArray();
+
+            return $mapel;
+        });
+        $p_mapel = '';
+        $p_kelas = '';
+        $p_guru = '';
+        $p_tgl = '';
+        $p_jenis = '';
+        return view('dev.data_absen', compact('data_absen', 'mapel_pegawai', 'p_jenis', 'p_mapel', 'p_kelas', 'p_guru', 'p_tgl', 'absen_siswa', 'update_absen', 'data_kelas', 'data_pegawai'));
+    }
+
+    public function get_absen(Request $request){
+        $absen_siswa = SiswaKelas::where('nama_kelas', $request->kelas)->get();
+        $data_absen = Absensi::all();
+        $update_absen = null;
+        $data_kelas = DataKelas::get('nama_kelas');
+        $data_pegawai = DataPegawai::get('nama_pegawai');
+        $mapel_pegawai = DataPegawai::all()->map(function ($mapel) {
+             $mapel->mapel = collect([
+                $mapel->mata_pelajaran_1,
+                $mapel->mata_pelajaran_2,
+                $mapel->mata_pelajaran_3,
+                $mapel->mata_pelajaran_4,
+                $mapel->mata_pelajaran_5,
+                $mapel->mata_pelajaran_6,
+            ])
+            ->filter(fn ($m) => $m !== '-' && !empty($m)) // buang "-" dan kosong
+            ->unique() // buang duplikat
+            ->values() // reset index array
+            ->toArray();
+
+            return $mapel;
+        });
+        $p_mapel = $request->mapel;
+        $p_kelas = $request->kelas;
+        $p_guru = $request->guru;
+        $p_tgl = $request->tgl;
+        $p_jenis = $request->jenis_absen;
+        return view('dev.data_absen', compact('data_absen', 'mapel_pegawai', 'p_jenis', 'p_mapel', 'p_kelas', 'p_guru', 'p_tgl', 'absen_siswa', 'update_absen', 'data_kelas', 'data_pegawai'));
     }
 
     public function create_data_absen(Request $request){
-        
-        $absensi = Absensi::create([
-            'nis' => $request->nis,
-            'nama' => $request->nama,
-            'kelas' => $request->kelas,
-            'guru' => Auth::user()->name,
-            'jenis_absen' => $request->jenis_absen,
-            'hari' => $request->hari,
-            'tanggal' => $request->tanggal,
-            'status' => $request->status,
-            'keterangan' => $request->keterangan,
-            'user_input' => Auth::user()->name,
-            'user_edit' => 'Null',
-            'id_user' => Auth::user()->id,
-        ]);
+        $nises   = $request->nis;
+        $nama   = $request->nama;
+        $status   = $request->status;
+        $kelas    = $request->s_kelas;
+        $jenis    = $request->s_jenis;
+        $guru     = $request->s_guru;
+        $mapel    = $request->s_mapel;
+        $tgl      = $request->s_tgl;
+        $keterangan   = $request->keterangan;
+        $hari = Carbon::parse($tgl)->format('l'); 
 
-        return redirect()->back()->withErrors('gagal menyimpan')->withInput();
+        foreach ($nises as $key => $nis) {
+            Absensi::create([
+                'nis'      => $nis,
+                'nama'     => $nama[$key],
+                'kelas'    => $kelas,
+                'guru'     => $guru . ', ' . $mapel,
+                'jenis_absen' => $jenis,
+                'hari' => $hari,
+                'tanggal'      => $tgl,
+                'status'   => $status[$key],
+                'keterangan' => $keterangan[$key],
+                'user_input' => Auth::user()->name,
+                'user_edit' => 'Null',
+                'id_user' => Auth::user()->id,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Absensi berhasil disimpan');
     }
 
     public function update_data_absen(Request $request, $id){
