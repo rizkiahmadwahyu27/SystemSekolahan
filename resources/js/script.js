@@ -48,7 +48,7 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
         card.style.display = text.includes(keywords2) ? "block" : "none";
     });
 
-     const keyword3 = this.value.toLowerCase();
+    const keyword3 = this.value.toLowerCase();
     const rows3 = document.querySelectorAll("#data_pegawai tbody tr");
 
     rows3.forEach(row => {
@@ -62,6 +62,22 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
     cards3.forEach(card => {
         const text = card.textContent.toLowerCase();
         card.style.display = text.includes(keywords3) ? "block" : "none";
+    });
+
+    const keyword4 = this.value.toLowerCase();
+    const rows4 = document.querySelectorAll("#data_absen_siswa tbody tr");
+
+    rows4.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        row.style.display = rowText.includes(keyword4) ? "" : "none";
+    });
+
+    const keywords4 = this.value.toLowerCase();
+    const cards4 = document.querySelectorAll("#data_absen_siswa > div"); // ambil setiap data siswa (satu siswa = satu div luar)
+
+    cards4.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(keywords4) ? "block" : "none";
     });
 
 });

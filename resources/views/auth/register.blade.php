@@ -39,6 +39,13 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <div class="block mt-4">
+            <label for="show_pass" class="inline-flex items-center">
+                <input id="show_pass" type="checkbox" class="rounded border-gray-300 ">
+                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Show Password') }}</span>
+            </label>
+        </div>
+
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:font-semibold" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
@@ -50,3 +57,18 @@
         </div>
     </form>
 </x-guest-layout>
+<script>
+    const pass = document.getElementById('password');
+    const showPassCheckbox = document.getElementById('show_pass'); 
+    const password_confirmation = document.getElementById('password_confirmation');
+    showPassCheckbox.addEventListener('change', (event) => {
+        
+        if (event.currentTarget.checked) {
+            pass.type = 'text';
+            password_confirmation.type = 'text';
+        } else {
+            pass.type = 'password';  
+            password_confirmation.type = 'password';
+        }
+    });
+</script>

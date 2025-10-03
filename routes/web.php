@@ -69,7 +69,12 @@ Route::middleware(['auth', 'isGuru'])->group(function () {
     Route::get('/guru/update/data/pegawai/{id}', [DataPegawaiController::class, 'update_data_pegawai'])->name('update_data_pegawai');
     Route::patch('/guru/updated/data/pegawai/{id}', [DataPegawaiController::class, 'updated_data_pegawai'])->name('updated_data_pegawai');
     Route::get('/guru/deleted/data/pegawai/{id}', [DataPegawaiController::class, 'deleted_data_pegawai'])->name('deleted_data_pegawai');
-    
+    Route::get('/guru/laporan/data/absen/siswa', [SiswaController::class, 'lap_absen_siswa'])->name('lap_absen_siswa');
+    Route::post('/guru/filter/absen/siswa', [SiswaController::class, 'filter_absen_siswa'])->name('filter_absen_siswa');
+    Route::get('/guru/update/data/absen/siswa/{id}', [SiswaController::class, 'update_data_absen_siswa'])->name('update_data_absen_siswa');
+    Route::patch('/guru/updated/data/absen/siswa/{id}', [SiswaController::class, 'updated_data_absen_siswa'])->name('updated_data_absen_siswa');
+    Route::get('/guru/deleted/data/absen/siswa/{id}', [SiswaController::class, 'deleted_data_absen_siswa'])->name('deleted_data_absen_siswa');
+
     //livewire
     Route::get('/absen/siswa', AbsenSiswa::class)->name('absensi_siswa');
 

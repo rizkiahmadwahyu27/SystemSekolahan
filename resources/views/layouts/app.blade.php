@@ -88,6 +88,7 @@
                 </button>
                 <div id="panel1" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out pl-4">
                     <a href="{{ route('data_absen') }}" class="block py-1 text-sm hover:text-orange-500">Data Absensi</a>
+                    <a href="{{ route('lap_absen_siswa') }}" class="block py-1 text-sm hover:text-orange-500">Report Absen</a>
                     <a href="#" class="block py-1 text-sm hover:text-orange-500">Konfigurasi</a>
                 </div>
             </div>

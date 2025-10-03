@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DataSiswa;
-
+use App\Models\Absensi;
+use App\Models\DataKelas;
+use App\Models\DataPegawai;
+use Dflydev\DotAccessData\Data;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -100,5 +103,102 @@ class SiswaController extends Controller
 
     public function absensi_siswa(){
         return view('siswa.absensi_siswa');
+    }
+
+    public function lap_absen_siswa(){
+        $data_absen = Absensi::all();
+        $update_absen = [];
+        $data_kelas = DataKelas::get(['nama_kelas', 'kode_kelas']);
+        $data_guru = DataPegawai::get('nama_pegawai');
+        $mapel_pegawai = DataPegawai::all()->map(function ($mapel) {
+             $mapel->mapel = collect([
+                $mapel->mata_pelajaran_1,
+                $mapel->mata_pelajaran_2,
+                $mapel->mata_pelajaran_3,
+                $mapel->mata_pelajaran_4,
+                $mapel->mata_pelajaran_5,
+                $mapel->mata_pelajaran_6,
+            ])
+            ->filter(fn ($m) => $m !== '-' && !empty($m)) // buang "-" dan kosong
+            ->unique() // buang duplikat
+            ->values() // reset index array
+            ->toArray();
+
+            return $mapel;
+        });
+        return view('dev.laporan_absen', compact('data_absen', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai'));
+    }
+
+    public function filter_absen_siswa(Request $request){
+        $nama_guru = $request->nama_guru . $request->mapel;
+        $data_absen = Absensi::where('kelas', $request->kelas)->orwhere('guru', $nama_guru)->orwhere('jenis_absen', $request->jenis_absen)->whereBetween('tanggal', [$request->tgl1, $request->tgl12])->get();
+        $update_absen = [];
+        $data_kelas = DataKelas::get('nama_kelas');
+        $data_guru = DataPegawai::get('nama_pegawai');
+        $mapel_pegawai = DataPegawai::all()->map(function ($mapel) {
+             $mapel->mapel = collect([
+                $mapel->mata_pelajaran_1,
+                $mapel->mata_pelajaran_2,
+                $mapel->mata_pelajaran_3,
+                $mapel->mata_pelajaran_4,
+                $mapel->mata_pelajaran_5,
+                $mapel->mata_pelajaran_6,
+            ])
+            ->filter(fn ($m) => $m !== '-' && !empty($m)) // buang "-" dan kosong
+            ->unique() // buang duplikat
+            ->values() // reset index array
+            ->toArray();
+
+            return $mapel;
+        });
+        return view('dev.laporan_absen', compact('data_absen', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai'));
+    }
+
+    public function update_data_absen_siswa(Request $request, $id){
+        $nama_guru = $request->nama_guru . $request->mapel;
+        $data_absen = Absensi::where('kelas', $request->kelas)->orwhere('guru', $nama_guru)->orwhere('jenis_absen', $request->jenis_absen)->whereBetween('tanggal', [$request->tgl1, $request->tgl12])->get();
+        $update_absen = Absensi::find($id);
+        $data_kelas = DataKelas::get('nama_kelas');
+        $data_guru = DataPegawai::get('nama_pegawai');
+        $mapel_pegawai = DataPegawai::all()->map(function ($mapel) {
+             $mapel->mapel = collect([
+                $mapel->mata_pelajaran_1,
+                $mapel->mata_pelajaran_2,
+                $mapel->mata_pelajaran_3,
+                $mapel->mata_pelajaran_4,
+                $mapel->mata_pelajaran_5,
+                $mapel->mata_pelajaran_6,
+            ])
+            ->filter(fn ($m) => $m !== '-' && !empty($m)) // buang "-" dan kosong
+            ->unique() // buang duplikat
+            ->values() // reset index array
+            ->toArray();
+
+            return $mapel;
+        });
+        return view('dev.laporan_absen', compact('data_absen', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai', 'update_absen'));
+    }
+
+    public function updated_data_absen_siswa(Request $request, $id){
+        $siswa_update = Absensi::find($id);
+        $siswa_update->update([
+            'nis' => $request->nis,
+            'nama' => $request->nama,
+            'guru' => $request->guru,
+            'kelas' => $request->kelas,
+            'jenis_absen' => $request->jenis_absen,
+            'hari' => $request->hari,
+            'tanggal' => $request->tanggal,
+            'status' => $request->status,
+            'keterangan' => $request->keterangan,
+        ]);
+        dd($siswa_update);
+        return redirect(route('lap_absen_siswa'));
+    }
+
+    public function deleted_data_absen_siswa($id){
+        $siswa_deleted = Absensi::find($id);
+        $siswa_deleted->delete();
+        return redirect(route('lap_absen_siswa'));
     }
 }
