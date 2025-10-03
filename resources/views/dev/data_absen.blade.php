@@ -75,15 +75,15 @@
     <form method="POST" action="{{route('create_data_absen')}}">
         @csrf
         {{-- {{$method}} --}}
-        <div class="w-full md:block overflow-y-scroll hidden max-h-[470px]">
+        <div class="w-full overflow-y-scroll max-h-[470px]">
             <table class="table-auto" id="data_absen">
                 <thead class="bg-gray-100 sticky top-0">
                 <tr>
-                    <th class="py-2 px-1 font-medium border">No</th>
-                    <th class="py-2 px-1 font-medium border">NIS</th>
-                    <th class="py-2 px-1 font-medium border">Nama Lengkap</th>
-                    <th class="py-2 px-1 font-medium border">Status</th>
-                    <th class="py-2 px-1 font-medium border">Keterangan</th>
+                    <th class="py-2 px-1 text-xs font-medium border">No</th>
+                    <th class="py-2 px-1 text-xs font-medium border">NIS</th>
+                    <th class="py-2 px-1 text-xs font-medium border">Nama Lengkap</th>
+                    <th class="py-2 px-1 text-xs font-medium border">Status</th>
+                    <th class="py-2 px-1 text-xs font-medium border">Keterangan</th>
                 </tr>
                 </thead>
                 <tbody class="bg-white">
@@ -92,15 +92,15 @@
                 @endphp
                 @foreach ($absen_siswa as $key => $siswa_absen)
                     <tr>
-                        <td class="py-2 px-1 border">{{$no++}}</td>
-                        <td class="py-2 px-1 border">{{$siswa_absen->nis}}
-                            <input type="hidden" value="{{$siswa_absen->nis}}" name="nis[{{$key}}]" class="block w-full rounded border-gray-300 shadow-sm">
+                        <td class="py-2 px-1 text-xs border">{{$no++}}</td>
+                        <td class="py-2 px-1 text-xs border">{{$siswa_absen->nis}}
+                            <input type="hidden" value="{{$siswa_absen->nis}}" name="nis[{{$key}}]" class="block w-full text-xs rounded border-gray-300 shadow-sm">
                         </td>
-                        <td class="py-2 px-1 border">{{$siswa_absen->nama}}
-                            <input type="hidden" value="{{$siswa_absen->nama}}" name="nama[{{$key}}]" class="block w-full rounded border-gray-300 shadow-sm">
+                        <td class="py-2 px-1 text-xs border">{{$siswa_absen->nama}}
+                            <input type="hidden" value="{{$siswa_absen->nama}}" name="nama[{{$key}}]" class="block w-full text-xs rounded border-gray-300 shadow-sm">
                         </td>
-                        <td class="py-2 px-1 border">
-                            <select name="status[{{$key}}]" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                        <td class="py-2 px-1 text-xs border">
+                            <select name="status[{{$key}}]" class="mt-1 text-xs block w-full rounded border-gray-300 shadow-sm" required>
                                 {{-- <option value="{{$agama}}">{{$agama}}</option> --}}
                                 <option value="Hadir">Hadir</option>
                                 <option value="Alpa">Alpa</option>
@@ -114,8 +114,8 @@
                                 <input type="hidden" value="{{$p_tgl}}" name="s_tgl" class="block w-full rounded border-gray-300 shadow-sm">
                                 <input type="hidden" value="{{$p_jenis}}" name="s_jenis" class="block w-full rounded border-gray-300 shadow-sm">
                             </td>
-                        <td class="py-2 px-1 border">
-                            <input type="text" name="keterangan[{{$key}}]" class="block w-full rounded border-gray-300 shadow-sm" required placeholder="isi keterangan">
+                        <td class="py-2 px-1 text-xs border">
+                            <input type="text" name="keterangan[{{$key}}]" class="block w-full text-xs rounded border-gray-300 shadow-sm" required placeholder="isi keterangan">
                         </td>
                     </tr>
                 @endforeach

@@ -63,7 +63,8 @@
       <a href="#fasilitas" class="block py-2 border-b border-orange-300">Fasilitas</a>
       <a href="#testimoni" class="block py-2 border-b border-orange-300">Testimoni</a>
       <a href="#kontak" class="block py-2 border-b border-orange-300">Kontak</a>
-      <a href="#registrasi" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Daftar</a>
+      <a href="{{ route('register') }}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Daftar</a>
+      <a href="{{ route('login') }}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Masuk</a>
     </div>
   </nav>
 

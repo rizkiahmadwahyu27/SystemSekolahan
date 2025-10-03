@@ -11,6 +11,9 @@ use App\Models\Absensi;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+
+use function PHPUnit\Framework\isEmpty;
+
 class DevController extends Controller
 {
     public function index(){
@@ -126,27 +129,29 @@ class DevController extends Controller
         $status   = $request->status;
         $kelas    = $request->s_kelas;
         $jenis    = $request->s_jenis;
-        $guru     = $request->s_guru;
-        $mapel    = $request->s_mapel;
+        $guru     = $request->s_guru . ', ' . $request->s_mapel;
         $tgl      = $request->s_tgl;
         $keterangan   = $request->keterangan;
         $hari = Carbon::parse($tgl)->format('l'); 
-
+        
         foreach ($nises as $key => $nis) {
-            Absensi::create([
-                'nis'      => $nis,
-                'nama'     => $nama[$key],
-                'kelas'    => $kelas,
-                'guru'     => $guru . ', ' . $mapel,
-                'jenis_absen' => $jenis,
-                'hari' => $hari,
-                'tanggal'      => $tgl,
-                'status'   => $status[$key],
-                'keterangan' => $keterangan[$key],
-                'user_input' => Auth::user()->name,
-                'user_edit' => 'Null',
-                'id_user' => Auth::user()->id,
-            ]);
+            $nis_siswa = Absensi::where('nis', $nis)->where('tanggal', $tgl)->where('guru', $guru)->where('jenis_absen', $jenis)->first();
+            if (!$nis_siswa) {
+                Absensi::create([
+                    'nis'      => $nis,
+                    'nama'     => $nama[$key],
+                    'kelas'    => $kelas,
+                    'guru'     => $guru,
+                    'jenis_absen' => $jenis,
+                    'hari' => $hari,
+                    'tanggal'      => $tgl,
+                    'status'   => $status[$key],
+                    'keterangan' => $keterangan[$key],
+                    'user_input' => Auth::user()->name,
+                    'user_edit' => 'Null',
+                    'id_user' => Auth::user()->id,
+                ]);
+            }
         }
 
         return redirect()->back()->with('success', 'Absensi berhasil disimpan');
