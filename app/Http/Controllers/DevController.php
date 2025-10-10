@@ -24,18 +24,18 @@ class DevController extends Controller
     }
 
     public function scan_post($nis){
-        $data = DataSiswa::join('data_kelas', 'data_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
+        $siswa = DataSiswa::join('data_kelas', 'data_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
         $conf = Configurasi::where('status', 'aktif')->first();
-         if (!$data) {
+         if (!$siswa) {
             return redirect()->back()->with('error', 'Siswa tidak ditemukan');
         }
         $nama_kelas = '';
-        if ($data->id_kelas_xi == null && $data->id_kelas_xii == null) {
-            $nama_kelas = $data->kelas_x; 
-        }elseif ($data->id_kelas_xii == null) {
-            $nama_kelas = $data->kelas_xi;
+        if ($siswa->id_kelas_xi == null && $siswa->id_kelas_xii == null) {
+            $nama_kelas = $siswa->kelas_x; 
+        }elseif ($siswa->id_kelas_xii == null) {
+            $nama_kelas = $siswa->kelas_xi;
         }else {
-            $nama_kelas = $data->kelas_xii;
+            $nama_kelas = $siswa->kelas_xii;
         }
 
         $hariInggris = date('l', strtotime(date('Y-m-d')));
@@ -49,9 +49,9 @@ class DevController extends Controller
             'Saturday'  => 'Sabtu'
         ];
 
-        Absensi::create([
-            'nis' => $data->nis,
-            'nama' => $data->nama,
+        $absen = Absensi::create([
+            'nis' => $siswa->nis,
+            'nama' => $siswa->nama,
             'kelas' => $nama_kelas,
             'guru' => Auth::user()->name,
             'jenis_absen' => 'harian',
@@ -63,7 +63,7 @@ class DevController extends Controller
             'user_edit' => 'Null',
             'id_user' => $conf->id,
         ]); 
-
+        $this->kirimPesanWali($siswa, $absen);
          return redirect(route('absensi_siswa'))->with('success', 'Absensi berhasil');
     }
 

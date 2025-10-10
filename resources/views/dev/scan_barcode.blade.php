@@ -64,7 +64,7 @@
                 <script type="text/javascript">
                     var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
                     scanner.addListener('scan', function (content) {
-                        window.location.href = `/guru/scan/absen/post/${content}`;
+                        window.location.href = `scan/absen/post/${content}`;
                     });
                     Instascan.Camera.getCameras().then(function (cameras) {
                         if (cameras.length > 0) {
