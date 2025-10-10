@@ -116,9 +116,9 @@
      @php
         
         if($update_kelas == null){
-            $url = 'guru/update/data/kelas/siswa';
+            $url = '/update/data/kelas/siswa';
         }else{
-            $url = url("guru/update/data/kelas/siswa/$update_kelas->id");
+            $url = url("/update/data/kelas/siswa/$update_kelas->id");
         }
          $ambil_url = url()->current();
          if($ambil_url == $url) {

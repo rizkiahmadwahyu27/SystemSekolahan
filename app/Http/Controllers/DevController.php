@@ -8,9 +8,12 @@ use App\Models\DataKelas;
 use App\Models\SiswaKelas;
 use App\Models\DataPegawai;
 use App\Models\Absensi;
+use App\Models\Configurasi;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -22,6 +25,7 @@ class DevController extends Controller
 
     public function scan_post($nis){
         $data = DataSiswa::join('data_kelas', 'data_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
+        $conf = Configurasi::where('status', 'aktif')->first();
          if (!$data) {
             return redirect()->back()->with('error', 'Siswa tidak ditemukan');
         }
@@ -57,7 +61,7 @@ class DevController extends Controller
             'keterangan' => 'Hadir di Kelas',
             'user_input' => Auth::user()->name,
             'user_edit' => 'Null',
-            'id_user' => Auth::user()->id,
+            'id_user' => $conf->id,
         ]); 
 
          return redirect(route('absensi_siswa'))->with('success', 'Absensi berhasil');
@@ -133,11 +137,12 @@ class DevController extends Controller
         $tgl      = $request->s_tgl;
         $keterangan   = $request->keterangan;
         $hari = Carbon::parse($tgl)->format('l'); 
-        
+        $conf = Configurasi::where('status', 'aktif')->first();
         foreach ($nises as $key => $nis) {
+            $siswa = DataSiswa::where('nis', $nis)->first();
             $nis_siswa = Absensi::where('nis', $nis)->where('tanggal', $tgl)->where('guru', $guru)->where('jenis_absen', $jenis)->first();
             if (!$nis_siswa) {
-                Absensi::create([
+                $absen = Absensi::create([
                     'nis'      => $nis,
                     'nama'     => $nama[$key],
                     'kelas'    => $kelas,
@@ -149,8 +154,10 @@ class DevController extends Controller
                     'keterangan' => $keterangan[$key],
                     'user_input' => Auth::user()->name,
                     'user_edit' => 'Null',
-                    'id_user' => Auth::user()->id,
+                    'id_user' => $conf->id,
                 ]);
+
+                $this->kirimPesanWali($siswa, $absen);
             }
         }
 
@@ -176,7 +183,6 @@ class DevController extends Controller
             'status' => $request->status,
             'keterangan' => $request->keterangan,
             'user_edit' => Auth::user()->name,
-            'id_user' => Auth::user()->id,
         ]);
 
         return redirect(route('data_absen'));
@@ -188,5 +194,37 @@ class DevController extends Controller
             $delete_absen = $absen_deleted->delete();
         }
         return redirect(route('data_absen'));
+    }
+
+    private function kirimPesanWali($siswa, $absen)
+    {
+        $token = env('FONNTE_TOKEN');
+        if ($absen->status == 'izin') {
+            $pesan = "Halo, Bapak/Ibu wali dari *{$siswa->nama}*.\n"
+                ."Siswa Anda telah *{$absen->status}* pada tanggal *{$absen->tanggal}* dan benar sepengetahuan Bapak/Ibu Wali Murid";
+        }elseif ($absen->status == 'sakit') {
+            $pesan = "Halo, Bapak/Ibu wali dari *{$siswa->nama}*.\n"
+                ."anak Bapak/Ibu *{$absen->status}* pada tanggal *{$absen->tanggal}* dan benar sepengetahuan Bapak/Ibu Wali Murid, semoga *{$absen->status}* cepat sembuh";
+        }elseif ($absen->status == 'hadir') {
+            $pesan = "Halo, Bapak/Ibu wali dari *{$siswa->nama}*.\n"
+                ."anak Bapak/Ibu *{$absen->status}* pada tanggal *{$absen->tanggal}* dan sudah berada di sekolahan";
+        }else {
+            $pesan = "Halo, Bapak/Ibu wali dari *{$siswa->nama}*.\n"
+                ."anak Bapak/Ibu *{$absen->status}* pada tanggal *{$absen->tanggal}* atau tidak hadir di sekolah tanpa keterangan";
+        }
+
+        $nomor = $siswa->no_hp_ortu;
+
+        // Pastikan hanya kirim jika format nomor benar
+        if (preg_match('/^62\d{9,15}$/', $nomor)) {
+            $response = Http::post(env('WA_BOT', 'http://localhost:4000/send-message'), [
+                'number' => $nomor,
+                'message' => $pesan
+            ]);
+            
+            Log::info('Kirim ke bot:', $response->json());
+        } else {
+            Log::warning("Nomor tidak valid, pesan tidak dikirim: {$nomor}");
+        }
     }
 }

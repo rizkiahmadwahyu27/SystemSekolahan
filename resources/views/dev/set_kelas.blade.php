@@ -110,9 +110,9 @@
      @php
                             //misal url yang di dapat
         if($update_kelas == null){
-            $url = 'guru/update/data/kelas';
+            $url = '/update/data/kelas';
         }else{
-            $url = url("guru/update/data/kelas/$update_kelas->id");
+            $url = url("/update/data/kelas/$update_kelas->id");
         }
          $ambil_url = url()->current();
          if($ambil_url == $url) {

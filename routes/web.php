@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ConfigurasiController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KepsekController;
 use App\Http\Controllers\SiswaController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\DataPegawaiController;
 use App\Http\Controllers\DataKelasController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\AbsenSiswa;
+use App\Models\Configurasi;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,46 +40,52 @@ Route::middleware(['auth', 'isGuru'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
     Route::get('/guru/dashboard', [GuruController::class, 'index'])->name('guru.index');
-    Route::get('/guru/data/siswa', [GuruController::class, 'data_siswa'])->name('data_siswa');
-    Route::post('/guru/create/data/siswa', [SiswaController::class, 'create_data_siswa'])->name('create_data_siswa');
-    Route::get('/guru/update/data/siswa/{id}', [SiswaController::class, 'update_data_siswa'])->name('update_data_siswa');
-    Route::patch('/guru/updated/data/siswa/{id}', [SiswaController::class, 'updated_data_siswa'])->name('updated_data_siswa');
-    Route::get('/guru/deleted/data/siswa/{id}', [SiswaController::class, 'deleted_data_siswa'])->name('deleted_data_siswa');
-    Route::get('/guru/cetak/kartu/absen/', [SiswaController::class, 'cetak_kartu_absen'])->name('cetak_kartu_absen');
-    Route::get('/guru/scann/barcode/absen/', [SiswaController::class, 'scan_barcode'])->name('scan_barcode');
-    Route::get('/guru/data/kelas', [DataKelasController::class, 'data_kelas'])->name('data_kelas');
-    Route::get('/guru/setting/kelas', [DataKelasController::class, 'set_kelas'])->name('set_kelas');
-    Route::post('/guru/create/data/kelas', [DataKelasController::class, 'create_data_kelas'])->name('create_data_kelas');
-    Route::get('/guru/update/data/kelas/{id}', [DataKelasController::class, 'update_data_kelas'])->name('update_data_kelas');
-    Route::patch('/guru/updated/data/kelas/{id}', [DataKelasController::class, 'updated_data_kelas'])->name('updated_data_kelas');
-    Route::get('/guru/deleted/data/kelas/{id}', [DataKelasController::class, 'deleted_data_kelas'])->name('deleted_data_kelas');
+    Route::get('/data/siswa', [GuruController::class, 'data_siswa'])->name('data_siswa');
+    Route::post('/create/data/siswa', [SiswaController::class, 'create_data_siswa'])->name('create_data_siswa');
+    Route::get('/update/data/siswa/{id}', [SiswaController::class, 'update_data_siswa'])->name('update_data_siswa');
+    Route::patch('/updated/data/siswa/{id}', [SiswaController::class, 'updated_data_siswa'])->name('updated_data_siswa');
+    Route::get('/deleted/data/siswa/{id}', [SiswaController::class, 'deleted_data_siswa'])->name('deleted_data_siswa');
+    Route::get('/cetak/kartu/absen/', [SiswaController::class, 'cetak_kartu_absen'])->name('cetak_kartu_absen');
+    Route::get('/scann/barcode/absen/', [SiswaController::class, 'scan_barcode'])->name('scan_barcode');
+    Route::get('/data/kelas', [DataKelasController::class, 'data_kelas'])->name('data_kelas');
+    Route::get('/setting/kelas', [DataKelasController::class, 'set_kelas'])->name('set_kelas');
+    Route::post('/create/data/kelas', [DataKelasController::class, 'create_data_kelas'])->name('create_data_kelas');
+    Route::get('/update/data/kelas/{id}', [DataKelasController::class, 'update_data_kelas'])->name('update_data_kelas');
+    Route::patch('/updated/data/kelas/{id}', [DataKelasController::class, 'updated_data_kelas'])->name('updated_data_kelas');
+    Route::get('/deleted/data/kelas/{id}', [DataKelasController::class, 'deleted_data_kelas'])->name('deleted_data_kelas');
 
     //kelas untuk siswa
-    Route::post('/guru/create/data/kelas/siswa', [DataKelasController::class, 'create_data_kelas_siswa'])->name('create_data_kelas_siswa');
-    Route::get('/guru/update/data/kelas/siswa/{id}', [DataKelasController::class, 'update_data_kelas_siswa'])->name('update_data_kelas_siswa');
-    Route::patch('/guru/updated/data/kelas/siswa/{id}', [DataKelasController::class, 'updated_data_kelas_siswa'])->name('updated_data_kelas_siswa');
-    Route::get('/guru/deleted/data/kelas/siswa/{id}', [DataKelasController::class, 'deleted_data_kelas_siswa'])->name('deleted_data_kelas_siswa');
+    Route::post('/create/data/kelas/siswa', [DataKelasController::class, 'create_data_kelas_siswa'])->name('create_data_kelas_siswa');
+    Route::get('/update/data/kelas/siswa/{id}', [DataKelasController::class, 'update_data_kelas_siswa'])->name('update_data_kelas_siswa');
+    Route::patch('/updated/data/kelas/siswa/{id}', [DataKelasController::class, 'updated_data_kelas_siswa'])->name('updated_data_kelas_siswa');
+    Route::get('/deleted/data/kelas/siswa/{id}', [DataKelasController::class, 'deleted_data_kelas_siswa'])->name('deleted_data_kelas_siswa');
 
-    Route::get('/guru/scan/absen/post/{nis}', [DevController::class, 'scan_post'])->name('scan_post');
-    Route::get('/guru/data/absen', [DevController::class, 'data_absen'])->name('data_absen');
-    Route::match(['get', 'post'], '/guru/data/get/absen/', [DevController::class, 'get_absen'])->name('get_absen');
-    Route::post('/guru/create/data/absen', [DevController::class, 'create_data_absen'])->name('create_data_absen');
-    Route::get('/guru/update/data/absen/{id}', [DevController::class, 'update_data_absen'])->name('update_data_absen');
-    Route::patch('/guru/updated/data/absen/{id}', [DevController::class, 'updated_data_absen'])->name('updated_data_absen');
-    Route::get('/guru/deleted/data/absen/{id}', [DevController::class, 'deleted_data_absen'])->name('deleted_data_absen');
-    Route::get('/guru/data/pegawai', [DataPegawaiController::class, 'data_pegawai'])->name('data_pegawai');
-    Route::post('/guru/create/data/pegawai', [DataPegawaiController::class, 'create_data_pegawai'])->name('create_data_pegawai');
-    Route::get('/guru/update/data/pegawai/{id}', [DataPegawaiController::class, 'update_data_pegawai'])->name('update_data_pegawai');
-    Route::patch('/guru/updated/data/pegawai/{id}', [DataPegawaiController::class, 'updated_data_pegawai'])->name('updated_data_pegawai');
-    Route::get('/guru/deleted/data/pegawai/{id}', [DataPegawaiController::class, 'deleted_data_pegawai'])->name('deleted_data_pegawai');
-    Route::get('/guru/laporan/data/absen/siswa', [SiswaController::class, 'lap_absen_siswa'])->name('lap_absen_siswa');
-    Route::post('/guru/filter/absen/siswa', [SiswaController::class, 'filter_absen_siswa'])->name('filter_absen_siswa');
-    Route::get('/guru/update/data/absen/siswa/{id}', [SiswaController::class, 'update_data_absen_siswa'])->name('update_data_absen_siswa');
-    Route::patch('/guru/updated/data/absen/siswa/{id}', [SiswaController::class, 'updated_data_absen_siswa'])->name('updated_data_absen_siswa');
-    Route::get('/guru/deleted/data/absen/siswa/{id}', [SiswaController::class, 'deleted_data_absen_siswa'])->name('deleted_data_absen_siswa');
-    Route::get('/guru/laporan/data/absen/siswa/bulanan', [SiswaController::class, 'laporan_bulanan_siswa'])->name('laporan_bulanan_siswa');
-    Route::post('/guru/filter/laporan/absen/bulanan/siswa', [SiswaController::class, 'filter_lap_bulanan_siswa'])->name('filter_lap_bulanan_siswa');
+    Route::get('/scan/absen/post/{nis}', [DevController::class, 'scan_post'])->name('scan_post');
+    Route::get('/data/absen', [DevController::class, 'data_absen'])->name('data_absen');
+    Route::match(['get', 'post'], '/data/get/absen/', [DevController::class, 'get_absen'])->name('get_absen');
+    Route::post('/create/data/absen', [DevController::class, 'create_data_absen'])->name('create_data_absen');
+    Route::get('/update/data/absen/{id}', [DevController::class, 'update_data_absen'])->name('update_data_absen');
+    Route::patch('/updated/data/absen/{id}', [DevController::class, 'updated_data_absen'])->name('updated_data_absen');
+    Route::get('/deleted/data/absen/{id}', [DevController::class, 'deleted_data_absen'])->name('deleted_data_absen');
+    Route::get('/data/pegawai', [DataPegawaiController::class, 'data_pegawai'])->name('data_pegawai');
+    Route::post('/create/data/pegawai', [DataPegawaiController::class, 'create_data_pegawai'])->name('create_data_pegawai');
+    Route::get('/update/data/pegawai/{id}', [DataPegawaiController::class, 'update_data_pegawai'])->name('update_data_pegawai');
+    Route::patch('/updated/data/pegawai/{id}', [DataPegawaiController::class, 'updated_data_pegawai'])->name('updated_data_pegawai');
+    Route::get('/deleted/data/pegawai/{id}', [DataPegawaiController::class, 'deleted_data_pegawai'])->name('deleted_data_pegawai');
+    Route::get('/laporan/data/absen/siswa', [SiswaController::class, 'lap_absen_siswa'])->name('lap_absen_siswa');
+    Route::post('/filter/absen/siswa', [SiswaController::class, 'filter_absen_siswa'])->name('filter_absen_siswa');
+    Route::get('/update/data/absen/siswa/{id}', [SiswaController::class, 'update_data_absen_siswa'])->name('update_data_absen_siswa');
+    Route::patch('/updated/data/absen/siswa/{id}', [SiswaController::class, 'updated_data_absen_siswa'])->name('updated_data_absen_siswa');
+    Route::get('/deleted/data/absen/siswa/{id}', [SiswaController::class, 'deleted_data_absen_siswa'])->name('deleted_data_absen_siswa');
+    Route::get('/laporan/data/absen/siswa/bulanan', [SiswaController::class, 'laporan_bulanan_siswa'])->name('laporan_bulanan_siswa');
+    Route::post('/filter/laporan/absen/bulanan/siswa', [SiswaController::class, 'filter_lap_bulanan_siswa'])->name('filter_lap_bulanan_siswa');
 
+    //congigurasi
+    Route::get('/seting/configurasi/aplikasi', [ConfigurasiController::class, 'index_config'])->name('index_config');
+    Route::post('/seting/configurasi/aplikasi', [ConfigurasiController::class, 'create_config'])->name('create_config');
+    Route::get('/deleted/data/config/{id}', [ConfigurasiController::class, 'delete_config'])->name('delete_config');
+    Route::get('/update/data/config/{id}', [ConfigurasiController::class, 'update_config'])->name('update_config');
+    Route::patch('/updated/data/config/{id}', [ConfigurasiController::class, 'updated_config'])->name('updated_config');
     //livewire
     Route::get('/absen/siswa', AbsenSiswa::class)->name('absensi_siswa');
 

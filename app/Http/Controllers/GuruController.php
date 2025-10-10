@@ -15,7 +15,7 @@ class GuruController extends Controller
     }
 
     public function data_siswa(){
-        $siswas = DataSiswa::select('nis', 'nisn', 'nama', 'jenis_kelamin', 'agama', 'alamat', 'nama_ibu', 'nama_ayah', 'id')->get();
+        $siswas = DataSiswa::select('nis', 'nisn', 'nama', 'jenis_kelamin', 'agama', 'alamat', 'nama_ibu', 'nama_ayah', 'id', 'no_hp_ortu')->get();
         $siswa_update = null;
         return view('guru.data_siswa', compact('siswas', 'siswa_update'));
     }

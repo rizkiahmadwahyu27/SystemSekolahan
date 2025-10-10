@@ -46,6 +46,7 @@
                 <th class="px-3 py-2 font-medium border">Nama Ayah</th>
                 <th class="px-3 py-2 font-medium border">Nama Ibu</th>
                 <th class="px-3 py-2 font-medium border">Alamat</th>
+                <th class="px-3 py-2 font-medium border">No HP Ortu</th>
                 <th class="px-3 py-2 font-medium border">Aksi</th>
             </tr>
             </thead>
@@ -64,6 +65,7 @@
                     <td class="px-3 py-2 border">Bapak {{$siswa->nama_ayah}}</td>
                     <td class="px-3 py-2 border">Ibu {{$siswa->nama_ibu}}</td>
                     <td class="px-3 py-2 border">{{$siswa->alamat}}</td>
+                    <td class="px-3 py-2 border">{{$siswa->no_hp_ortu}}</td>
                     <td class="px-3 py-2 border">
                         <div class="flex justify-between items-center">
                             <div>
@@ -150,9 +152,9 @@
      @php
                             //misal url yang di dapat
         if($siswa_update == null){
-            $url = 'guru/update/data/siswa';
+            $url = '/update/data/siswa';
         }else{
-            $url = url("guru/update/data/siswa/$siswa_update->id");
+            $url = url("/update/data/siswa/$siswa_update->id");
         }
          $ambil_url = url()->current();
          if($ambil_url == $url) {

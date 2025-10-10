@@ -148,9 +148,9 @@
     @php
                             //misal url yang di dapat
         if($update_absen == null){
-            $url = '/guru/laporan/data/absen/siswa';
+            $url = '/laporan/data/absen/siswa';
         }else{
-            $url = url("/guru/update/data/absen/siswa/$update_absen->id");
+            $url = url("/update/data/absen/siswa/$update_absen->id");
         }
          $ambil_url = url()->current();
          if($ambil_url == $url) {

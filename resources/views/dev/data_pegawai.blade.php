@@ -150,9 +150,9 @@
      @php
                             //misal url yang di dapat
         if($pegawai_update == null){
-            $url = 'guru/update/data/pegawai';
+            $url = '/update/data/pegawai';
         }else{
-            $url = url("guru/update/data/pegawai/$pegawai_update->id");
+            $url = url("/update/data/pegawai/$pegawai_update->id");
         }
          $ambil_url = url()->current();
          if($ambil_url == $url) {

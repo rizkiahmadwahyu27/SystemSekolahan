@@ -36,9 +36,9 @@
      @php
                             //misal url yang di dapat
         if($update_absen == null){
-            $url = 'guru/update/data/absen';
+            $url = '/update/data/absen';
         }else{
-            $url = url("guru/update/data/absen/$update_absen->id");
+            $url = url("/update/data/absen/$update_absen->id");
         }
          $ambil_url = url()->current();
          if($ambil_url == $url) {

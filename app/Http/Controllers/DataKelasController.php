@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configurasi;
 use Illuminate\Http\Request;
 use App\Models\DataKelas;
 use App\Models\DataSiswa;
@@ -28,14 +29,14 @@ class DataKelasController extends Controller
     }
 
     public function create_data_kelas(Request $request){
-
+        $conf = Configurasi::where('status', 'aktif')->first();
         $datakelas = DataKelas::create([
             'kode_kelas' => '10-'.$request->nama_kelas,
             'nama_kelas' => $request->nama_kelas,
             'nama_wali_kelas' => $request->nama_wali_kelas,
             'user_input' => Auth::user()->name,
             'user_edit' => 'null',
-            'id_user' => Auth::user()->id,
+            'id_user' => $conf->id,
         ]);
 
         return redirect()->back()->withErrors('gagal menyimpan')->withInput();
@@ -56,7 +57,6 @@ class DataKelasController extends Controller
             'nama_wali_kelas' => $request->nama_wali_kelas,
             'user_input' => Auth::user()->name,
             'user_edit' => 'null',
-            'id_user' => Auth::user()->id,
         ]);
 
         return redirect(route('set_kelas'));
@@ -106,7 +106,7 @@ class DataKelasController extends Controller
 
     public function updated_data_kelas_siswa(Request $request, $id){
             $updateSiswa_kelas = SiswaKelas::where('id', $id)->first();
-           $siswa = $request->siswa;
+            $siswa = $request->siswa;
             $kelas = $request->kelas;
 
             $h_siswa = explode(",", $siswa);
