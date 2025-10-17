@@ -28,7 +28,6 @@ class DevController extends Controller
         $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
         $conf = Configurasi::where('status', 'aktif')->first();
          if (!$siswa) {
-            Alert::warning('Sorry!', 'Data tidak ditemukan.');
             return redirect(route('scan_barcode'))->with('error', 'Data Siswa Tidak Ada');
         }
         
