@@ -60,7 +60,7 @@ Route::middleware(['auth', 'isGuru'])->group(function () {
     Route::patch('/updated/data/kelas/siswa/{id}', [DataKelasController::class, 'updated_data_kelas_siswa'])->name('updated_data_kelas_siswa');
     Route::get('/deleted/data/kelas/siswa/{id}', [DataKelasController::class, 'deleted_data_kelas_siswa'])->name('deleted_data_kelas_siswa');
 
-    Route::get('/scan/absen/post/{nis}', [DevController::class, 'scan_post'])->name('scan_post');
+    Route::get('/scann/barcode/absen/post/{nis}', [DevController::class, 'scan_post'])->name('scan_post');
     Route::get('/data/absen', [DevController::class, 'data_absen'])->name('data_absen');
     Route::match(['get', 'post'], '/data/get/absen/', [DevController::class, 'get_absen'])->name('get_absen');
     Route::post('/create/data/absen', [DevController::class, 'create_data_absen'])->name('create_data_absen');

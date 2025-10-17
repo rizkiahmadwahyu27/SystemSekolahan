@@ -10,6 +10,7 @@ use App\Models\SiswaKelas;
 use App\Models\DataPegawai;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DataKelasController extends Controller
 {
@@ -38,8 +39,8 @@ class DataKelasController extends Controller
             'user_edit' => 'null',
             'id_user' => $conf->id,
         ]);
-
-        return redirect()->back()->withErrors('gagal menyimpan')->withInput();
+        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
     public function update_data_kelas(Request $request, $id){
@@ -58,8 +59,8 @@ class DataKelasController extends Controller
             'user_input' => Auth::user()->name,
             'user_edit' => 'null',
         ]);
-
-        return redirect(route('set_kelas'));
+        Alert::success('Berhasil!', 'Data Anda telah diubah.');
+        return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_kelas(Request $request, $id){
@@ -67,7 +68,8 @@ class DataKelasController extends Controller
         if ($kelas_deleted) {
             $delete_kelas = $kelas_deleted->delete();
         }
-        return redirect(route('set_kelas'));
+        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
     //data kelas untuk siswa
@@ -91,8 +93,8 @@ class DataKelasController extends Controller
             'edit_user' => 'null',
             'id_user' => Auth::user()->id,
         ]);
-
-        return redirect()->back()->withErrors('gagal menyimpan')->withInput();
+        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
     public function update_data_kelas_siswa(Request $request, $id){
@@ -124,8 +126,8 @@ class DataKelasController extends Controller
             'user_edit' => Auth::user()->name,
             'id_user' => Auth::user()->id,
         ]);
-
-        return redirect(route('data_kelas'));
+        Alert::success('Berhasil!', 'Data Anda telah diubah.');
+        return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_kelas_siswa(Request $request, $id){
@@ -133,7 +135,8 @@ class DataKelasController extends Controller
         if ($Siswakelas_deleted) {
             $Siswadelete_kelas = $Siswakelas_deleted->delete();
         }
-        return redirect(route('data_kelas'));
+        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
 }

@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Dflydev\DotAccessData\Data;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SiswaController extends Controller
 {
@@ -45,8 +46,8 @@ class SiswaController extends Controller
             'edited_by' => 'Null',
             'id_user_edit_or_create' => Auth::user()->id,
         ]);
-
-        return redirect()->back()->withErrors('gagal menyimpan')->withInput();
+        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
     public function update_data_siswa(Request $request, $id){
@@ -81,8 +82,8 @@ class SiswaController extends Controller
             'edited_by' => Auth::user()->name,
             'id_user_edit_or_create' => Auth::user()->id,
         ]);
-
-        return redirect(route('data_siswa'));
+        Alert::success('Berhasil!', 'Data Anda telah diubah.');
+        return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_siswa(Request $request, $id){
@@ -90,7 +91,8 @@ class SiswaController extends Controller
         if ($siswa_deleted) {
             $delete_siswa = $siswa_deleted->delete();
         }
-        return redirect(route('data_siswa'));
+        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
     public function cetak_kartu_absen(){
@@ -193,14 +195,15 @@ class SiswaController extends Controller
             'status' => $request->status,
             'keterangan' => $request->keterangan,
         ]);
-        dd($siswa_update);
-        return redirect(route('lap_absen_siswa'));
+        Alert::success('Berhasil!', 'Data Anda telah diubah.');
+        return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_absen_siswa($id){
         $siswa_deleted = Absensi::find($id);
         $siswa_deleted->delete();
-        return redirect(route('lap_absen_siswa'));
+        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
     public function laporan_bulanan_siswa(){

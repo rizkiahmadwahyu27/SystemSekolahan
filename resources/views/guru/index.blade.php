@@ -1,4 +1,5 @@
 <x-app-layout>
+    
     <div class="md:grid md:grid-cols-4 md:gap-4 gap-2 flex overflow-y-scroll justify-start items-center md:justify-center md:mt-5 mt-16 p-5">
         <div>
             <div class="bg-slate-200 rounded-xl h-28 w-72 md:w-auto">

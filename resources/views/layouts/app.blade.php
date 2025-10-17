@@ -12,14 +12,17 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     <style>[x-cloak] { display: none !important; }</style>
+    <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css”> 
 
+   
     <!-- Scripts -->
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
+
 <body class="font-sans bg-orange-600 min-h-screen">
     @include('layouts.navigation')
-
     <!-- Sidebar for Desktop -->
     <aside class="hidden md:flex fixed top-0 left-0 h-screen w-56 bg-gray-200 text-orange-800 flex-col p-2 justify-start items-center gap-6">
         <div class="font-bold text-lg mt-8 flex justify-center items-center">
@@ -182,8 +185,34 @@
     <main class="pt-6 pb-16 md:pl-60 p-2">
         {{ $slot }}
     </main>
-
+    
     @vite(['resources/js/script.js'])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success', 
+                title: 'Berhasil!',
+                text: {!! json_encode(session('success')) !!}, // Pastikan menggunakan json_encode untuk amannya
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
+
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: {!! json_encode(session('error')) !!},
+                showConfirmButton: true,
+            });
+        </script>
+    @endif
+
+    
     @livewireScripts
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
@@ -207,6 +236,26 @@
                 panel.classList.add('max-h-96');
                 icon.classList.add('rotate-180');
             }
+        }
+    </script>
+    <script>
+        function confirmRedirectDelete(deleteUrl) {
+            Swal.fire({
+                title: 'Hapus Data Pegawai?',
+                text: "Data pegawai ini akan dihapus permanen. Anda yakin?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna menekan 'Ya, Hapus!', 
+                    // kita mengarahkan browser ke URL delete menggunakan JavaScript
+                    window.location.href = deleteUrl;
+                }
+            });
         }
     </script>
 </body>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\DataPegawai;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DataPegawaiController extends Controller
 {
@@ -59,8 +60,8 @@ class DataPegawaiController extends Controller
             'user_input' => Auth::user()->name,
             'user_edit'=> 'Null',
         ]);
-
-        return redirect()->back()->withErrors('gagal menyimpan')->withInput();
+        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
     public function update_data_pegawai(Request $request, $id){
@@ -188,8 +189,8 @@ class DataPegawaiController extends Controller
             ]);
         }
         
-
-        return redirect(route('data_pegawai'));
+        Alert::success('Berhasil!', 'Data Anda telah diubah.');
+        return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_pegawai(Request $request, $id){
@@ -197,7 +198,8 @@ class DataPegawaiController extends Controller
         if ($pegawai_deleted) {
             $delete_pegawai = $pegawai_deleted->delete();
         }
-        return redirect(route('data_pegawai'));
+        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
 }

@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RealRashid\SweetAlert\Facades\Alert;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -24,19 +25,13 @@ class DevController extends Controller
     }
 
     public function scan_post($nis){
-        $siswa = DataSiswa::join('data_kelas', 'data_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
+        $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
         $conf = Configurasi::where('status', 'aktif')->first();
          if (!$siswa) {
-            return redirect()->back()->with('error', 'Siswa tidak ditemukan');
+            Alert::warning('Sorry!', 'Data tidak ditemukan.');
+            return redirect(route('scan_barcode'))->with('error', 'Data Siswa Tidak Ada');
         }
-        $nama_kelas = '';
-        if ($siswa->id_kelas_xi == null && $siswa->id_kelas_xii == null) {
-            $nama_kelas = $siswa->kelas_x; 
-        }elseif ($siswa->id_kelas_xii == null) {
-            $nama_kelas = $siswa->kelas_xi;
-        }else {
-            $nama_kelas = $siswa->kelas_xii;
-        }
+        
 
         $hariInggris = date('l', strtotime(date('Y-m-d')));
         $hariIndonesia = [
@@ -52,7 +47,7 @@ class DevController extends Controller
         $absen = Absensi::create([
             'nis' => $siswa->nis,
             'nama' => $siswa->nama,
-            'kelas' => $nama_kelas,
+            'kelas' => $siswa->nama_kelas,
             'guru' => Auth::user()->name,
             'jenis_absen' => 'harian',
             'hari' => $hariIndonesia[$hariInggris],
@@ -64,7 +59,8 @@ class DevController extends Controller
             'id_user' => $conf->id,
         ]); 
         $this->kirimPesanWali($siswa, $absen);
-         return redirect(route('absensi_siswa'))->with('success', 'Absensi berhasil');
+        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
     public function data_absen(){
@@ -94,6 +90,7 @@ class DevController extends Controller
         $p_guru = '';
         $p_tgl = '';
         $p_jenis = '';
+
         return view('dev.data_absen', compact('data_absen', 'mapel_pegawai', 'p_jenis', 'p_mapel', 'p_kelas', 'p_guru', 'p_tgl', 'absen_siswa', 'update_absen', 'data_kelas', 'data_pegawai'));
     }
 
@@ -160,8 +157,8 @@ class DevController extends Controller
                 $this->kirimPesanWali($siswa, $absen);
             }
         }
-
-        return redirect()->back()->with('success', 'Absensi berhasil disimpan');
+        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
     public function update_data_absen(Request $request, $id){
@@ -184,8 +181,8 @@ class DevController extends Controller
             'keterangan' => $request->keterangan,
             'user_edit' => Auth::user()->name,
         ]);
-
-        return redirect(route('data_absen'));
+        Alert::success('Berhasil!', 'Data Anda telah diubah.');
+        return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_absen(Request $request, $id){
@@ -193,26 +190,32 @@ class DevController extends Controller
         if ($absen_deleted) {
             $delete_absen = $absen_deleted->delete();
         }
-        return redirect(route('data_absen'));
+        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
     private function kirimPesanWali($siswa, $absen)
     {
-        $token = env('FONNTE_TOKEN');
-        if ($absen->status == 'izin') {
-            $pesan = "Halo, Bapak/Ibu wali dari *{$siswa->nama}*.\n"
-                ."Siswa Anda telah *{$absen->status}* pada tanggal *{$absen->tanggal}* dan benar sepengetahuan Bapak/Ibu Wali Murid";
-        }elseif ($absen->status == 'sakit') {
-            $pesan = "Halo, Bapak/Ibu wali dari *{$siswa->nama}*.\n"
-                ."anak Bapak/Ibu *{$absen->status}* pada tanggal *{$absen->tanggal}* dan benar sepengetahuan Bapak/Ibu Wali Murid, semoga *{$absen->status}* cepat sembuh";
-        }elseif ($absen->status == 'hadir') {
-            $pesan = "Halo, Bapak/Ibu wali dari *{$siswa->nama}*.\n"
-                ."anak Bapak/Ibu *{$absen->status}* pada tanggal *{$absen->tanggal}* dan sudah berada di sekolahan";
-        }else {
-            $pesan = "Halo, Bapak/Ibu wali dari *{$siswa->nama}*.\n"
-                ."anak Bapak/Ibu *{$absen->status}* pada tanggal *{$absen->tanggal}* atau tidak hadir di sekolah tanpa keterangan";
-        }
 
+        $pesan = " Assalamu alaikum wr.wb \n"
+
+                ." Yth. Bapak/Ibu Wali Murid *{$siswa->nama}* \n"
+
+                ." Kami pihak SMK Pelita Jatibarang menginformasikan bahwa sanya pada : \n"
+
+                ." Hari, Tanggal : *{$absen->hari}*, *{$siswa->tanggal}* \n" 
+                ." Tempat : SMK Pelita Jatibarang \n" 
+                ." Satatus Kehadiran : *{$absen->nama}* \n"
+
+                ." Demikian informasi yang disampaikan. \n"
+
+                ." Jatibarang, *{$absen->tanggal}* \n"
+
+                ." Kepala Sekolah, \n"
+
+
+                ." Linda Tri Apsari, S.Pd";
+            
         $nomor = $siswa->no_hp_ortu;
 
         // Pastikan hanya kirim jika format nomor benar

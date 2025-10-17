@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Configurasi;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 
 class ConfigurasiController extends Controller
@@ -32,8 +33,8 @@ class ConfigurasiController extends Controller
             'edit_user' => 'Null',
             'id_user' => Auth::user()->id,
         ]);
-
-        return redirect()->back();
+        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
     public function update_config($id){
@@ -65,8 +66,8 @@ class ConfigurasiController extends Controller
             'edit_user' => Auth::user()->name, // null tanpa tanda kutip
             'id_user' => Auth::user()->id,
         ]);
-
-        return redirect()->back()->with('success', 'Konfigurasi berhasil diperbarui.');
+        Alert::success('Berhasil!', 'Data Anda telah diubah.');
+        return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function delete_config($id){
@@ -74,6 +75,7 @@ class ConfigurasiController extends Controller
         if ($delete_conf) {
             $delete_conf->delete();
         }
-        return redirect()->back();
+        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 }
