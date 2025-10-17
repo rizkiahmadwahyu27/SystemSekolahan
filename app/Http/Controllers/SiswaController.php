@@ -46,7 +46,7 @@ class SiswaController extends Controller
             'edited_by' => 'Null',
             'id_user_edit_or_create' => Auth::user()->id,
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+;
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
@@ -82,7 +82,6 @@ class SiswaController extends Controller
             'edited_by' => Auth::user()->name,
             'id_user_edit_or_create' => Auth::user()->id,
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah diubah.');
         return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
@@ -91,7 +90,7 @@ class SiswaController extends Controller
         if ($siswa_deleted) {
             $delete_siswa = $siswa_deleted->delete();
         }
-        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
@@ -195,14 +194,13 @@ class SiswaController extends Controller
             'status' => $request->status,
             'keterangan' => $request->keterangan,
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah diubah.');
         return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_absen_siswa($id){
         $siswa_deleted = Absensi::find($id);
         $siswa_deleted->delete();
-        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 

@@ -39,7 +39,7 @@ class DataKelasController extends Controller
             'user_edit' => 'null',
             'id_user' => $conf->id,
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
@@ -59,8 +59,7 @@ class DataKelasController extends Controller
             'user_input' => Auth::user()->name,
             'user_edit' => 'null',
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah diubah.');
-        return redirect()->back()->with('success', 'Data Berhasil Diubah');
+                return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_kelas(Request $request, $id){
@@ -68,7 +67,7 @@ class DataKelasController extends Controller
         if ($kelas_deleted) {
             $delete_kelas = $kelas_deleted->delete();
         }
-        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
@@ -93,7 +92,7 @@ class DataKelasController extends Controller
             'edit_user' => 'null',
             'id_user' => Auth::user()->id,
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
@@ -126,8 +125,7 @@ class DataKelasController extends Controller
             'user_edit' => Auth::user()->name,
             'id_user' => Auth::user()->id,
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah diubah.');
-        return redirect()->back()->with('success', 'Data Berhasil Diubah');
+                return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
     public function deleted_data_kelas_siswa(Request $request, $id){
@@ -135,7 +133,7 @@ class DataKelasController extends Controller
         if ($Siswakelas_deleted) {
             $Siswadelete_kelas = $Siswakelas_deleted->delete();
         }
-        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+        
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 

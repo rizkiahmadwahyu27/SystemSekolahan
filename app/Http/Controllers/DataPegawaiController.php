@@ -60,7 +60,7 @@ class DataPegawaiController extends Controller
             'user_input' => Auth::user()->name,
             'user_edit'=> 'Null',
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
@@ -189,7 +189,6 @@ class DataPegawaiController extends Controller
             ]);
         }
         
-        Alert::success('Berhasil!', 'Data Anda telah diubah.');
         return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
@@ -198,7 +197,7 @@ class DataPegawaiController extends Controller
         if ($pegawai_deleted) {
             $delete_pegawai = $pegawai_deleted->delete();
         }
-        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 

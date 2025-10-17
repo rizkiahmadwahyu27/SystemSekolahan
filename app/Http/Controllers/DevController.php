@@ -14,7 +14,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use RealRashid\SweetAlert\Facades\Alert;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -57,8 +56,7 @@ class DevController extends Controller
             'user_edit' => 'Null',
             'id_user' => $conf->id,
         ]); 
-        $this->kirimPesanWali($siswa, $absen);
-        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        // $this->kirimPesanWali($siswa, $absen);
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
@@ -156,7 +154,7 @@ class DevController extends Controller
                 $this->kirimPesanWali($siswa, $absen);
             }
         }
-        Alert::success('Berhasil!', 'Data Anda telah disimpan.');
+        
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
 
@@ -180,7 +178,7 @@ class DevController extends Controller
             'keterangan' => $request->keterangan,
             'user_edit' => Auth::user()->name,
         ]);
-        Alert::success('Berhasil!', 'Data Anda telah diubah.');
+        
         return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
 
@@ -189,7 +187,7 @@ class DevController extends Controller
         if ($absen_deleted) {
             $delete_absen = $absen_deleted->delete();
         }
-        Alert::success('Berhasil!', 'Data Anda telah dihapus.');
+       
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
@@ -202,9 +200,9 @@ class DevController extends Controller
 
                 ." Kami pihak SMK Pelita Jatibarang menginformasikan bahwa sanya pada : \n"
 
-                ." Hari, Tanggal : *{$absen->hari}*, *{$siswa->tanggal}* \n" 
+                ." Hari, Tanggal : *{$absen->hari}*, *{$absen->tanggal}* \n" 
                 ." Tempat : SMK Pelita Jatibarang \n" 
-                ." Satatus Kehadiran : *{$absen->nama}* \n"
+                ." Satatus Kehadiran : *{$absen->status}* \n"
 
                 ." Demikian informasi yang disampaikan. \n"
 
