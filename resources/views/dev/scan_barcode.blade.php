@@ -10,6 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css”> 
     <title>QR Scanner</title>
     <style>
         /* Hide the default radio button */
@@ -64,7 +65,7 @@
                 <script type="text/javascript">
                     var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
                     scanner.addListener('scan', function (content) {
-                        window.location.href = `post/${content}`;
+                        window.location.href = `absen/post/${content}`;
                     });
                     Instascan.Camera.getCameras().then(function (cameras) {
                         if (cameras.length > 0) {
@@ -111,5 +112,30 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success', 
+                title: 'Berhasil!',
+                text: {!! json_encode(session('success')) !!}, // Pastikan menggunakan json_encode untuk amannya
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
+
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: {!! json_encode(session('error')) !!},
+                showConfirmButton: true,
+            });
+        </script>
+    @endif
+
 </body>
 </html>
