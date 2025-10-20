@@ -60,6 +60,7 @@ class DevController extends Controller
                 'id_user' => $conf->id,
             ]); 
             $this->kirimPesanWali($siswa, $absen);
+            //MENAMBAHA
             return redirect()->back()->with('success', 'Data Berhasil Disimpan');
         }else{
             return redirect()->back()->with('error', 'Maaf kamu sudah absen');
