@@ -138,7 +138,16 @@ class DevController extends Controller
         
         $tgl      = $request->s_tgl;
         $keterangan   = $request->keterangan;
-        $hari = Carbon::parse($tgl)->format('l'); 
+        $hariInggris = date('l', strtotime($tgl));
+        $hariIndonesia = [
+            'Sunday'    => 'Minggu',
+            'Monday'    => 'Senin',
+            'Tuesday'   => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday'  => 'Kamis',
+            'Friday'    => 'Jumat',
+            'Saturday'  => 'Sabtu'
+        ];
         $conf = Configurasi::where('status', 'aktif')->first();
 
         if ($jenis == 'mapel') {
@@ -157,7 +166,7 @@ class DevController extends Controller
                     'kelas'    => $kelas,
                     'guru'     => $guru,
                     'jenis_absen' => $jenis,
-                    'hari' => $hari,
+                    'hari' => $hariIndonesia[$hariInggris],
                     'tanggal'      => $tgl,
                     'status'   => $status[$key],
                     'keterangan' => $keterangan[$key],
