@@ -42,22 +42,29 @@ class DevController extends Controller
             'Saturday'  => 'Sabtu'
         ];
 
-        $absen = Absensi::create([
-            'nis' => $siswa->nis,
-            'nama' => $siswa->nama,
-            'kelas' => $siswa->nama_kelas,
-            'guru' => $data_kelas->nama_wali_kelas,
-            'jenis_absen' => 'harian',
-            'hari' => $hariIndonesia[$hariInggris],
-            'tanggal' => date('Y-m-d'),
-            'status' => 'Hadir',
-            'keterangan' => 'Hadir di Kelas',
-            'user_input' => Auth::user()->name,
-            'user_edit' => 'Null',
-            'id_user' => $conf->id,
-        ]); 
-        // $this->kirimPesanWali($siswa, $absen);
-        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+        $absensi = Absensi::where('nis', $nis)->where('tanggal', date('Y-m-d'))->where('guru', $data_kelas->nama_wali_kelas)->where('jenis_absen', 'harian')->first();
+
+        if (!$absensi) {
+            $absen = Absensi::create([
+                'nis' => $siswa->nis,
+                'nama' => $siswa->nama,
+                'kelas' => $siswa->nama_kelas,
+                'guru' => $data_kelas->nama_wali_kelas,
+                'jenis_absen' => 'harian',
+                'hari' => $hariIndonesia[$hariInggris],
+                'tanggal' => date('Y-m-d'),
+                'status' => 'Hadir',
+                'keterangan' => 'Hadir di Kelas',
+                'user_input' => Auth::user()->name,
+                'user_edit' => 'Null',
+                'id_user' => $conf->id,
+            ]); 
+            $this->kirimPesanWali($siswa, $absen);
+            return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+        }else{
+            return redirect()->back()->with('error', 'Maaf kamu sudah absen');
+        }
+        
     }
 
     public function data_absen(){
