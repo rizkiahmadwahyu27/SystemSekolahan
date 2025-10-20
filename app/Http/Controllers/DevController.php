@@ -25,11 +25,11 @@ class DevController extends Controller
 
     public function scan_post($nis){
         $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
+        $data_kelas = $siswa->join('data_kelas', 'data_kelas.kode_kelas', '=', 'kode_kelas')->where('data_kelas.kode_kelas', $siswa->kode_kelas)->first();
         $conf = Configurasi::where('status', 'aktif')->first();
          if (!$siswa) {
             return redirect(route('scan_barcode'))->with('error', 'Data Siswa Tidak Ada');
         }
-        
 
         $hariInggris = date('l', strtotime(date('Y-m-d')));
         $hariIndonesia = [
@@ -46,7 +46,7 @@ class DevController extends Controller
             'nis' => $siswa->nis,
             'nama' => $siswa->nama,
             'kelas' => $siswa->nama_kelas,
-            'guru' => Auth::user()->name,
+            'guru' => $data_kelas->nama_wali_kelas,
             'jenis_absen' => 'harian',
             'hari' => $hariIndonesia[$hariInggris],
             'tanggal' => date('Y-m-d'),
@@ -127,11 +127,18 @@ class DevController extends Controller
         $status   = $request->status;
         $kelas    = $request->s_kelas;
         $jenis    = $request->s_jenis;
-        $guru     = $request->s_guru . ', ' . $request->s_mapel;
+        
         $tgl      = $request->s_tgl;
         $keterangan   = $request->keterangan;
         $hari = Carbon::parse($tgl)->format('l'); 
         $conf = Configurasi::where('status', 'aktif')->first();
+
+        if ($jenis == 'mapel') {
+            $guru     = $request->s_guru . ', ' . $request->s_mapel;
+        }else {
+            $data_kelas = DataKelas::where('nama_kelas', $kelas)->first();
+            $guru     = $data_kelas->nama_wali_kelas;
+        }
         foreach ($nises as $key => $nis) {
             $siswa = DataSiswa::where('nis', $nis)->first();
             $nis_siswa = Absensi::where('nis', $nis)->where('tanggal', $tgl)->where('guru', $guru)->where('jenis_absen', $jenis)->first();
@@ -151,7 +158,9 @@ class DevController extends Controller
                     'id_user' => $conf->id,
                 ]);
 
-                $this->kirimPesanWali($siswa, $absen);
+                if ($jenis == 'harian') {
+                    $this->kirimPesanWali($siswa, $absen);
+                }
             }
         }
         

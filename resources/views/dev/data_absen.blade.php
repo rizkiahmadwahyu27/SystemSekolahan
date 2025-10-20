@@ -115,7 +115,7 @@
                                 <input type="hidden" value="{{$p_jenis}}" name="s_jenis" class="block w-full rounded border-gray-300 shadow-sm">
                             </td>
                         <td class="py-2 px-1 text-xs border">
-                            <input type="text" name="keterangan[{{$key}}]" class="block w-full text-xs rounded border-gray-300 shadow-sm" required placeholder="isi keterangan">
+                            <input type="text" name="keterangan[{{$key}}]" value="ada di kelas" class="block w-full text-xs rounded border-gray-300 shadow-sm" required placeholder="isi keterangan">
                         </td>
                     </tr>
                 @endforeach
