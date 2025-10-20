@@ -33,7 +33,7 @@
     </div>
 
     <div class="w-full overflow-y-scroll md:block hidden max-h-[470px]">
-        <table class="table-auto" id="data_absen_siswa">
+        <table class="table-auto" id="lapAbsenSiswa">
             <thead class="bg-gray-100 sticky top-0">
             <tr>
                 <th class="px-3 py-2 font-medium border">No</th>
@@ -87,7 +87,7 @@
             </tbody>
         </table>
     </div>
-    <div id="data_absen_siswa" class="md:hidden block overflow-auto h-[650px] p-3">
+    <div id="lapAbsenSiswa" class="md:hidden block overflow-auto h-[650px] p-3">
         @foreach ($data_absen as $absen)
             <div class="w-full rounded-lg bg-white p-1">
                 <div class="flex justify-center items-start">

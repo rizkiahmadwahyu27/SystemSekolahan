@@ -65,7 +65,7 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
     });
 
     const keyword4 = this.value.toLowerCase();
-    const rows4 = document.querySelectorAll("#data_absen_siswa tbody tr");
+    const rows4 = document.querySelectorAll("#lapAbsenSiswa tbody tr");
 
     rows4.forEach(row => {
         const rowText = row.textContent.toLowerCase();
@@ -73,11 +73,10 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
     });
 
     const keywords4 = this.value.toLowerCase();
-    const cards4 = document.querySelectorAll("#data_absen_siswa > div"); // ambil setiap data siswa (satu siswa = satu div luar)
+    const cards4 = document.querySelectorAll("#lapAbsenSiswa > div"); // ambil setiap data siswa (satu siswa = satu div luar)
 
     cards4.forEach(card => {
         const text = card.textContent.toLowerCase();
         card.style.display = text.includes(keywords4) ? "block" : "none";
     });
-
 });
