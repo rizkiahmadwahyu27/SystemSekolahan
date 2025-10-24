@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="w-full h-16 bg-slate-100 px-3 py-2">
         <div class="flex justify-between items-center">
-            <div class="flex justify-start items-center mr-2">
+            <div class="flex justify-center items-center mr-2">
                 <div class="ml-5">
                     <button>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 md:size-8 text-slate-400 hover:text-slate-600">
@@ -9,13 +9,15 @@
                         </svg>
                     </button>
                 </div>
-                <div class="ml-5">
-                    <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'filter_absen_bulanan_siswa' }))">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 md:size-8 text-slate-400 hover:text-slate-600">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
-                        </svg>
-                    </button>
-                </div>
+                @if (Auth::user()->level != 'siswa')
+                    <div class="ml-5">
+                        <button type="button" x-data @click="window.dispatchEvent(new CustomEvent('open-modal', { detail: 'filter_absen_bulanan_siswa' }))">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 md:size-8 text-slate-400 hover:text-slate-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                            </svg>
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -26,6 +28,11 @@
             'izin'  => ['label' => 'i', 'color' => 'bg-blue-200 text-blue-800'],
             'alpa'  => ['label' => 'a', 'color' => 'bg-red-200 text-red-800'],
         ];
+        if (Auth::user()->level == 'siswa') {
+            $show = false;
+        }else{
+            $show = true;
+        }
     @endphp
     <div class="overflow-x-auto">
         <table class="table-auto w-full border mt-3 min-w-max">
@@ -76,7 +83,7 @@
             </tbody>
         </table>
     </div>
-    <x-modal name="filter_absen_bulanan_siswa" :show="true" max-width="lg">
+    <x-modal name="filter_absen_bulanan_siswa" :show="$show" max-width="lg">
         <form method="POST" action="{{route('filter_lap_bulanan_siswa')}}">
             @csrf
             <div class="p-6">
@@ -95,9 +102,13 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-200">Nama Guru</label>
                     <select name="guru" class="form-select block w-full rounded border-gray-300 shadow-sm" >
-                        @foreach ($data_guru as $guru)
-                            <option value="{{$guru->nama_pegawai}}">{{$guru->nama_pegawai}}</option>
-                        @endforeach
+                        @if (Auth::user()->level == 'guru')
+                            <option value="{{$data_guru->nama_pegawai}}">{{$data_guru->nama_pegawai}}</option>
+                        @else
+                            @foreach ($data_guru as $guru)
+                                <option value="{{$guru->nama_pegawai}}">{{$guru->nama_pegawai}}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
                  <div class="mb-4">

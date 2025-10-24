@@ -31,21 +31,24 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
-        // Redirect berdasarkan level user
-        switch ($user->level) {
-            case 'admin':
-                return redirect()->intended('/admin/dashboard');
-            case 'guru':
-                return redirect()->intended('/guru/dashboard');
-            case 'siswa':
-                return redirect()->intended('/siswa/dashboard');
-            case 'kepsek':
-                return redirect()->intended('/kepsek/dashboard');
-            case 'dev':
-                return redirect()->intended('/dev/dashboard');
-            default:
-                return redirect()->intended('/'); // fallback
+       $level = strtolower(trim($user->level));
+
+        if ($level == 'admin') {
+            return redirect()->route('admin.index');
+        } elseif ($level == 'guru') {
+            return redirect()->route('guru.index');
+        } elseif ($level == 'dev') {
+            return redirect()->route('dev.index');
+        } elseif ($level == 'kepsek') {
+            return redirect()->route('kepsek.index');
+        } elseif ($level == 'siswa') {
+            return redirect()->route('siswa.index');
         }
+
+        // Default fallback jika level tidak dikenali
+        $level = Auth::user()->level;
+        $url = '/' . $level . '/dashboard';
+        return redirect($url);
     }
 
     /**

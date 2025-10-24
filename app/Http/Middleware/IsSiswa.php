@@ -15,6 +15,12 @@ class IsSiswa
             return $next($request);
         }
 
+        // Jika ini adalah permintaan AJAX/API, kembalikan respons 403 JSON
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Kamu tidak punya akses ke halaman ini.'], 403);
+        }
+
+        // Jika ini adalah permintaan Web biasa, lakukan redirect
         return redirect('/')->with('error', 'Kamu tidak punya akses ke halaman ini.');
     }
 }

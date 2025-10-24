@@ -27,7 +27,7 @@ class DevController extends Controller
         $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
         $data_kelas = $siswa->join('data_kelas', 'data_kelas.kode_kelas', '=', 'kode_kelas')->where('data_kelas.kode_kelas', $siswa->kode_kelas)->first();
         $conf = Configurasi::where('status', 'aktif')->first();
-         if (!$siswa) {
+         if (!$siswa && !$data_kelas) {
             return redirect(route('scan_barcode'))->with('error', 'Data Siswa Tidak Ada');
         }
 
@@ -193,16 +193,11 @@ class DevController extends Controller
     public function updated_data_absen(Request $request, $id){
         $update_absen = Absensi::where('id', $id)->first();
         $Absensi = $update_absen->update([
-             'nis' => $request->nis,
-            'nama' => $request->nama,
-            'kelas' => $request->kelas,
-            'guru' => Auth::user()->name,
             'jenis_absen' => $request->jenis_absen,
             'hari' => $request->hari,
             'tanggal' => $request->tanggal,
             'status' => $request->status,
             'keterangan' => $request->keterangan,
-            'user_edit' => Auth::user()->name,
         ]);
         
         return redirect()->back()->with('success', 'Data Berhasil Diubah');

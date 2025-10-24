@@ -38,7 +38,19 @@
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
-
+        <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-900">Pilih Level</label>
+            <select name="level" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" required>
+                <option value="siswa">Siswa</option>
+                <option value="guru">Guru</option>
+                <option value="kepsek">Kepala Sekolah</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-900">Masukan Kode</label>
+            <input type="text" name="kode" class="block w-full rounded border-gray-300 shadow-sm" placeholder="masukan NIS/Kode Pegawai" required>
+        </div>
         <div class="block mt-4">
             <label for="show_pass" class="inline-flex items-center">
                 <input id="show_pass" type="checkbox" class="rounded border-gray-300 ">

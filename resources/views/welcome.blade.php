@@ -9,7 +9,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-        
+        <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css”> 
         <script src="https://cdn.tailwindcss.com"></script>
         <!-- Styles -->
         <style>
@@ -18,7 +18,11 @@
     </head>
    
 <body class="bg-gray-100 font-sans">
-
+  @php
+      if (Auth::check()) {
+          $url = Auth::user()->level . '/dashboard';
+      }
+  @endphp
   <!-- Navbar -->
   <nav class="bg-orange-500 text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,8 +43,12 @@
         <!-- CTA Button -->
         <div class="hidden md:block">
           <div class="flex justify-center items-center">
-            <div class="mr-2"><a href="{{ route('register') }}" class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition font-medium">Daftar</a></div>
-            <div><a href="{{ route('login') }}" class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition font-medium">Masuk</a></div>
+            @if (Auth::user())
+               <div class="mr-2"><a href="{{$url}}" class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition font-medium">Dashboard</a></div> 
+            @else
+                <div class="mr-2"><a href="{{ route('register') }}" class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition font-medium">Daftar</a></div>
+                <div><a href="{{ route('login') }}" class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition font-medium">Masuk</a></div>
+            @endif
           </div>
         </div>
 
@@ -63,8 +71,12 @@
       <a href="#fasilitas" class="block py-2 border-b border-orange-300">Fasilitas</a>
       <a href="#testimoni" class="block py-2 border-b border-orange-300">Testimoni</a>
       <a href="#kontak" class="block py-2 border-b border-orange-300">Kontak</a>
-      <a href="{{ route('register') }}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Daftar</a>
-      <a href="{{ route('login') }}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Masuk</a>
+      @if (Auth::user())
+          <a href="{{$url}}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Dashboard</a>
+      @else
+          <a href="{{ route('register') }}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Daftar</a>
+          <a href="{{ route('login') }}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Masuk</a>
+      @endif
     </div>
   </nav>
 
@@ -151,7 +163,30 @@
       menu.classList.toggle("hidden");
     });
   </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success', 
+                title: 'Berhasil!',
+                text: {!! json_encode(session('success')) !!}, // Pastikan menggunakan json_encode untuk amannya
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
 
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: {!! json_encode(session('error')) !!},
+                showConfirmButton: true,
+            });
+        </script>
+    @endif
 </body>
 </html>
 

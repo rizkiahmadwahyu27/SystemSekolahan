@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\DataPegawai;
+use App\Models\DataSiswa;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -35,17 +37,34 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $siswa = DataSiswa::where('nis', $request->kode)->first();
+        $pegawai = DataPegawai::where('id_pegawai', $request->kode)->first();
+        if ($siswa) {
+            $user = User::create([
+                'id_user' => $request->kode,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'level' => 'siswa',
+            ]);
+        }elseif ($pegawai){
+            $user = User::create([
+                'id_user' => $request->kode,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'level' => $request->level,
+            ]);
+        }else{
+            return redirect()->back()->with('error', 'Maaf kode kamu tidak sesuai!');
+        }
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        $level = Auth::user()->level;
+        $url = '/' . $level . '/dashboard';
+        return redirect($url);
     }
 }

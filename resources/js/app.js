@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 import './bootstrap';
-
+import Chart from 'chart.js/auto';
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;

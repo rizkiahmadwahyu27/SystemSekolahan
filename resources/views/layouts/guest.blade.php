@@ -10,7 +10,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+        <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css”> 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -26,5 +26,29 @@
                 {{ $slot }}
             </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    
+        @if(session('success'))
+            <script>
+                Swal.fire({
+                    icon: 'success', 
+                    title: 'Berhasil!',
+                    text: {!! json_encode(session('success')) !!}, // Pastikan menggunakan json_encode untuk amannya
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            </script>
+        @endif
+
+        @if(session('error'))
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: {!! json_encode(session('error')) !!},
+                    showConfirmButton: true,
+                });
+            </script>
+        @endif
     </body>
 </html>
