@@ -40,6 +40,7 @@
             <tr>
                 <th class="px-3 py-2 font-medium border">No</th>
                 <th class="px-3 py-2 font-medium border">ID Pegawai</th>
+                <th class="px-3 py-2 font-medium border">ID Pegawai Mutasi</th>
                 <th class="px-3 py-2 font-medium border">NUPTK</th>
                 <th class="px-3 py-2 font-medium border">NIP</th>
                 <th class="px-3 py-2 font-medium border">Nama Lengkap</th>
@@ -58,6 +59,7 @@
                 <tr>
                     <td class="px-3 py-2 border">{{$no++}}</td>
                     <td class="px-3 py-2 border">{{$pegawai->id_pegawai}}</td>
+                    <td class="px-3 py-2 border">{{$pegawai->id_pegawai_mutasi}}</td>
                     <td class="px-3 py-2 border">{{$pegawai->nuptk}}</td>
                     <td class="px-3 py-2 border">{{$pegawai->nip}}</td>
                     <td class="px-3 py-2 border">{{$pegawai->nama_pegawai}}</td>

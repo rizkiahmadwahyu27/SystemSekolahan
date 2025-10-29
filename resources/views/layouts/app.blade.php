@@ -32,7 +32,7 @@
         @endphp
         <nav class="flex flex-col gap-4 shadow-lg p-2 bg-white rounded-md w-full max-w-xs">
             <!-- Panel 1 -->
-            @if (Auth::user()->level == 'dev' || Auth::user()->level == 'admin')
+            @if (Auth::user()->level == 'dev' || Auth::user()->level == 'admin' || Auth::user()->level == 'kepsek')
                 <div class="border border-gray-200 rounded p-4 gap-4">
                     <div class="flex justify-start items-center gap-4">
                         <div>

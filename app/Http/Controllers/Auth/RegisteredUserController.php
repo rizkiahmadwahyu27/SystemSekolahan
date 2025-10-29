@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
         $siswa = DataSiswa::where('nis', $request->kode)->first();
-        $pegawai = DataPegawai::where('id_pegawai', $request->kode)->first();
+        $pegawai = DataPegawai::where('id_pegawai', $request->kode)->Orwhere('id_pegawai_mutasi', $request->kode)->first();
         if ($siswa) {
             $user = User::create([
                 'id_user' => $request->kode,

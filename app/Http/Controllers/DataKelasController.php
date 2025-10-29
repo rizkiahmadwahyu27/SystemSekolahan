@@ -32,7 +32,7 @@ class DataKelasController extends Controller
     public function create_data_kelas(Request $request){
         $conf = Configurasi::where('status', 'aktif')->first();
         $datakelas = DataKelas::create([
-            'kode_kelas' => '10-'.$request->nama_kelas,
+            'kode_kelas' => $request->nama_kelas,
             'nama_kelas' => $request->nama_kelas,
             'nama_wali_kelas' => $request->nama_wali_kelas,
             'user_input' => Auth::user()->name,
@@ -53,7 +53,7 @@ class DataKelasController extends Controller
     public function updated_data_kelas(Request $request, $id){
         $update_kelas = DataKelas::where('id', $id)->first();
         $datakelas = $update_kelas->update([
-            'kode_kelas' => '10-'.$request->nama_kelas,
+            'kode_kelas' => $request->nama_kelas,
             'nama_kelas' => $request->nama_kelas,
             'nama_wali_kelas' => $request->nama_wali_kelas,
             'user_input' => Auth::user()->name,
