@@ -21,6 +21,11 @@ class Absensi extends Model
         'keterangan',
         'user_input',
         'user_edit',
-        'id_user',
+        'id_conf',
+        'id_user_input',
+        'id_user_edit',
+        'id_siswa',
+        'id_wali_kelas',
+        'id_kelas',
     ];
 }

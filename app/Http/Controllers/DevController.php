@@ -9,14 +9,10 @@ use App\Models\SiswaKelas;
 use App\Models\DataPegawai;
 use App\Models\Absensi;
 use App\Models\Configurasi;
-use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
-use function PHPUnit\Framework\isEmpty;
 
 class DevController extends Controller
 {
@@ -93,7 +89,12 @@ class DevController extends Controller
                 'keterangan' => 'Hadir di Kelas',
                 'user_input' => Auth::user()->name,
                 'user_edit' => 'Null',
-                'id_user' => $conf->id,
+                'id_conf' => $conf->id,
+                'id_user_input' => Auth::user()->id,
+                'id_user_edit' => null,
+                'id_siswa' => $siswa->id,
+                'id_wali_kelas' => $data_kelas->id_wali_kelas,
+                'id_kelas' => $data_kelas->id,
             ]); 
             $this->kirimPesanWali($siswa, $absen);
             //MENAMBAHA
@@ -188,6 +189,7 @@ class DevController extends Controller
 
         if ($jenis == 'mapel') {
             $guru     = $request->s_guru . ', ' . $request->s_mapel;
+            $data_kelas = DataKelas::where('nama_kelas', $kelas)->first();
         }else {
             $data_kelas = DataKelas::where('nama_kelas', $kelas)->first();
             $guru     = $data_kelas->nama_wali_kelas;
@@ -197,18 +199,23 @@ class DevController extends Controller
             $nis_siswa = Absensi::where('nis', $nis)->where('tanggal', $tgl)->where('guru', $guru)->where('jenis_absen', $jenis)->first();
             if (!$nis_siswa) {
                 $absen = Absensi::create([
-                    'nis'      => $nis,
-                    'nama'     => $nama[$key],
-                    'kelas'    => $kelas,
-                    'guru'     => $guru,
+                    'nis' => $nis,
+                    'nama' => $nama[$key],
+                    'kelas'=> $kelas,
+                    'guru' => $guru,
                     'jenis_absen' => $jenis,
                     'hari' => $hariIndonesia[$hariInggris],
-                    'tanggal'      => $tgl,
-                    'status'   => $status[$key],
+                    'tanggal' => $tgl,
+                    'status'  => $status[$key],
                     'keterangan' => $keterangan[$key],
                     'user_input' => Auth::user()->name,
                     'user_edit' => 'Null',
-                    'id_user' => $conf->id,
+                    'id_conf' => $conf->id,
+                    'id_user_input' => Auth::user()->id,
+                    'id_user_edit' => null,
+                    'id_siswa' => $siswa->id,
+                    'id_wali_kelas' => $data_kelas->id_wali_kelas,
+                    'id_kelas' => $data_kelas->id,
                 ]);
 
                 if ($jenis == 'harian') {
@@ -244,28 +251,26 @@ class DevController extends Controller
         if ($absen_deleted) {
             $delete_absen = $absen_deleted->delete();
         }
-       
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
     }
 
     private function kirimPesanWali($siswa, $absen)
     {
+        $pesan = " Assalamu alaikum wr.wb \n \n"
 
-        $pesan = " Assalamu alaikum wr.wb \n"
-
-                ." Yth. Bapak/Ibu Wali Murid *{$siswa->nama}* \n"
+                ." Yth. Bapak/Ibu Wali Murid *{$siswa->nama}* \n \n"
 
                 ." Kami pihak SMK Pelita Jatibarang menginformasikan bahwa sanya pada : \n"
 
                 ." Hari, Tanggal : *{$absen->hari}*, *{$absen->tanggal}* \n" 
                 ." Tempat : SMK Pelita Jatibarang \n" 
-                ." Satatus Kehadiran : *{$absen->status}* \n"
+                ." Satatus Kehadiran : *{$absen->status}* \n \n"
 
-                ." Demikian informasi yang disampaikan. \n"
+                ." Demikian informasi yang disampaikan. \n \n"
 
                 ." Jatibarang, *{$absen->tanggal}* \n"
 
-                ." Kepala Sekolah, \n"
+                ." Kepala Sekolah, \n \n \n"
 
 
                 ." Linda Tri Apsari, S.Pd";

@@ -110,6 +110,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/updated/data/config/{id}', [ConfigurasiController::class, 'updated_config'])->name('updated_config');
     //livewire
     Route::get('/absen/siswa', AbsenSiswa::class)->name('absensi_siswa');
+
+    //export 
+    Route::get('/export/data/siswa', [SiswaController::class, 'exportDataSiswa'])->name('exportDataSiswa');
+    Route::get('/export/data/pegawai', [DataPegawaiController::class, 'exportDataPegawai'])->name('exportDataPegawai');
 });
 
 

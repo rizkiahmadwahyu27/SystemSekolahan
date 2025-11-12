@@ -10,6 +10,7 @@ use App\Models\DataSiswa;
 use App\Models\SiswaKelas;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 
 class GuruController extends Controller

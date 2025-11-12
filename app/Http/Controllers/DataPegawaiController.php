@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PegawaiExport;
+use App\Models\Configurasi;
 use Illuminate\Http\Request;
 use App\Models\DataPegawai;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DataPegawaiController extends Controller
 {
@@ -31,38 +34,42 @@ class DataPegawaiController extends Controller
             $id_pegawai = 'stf' . date('Y') . '005_' . $id_belakang;
         }
 
-        dd($id_pegawai, $id_belakang, $no_urut);
+        // dd($id_pegawai, $id_belakang, $no_urut);
+         $conf = Configurasi::where('status', 'aktif')->first();
+        $datapegawai = DataPegawai::create([
+            'id_pegawai' => $id_pegawai,
+            'id_pegawai_mutasi' => 'Null',
+            'nuptk' => $request->nuptk,
+            'nip' => $request->nip,
+            'nik' => $request->nik,
+            'nomor_sertif_pendidik' => $request->nomor_sertif_pendidik,
+            'nama_pegawai' => $request->nama_pegawai,
+            'pendidikan_akhir' => $request->pendidikan_akhir,
+            'jurusan' => $request->jurusan,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'tempat_lahir' => $request->tempat_lahir,
+            'tgl_lahir' => $request->tgl_lahir,
+            'agama' => $request->agama,
+            'pangkat_or_golongan' => $request->pangkat_or_golongan,
+            'jabatan' => $request->jabatan,
+            'tugas_tambahan' => $request->tugas_tambahan,
+            'nama_instansi' => $request->nama_instansi,
+            'nama_instansi_cab' => $request->nama_instansi_cab,
+            'mata_pelajaran_1' => $request->mata_pelajaran_1,
+            'mata_pelajaran_2' => $request->mata_pelajaran_2,
+            'mata_pelajaran_3' => $request->mata_pelajaran_3,
+            'mata_pelajaran_4' => $request->mata_pelajaran_4,
+            'mata_pelajaran_5' => $request->mata_pelajaran_5,
+            'mata_pelajaran_6' => $request->mata_pelajaran_6,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'user_input' => Auth::user()->name,
+            'user_edit'=> 'Null',
+            'id_conf'=> $conf->id,
+            'id_user_input'=> Auth::user()->id,
+            'id_user_edit'=> null,
 
-        // $datapegawai = DataPegawai::create([
-        //     'id_pegawai' => $id_pegawai,
-        //     'id_pegawai_mutasi' => 'Null',
-        //     'nuptk' => $request->nuptk,
-        //     'nip' => $request->nip,
-        //     'nik' => $request->nik,
-        //     'nomor_sertif_pendidik' => $request->nomor_sertif_pendidik,
-        //     'nama_pegawai' => $request->nama_pegawai,
-        //     'pendidikan_akhir' => $request->pendidikan_akhir,
-        //     'jurusan' => $request->jurusan,
-        //     'jenis_kelamin' => $request->jenis_kelamin,
-        //     'tempat_lahir' => $request->tempat_lahir,
-        //     'tgl_lahir' => $request->tgl_lahir,
-        //     'agama' => $request->agama,
-        //     'pangkat_or_golongan' => $request->pangkat_or_golongan,
-        //     'jabatan' => $request->jabatan,
-        //     'tugas_tambahan' => $request->tugas_tambahan,
-        //     'nama_instansi' => $request->nama_instansi,
-        //     'nama_instansi_cab' => $request->nama_instansi_cab,
-        //     'mata_pelajaran_1' => $request->mata_pelajaran_1,
-        //     'mata_pelajaran_2' => $request->mata_pelajaran_2,
-        //     'mata_pelajaran_3' => $request->mata_pelajaran_3,
-        //     'mata_pelajaran_4' => $request->mata_pelajaran_4,
-        //     'mata_pelajaran_5' => $request->mata_pelajaran_5,
-        //     'mata_pelajaran_6' => $request->mata_pelajaran_6,
-        //     'no_hp' => $request->no_hp,
-        //     'alamat' => $request->alamat,
-        //     'user_input' => Auth::user()->name,
-        //     'user_edit'=> 'Null',
-        // ]);
+        ]);
         
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
     }
@@ -104,6 +111,7 @@ class DataPegawaiController extends Controller
                 'no_hp' => $request->no_hp,
                 'alamat' => $request->alamat,
                 'user_edit'=> Auth::user()->name,
+                'id_user_edit'=> Auth::user()->id,
             ]);
         }elseif ($update_pegawai->jabatan != $request->jabatan) {
             $no_urut = DataPegawai::where('jabatan', $request->jabatan)->count();
@@ -146,6 +154,7 @@ class DataPegawaiController extends Controller
                 'no_hp' => $request->no_hp,
                 'alamat' => $request->alamat,
                 'user_edit'=> Auth::user()->name,
+                'id_user_edit'=> Auth::user()->id,
             ]);
         }
         else {
@@ -188,6 +197,7 @@ class DataPegawaiController extends Controller
                 'no_hp' => $request->no_hp,
                 'alamat' => $request->alamat,
                 'user_edit'=> Auth::user()->name,
+                'id_user_edit'=> Auth::user()->id,
             ]);
         }
         
@@ -201,6 +211,10 @@ class DataPegawaiController extends Controller
         }
 
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
+    }
+
+    public function exportDataPegawai(){
+         return Excel::download(new PegawaiExport, 'data_pegawai.xlsx');
     }
 
 }

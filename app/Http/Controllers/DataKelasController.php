@@ -10,6 +10,7 @@ use App\Models\SiswaKelas;
 use App\Models\DataPegawai;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class DataKelasController extends Controller
@@ -25,19 +26,24 @@ class DataKelasController extends Controller
     public function set_kelas(){
         $data_kelas = DataKelas::all();
         $update_kelas = null;
-        $data_guru = DataPegawai::select('nama_pegawai')->where('jabatan', '=', 'Guru')->get();
+        $data_guru = DataPegawai::select('nama_pegawai', 'id')->get();
         return view('dev.set_kelas', compact('data_guru', 'data_kelas', 'update_kelas'));
     }
 
     public function create_data_kelas(Request $request){
         $conf = Configurasi::where('status', 'aktif')->first();
+        $id_wali_kelas = explode('-', $request->nama_wali_kelas);
         $datakelas = DataKelas::create([
             'kode_kelas' => $request->nama_kelas,
             'nama_kelas' => $request->nama_kelas,
-            'nama_wali_kelas' => $request->nama_wali_kelas,
+            'nama_wali_kelas' => $id_wali_kelas[1],
             'user_input' => Auth::user()->name,
             'user_edit' => 'null',
-            'id_user' => $conf->id,
+            'id_conf' => $conf->id,
+            'id_wali_kelas' => $id_wali_kelas[0],
+            'id_user_input' => Auth::user()->id,
+            'id_user_edit' => null,
+            
         ]);
         
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
@@ -46,18 +52,19 @@ class DataKelasController extends Controller
     public function update_data_kelas(Request $request, $id){
         $update_kelas = DataKelas::where('id', $id)->first();
         $data_kelas = DataKelas::all();
-        $data_guru = DataPegawai::select('nama_pegawai')->where('jabatan', '=', 'Guru')->get();
+        $data_guru = DataPegawai::select('nama_pegawai', 'id')->get();
         return view('dev.set_kelas', compact('update_kelas', 'data_kelas', 'data_guru'));
     }
 
     public function updated_data_kelas(Request $request, $id){
         $update_kelas = DataKelas::where('id', $id)->first();
+          $id_wali_kelas = explode('-', $request->nama_wali_kelas);
         $datakelas = $update_kelas->update([
             'kode_kelas' => $request->nama_kelas,
             'nama_kelas' => $request->nama_kelas,
-            'nama_wali_kelas' => $request->nama_wali_kelas,
-            'user_input' => Auth::user()->name,
-            'user_edit' => 'null',
+            'nama_wali_kelas' => $id_wali_kelas[1],
+            'id_wali_kelas' => $id_wali_kelas[0],
+            'id_user_edit' => Auth::user()->id,
         ]);
                 return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
@@ -76,11 +83,13 @@ class DataKelasController extends Controller
     public function create_data_kelas_siswa(Request $request){
         $siswa = $request->siswa;
         $kelas = $request->kelas;
-
+        $conf = Configurasi::where('status', 'aktif')->first();
         $h_siswa = explode(",", $siswa);
         $array_siswa = array_map('trim', $h_siswa);
         $h_kelas = explode(",", $kelas);
         $array_kelas = array_map('trim', $h_kelas);
+        $id_siswa = DataSiswa::where('nis', $array_siswa[1])->first();
+        $id_wali_kelas = DataKelas::where('kode_kelas', $array_kelas[0])->first();
         $dataSiswakelas = SiswaKelas::create([
             'nisn' => $array_siswa[0],
             'nis' => $array_siswa[1],
@@ -90,7 +99,12 @@ class DataKelasController extends Controller
             'keterangan' => $request->keterangan,
             'user_create' => Auth::user()->name,
             'edit_user' => 'null',
-            'id_user' => Auth::user()->id,
+            'id_conf' => $conf->id,
+            'id_user_input' => Auth::user()->id,
+            'id_user_edit' => null,
+            'id_siswa' => $id_siswa->id,
+            'id_kelas' => $id_wali_kelas->id,
+            'id_wali_kelas' => $id_wali_kelas->id_wali_kelas,
         ]);
         
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
@@ -114,6 +128,8 @@ class DataKelasController extends Controller
             $array_siswa = array_map('trim', $h_siswa);
             $h_kelas = explode(",", $kelas);
             $array_kelas = array_map('trim', $h_kelas);
+            $id_siswa = DataSiswa::where('nis', $array_siswa[1])->first();
+            $id_wali_kelas = DataKelas::where('kode_kelas', $array_kelas[0])->first();
         $dataSiswakelas = $updateSiswa_kelas->update([
             'nisn' => $array_siswa[0],
             'nis' => $array_siswa[1],
@@ -121,9 +137,11 @@ class DataKelasController extends Controller
             'kode_kelas' => $array_kelas[0],
             'nama_kelas' => $array_kelas[1],
             'keterangan' => $request->keterangan,
-            'user_create' => 'null',
             'user_edit' => Auth::user()->name,
-            'id_user' => Auth::user()->id,
+             'id_user_edit' => Auth::user()->id,
+             'id_siswa' => $id_siswa->id,
+            'id_kelas' => $id_wali_kelas->id,
+            'id_wali_kelas' => $id_wali_kelas->id_wali_kelas,
         ]);
                 return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }

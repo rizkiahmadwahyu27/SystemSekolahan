@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="mt-3 w-72 p-4 bg-gray-200 rounded-tl-3xl rounded-br-3xl">
-        <p>Data Murid Kelas : {{$kelas->nama_kelas}}</p>
+        <p>Data Murid Kelas : {{ $kelas->nama_kelas ?? '' }}</p>
     </div>
     <div class="w-full overflow-y-scroll md:block hidden max-h-[470px]">
         <table class="table-auto" id="data_siswa">

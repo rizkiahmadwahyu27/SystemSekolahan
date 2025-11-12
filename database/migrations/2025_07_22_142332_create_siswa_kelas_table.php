@@ -21,7 +21,12 @@ return new class extends Migration
             $table->string('keterangan');
             $table->string('user_create');
             $table->string('edit_user');
-            $table->integer('id_user');
+            $table->integer('id_conf');
+            $table->integer('id_user_input');
+            $table->integer('id_user_edit')->nullable();
+            $table->integer('id_siswa');
+            $table->integer('id_kelas');
+            $table->integer('id_wali_kelas');
             $table->timestamps();
         });
     }

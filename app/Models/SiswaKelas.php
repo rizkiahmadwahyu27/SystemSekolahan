@@ -18,6 +18,11 @@ class SiswaKelas extends Model
         'keterangan',
         'user_create',
         'edit_user',
-        'id_user',
+        'id_conf',
+        'id_user_input',
+        'id_user_edit',
+        'id_siswa',
+        'id_kelas',
+        'id_wali_kelas',
     ];
 }

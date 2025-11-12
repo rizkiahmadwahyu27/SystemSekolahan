@@ -10,6 +10,7 @@ use App\Models\DataSiswa;
 use App\Models\SiswaKelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 
 class KepsekController extends Controller

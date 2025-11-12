@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('nama_wali_kelas');
             $table->string('user_input');
             $table->string('user_edit');
-            $table->string('id_user');
+            $table->integer('id_conf');
+            $table->integer('id_wali_kelas');
+            $table->integer('id_user_input');
+            $table->integer('id_user_edit')->nullable();
             $table->timestamps();
         });
     }

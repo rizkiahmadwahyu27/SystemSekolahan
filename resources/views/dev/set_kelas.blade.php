@@ -165,7 +165,7 @@
                             <select name="nama_wali_kelas" id="walikelasX" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
                                 <option value="{{$nama_wali_kelas}}">{{$nama_wali_kelas}}</option>
                                 @foreach ($data_guru as $gurux)
-                                    <option value="{{$gurux->nama_pegawai}}">{{$gurux->nama_pegawai}}</option>
+                                    <option value="{{$gurux->id}}-{{$gurux->nama_pegawai}}">{{$gurux->nama_pegawai}}</option>
                                 @endforeach
                             </select>
                         </div>

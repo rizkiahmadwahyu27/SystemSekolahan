@@ -19,6 +19,7 @@ class Configurasi extends Model
         'status',
         'user_create',
         'edit_user',
-        'id_user',
+        'id_user_input',
+        'id_user_edit',
     ];
 }

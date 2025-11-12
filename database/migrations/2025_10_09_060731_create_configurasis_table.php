@@ -22,7 +22,8 @@ return new class extends Migration
             $table->enum('status', ['aktif','non-aktif'])->default('aktif');
             $table->string('user_create');
             $table->string('edit_user');
-            $table->integer('id_user');
+            $table->integer('id_user_input');
+            $table->integer('id_user_edit')->nullable();
             $table->timestamps();
         });
     }

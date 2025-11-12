@@ -38,5 +38,8 @@ class DataPegawai extends Model
         'alamat',
         'user_input',
         'user_edit',
+        'id_conf',
+        'id_user_input',
+        'id_user_edit',
     ];
 }

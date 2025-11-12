@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SiswaExport;
 use Illuminate\Http\Request;
 use App\Models\DataSiswa;
 use App\Models\Absensi;
+use App\Models\Configurasi;
 use App\Models\DataKelas;
 use App\Models\DataPegawai;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 use Dflydev\DotAccessData\Data;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -55,7 +58,7 @@ class SiswaController extends Controller
 
 
     public function create_data_siswa(Request $request){
-        
+        $conf = Configurasi::where('status', 'aktif')->first();
         $datasiswa = DataSiswa::create([
             'nik' => $request->nik,
             'no_kk' => $request->no_kk,
@@ -78,7 +81,9 @@ class SiswaController extends Controller
             'no_hp_ortu' => $request->no_hp_ortu,
             'created_by' => Auth::user()->name,
             'edited_by' => 'Null',
-            'id_user_edit_or_create' => Auth::user()->id,
+            'id_conf' => $conf->id,
+            'id_user_input' => Auth::user()->id,
+            'id_user_edit' => null,
         ]);
 ;
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
@@ -114,7 +119,7 @@ class SiswaController extends Controller
             'alamat_ortu' => $request->alamat_ortu,
             'no_hp_ortu' => $request->no_hp_ortu,
             'edited_by' => Auth::user()->name,
-            'id_user_edit_or_create' => Auth::user()->id,
+            'id_user_edit' => Auth::user()->id,
         ]);
         return redirect()->back()->with('success', 'Data Berhasil Diubah');
     }
@@ -146,11 +151,19 @@ class SiswaController extends Controller
             $update_absen = [];
             $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
             $data_kelas = DataKelas::get(['nama_kelas', 'kode_kelas']);
-            $data_absen = Absensi::where('guru', $data_guru->nama_pegawai)->get();
+            if ($data_guru) {
+                $data_absen = Absensi::where('guru', $data_guru->nama_pegawai)->get();
+            }else{
+                return redirect()->back()->with('error', 'Data Pegawai Tidak Ditemukan');
+            }
             if ($data_guru) {
                 $data_guru->mapel = collect([
                     $data_guru->mata_pelajaran_1,
                     $data_guru->mata_pelajaran_2,
+                    $data_guru->mata_pelajaran_3,
+                    $data_guru->mata_pelajaran_4,
+                    $data_guru->mata_pelajaran_5,
+                    $data_guru->mata_pelajaran_6,
                     // ... mata pelajaran lainnya
                 ])
                 ->filter(fn ($m) => $m !== '-' && !empty($m))
@@ -226,6 +239,10 @@ class SiswaController extends Controller
                 $data_guru->mapel = collect([
                     $data_guru->mata_pelajaran_1,
                     $data_guru->mata_pelajaran_2,
+                    $data_guru->mata_pelajaran_3,
+                    $data_guru->mata_pelajaran_4,
+                    $data_guru->mata_pelajaran_5,
+                    $data_guru->mata_pelajaran_6,
                     // ... mata pelajaran lainnya
                 ])
                 ->filter(fn ($m) => $m !== '-' && !empty($m))
@@ -274,7 +291,11 @@ class SiswaController extends Controller
         $data_absen = Absensi::where('kelas', $request->kelas)->where('guru', $nama_guru)->where('jenis_absen', $request->jenis_absen)->whereBetween('tanggal', [$request->tgl1, $request->tgl2])->get();
         $update_absen = Absensi::find($id);
         $data_kelas = DataKelas::get('nama_kelas');
-        $data_guru = DataPegawai::get('nama_pegawai');
+        if(Auth::user()->level == 'guru'){
+            $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
+        }else{
+            $data_guru = DataPegawai::get('nama_pegawai');
+        }
         $mapel_pegawai = DataPegawai::all()->map(function ($mapel) {
              $mapel->mapel = collect([
                 $mapel->mata_pelajaran_1,
@@ -324,7 +345,7 @@ class SiswaController extends Controller
 
             // Ambil absensi untuk bulan & tahun sekarang
             $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
-            $absensi = Absensi::where('guru', $data_guru->nama_pegawai)->whereYear('tanggal', $tahun)
+            $absensi = Absensi::where('gurujen', $data_guru->nama_pegawai)->whereYear('tanggal', $tahun)
                 ->whereMonth('tanggal', $bulan)
                 ->get(['nis', 'nama', 'tanggal', 'status']);
 
@@ -338,6 +359,10 @@ class SiswaController extends Controller
                 $data_guru->mapel = collect([
                     $data_guru->mata_pelajaran_1,
                     $data_guru->mata_pelajaran_2,
+                    $data_guru->mata_pelajaran_3,
+                    $data_guru->mata_pelajaran_4,
+                    $data_guru->mata_pelajaran_5,
+                    $data_guru->mata_pelajaran_6,
                     // ... mata pelajaran lainnya
                 ])
                 ->filter(fn ($m) => $m !== '-' && !empty($m))
@@ -426,8 +451,8 @@ class SiswaController extends Controller
 
     public function filter_lap_bulanan_siswa(Request $request){
         if (Auth::user()->level == 'guru') {
-            $tahun = date('Y');
-            $bulan = date('m');
+            $tahun = $request->tahun;
+            $bulan = $request->bulan;
 
             // Ambil absensi untuk bulan & tahun sekarang
             $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
@@ -457,7 +482,10 @@ class SiswaController extends Controller
                 $data_guru->mapel = collect([
                     $data_guru->mata_pelajaran_1,
                     $data_guru->mata_pelajaran_2,
-                    // ... mata pelajaran lainnya
+                    $data_guru->mata_pelajaran_3,
+                    $data_guru->mata_pelajaran_4,
+                    $data_guru->mata_pelajaran_5,
+                    $data_guru->mata_pelajaran_6,
                 ])
                 ->filter(fn ($m) => $m !== '-' && !empty($m))
                 ->unique()
@@ -471,20 +499,24 @@ class SiswaController extends Controller
 
             return view('siswa.lap_bulanan_siswa', compact('dataAbsensi', 'tahun', 'bulan', 'jumlahHari', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai'));
         } else {
-             $tahun = $request->tahun;
+            $tahun = $request->tahun;
             $bulan = $request->bulan;
-            // Ambil absensi untuk bulan & tahun sekarang
-            $guru = $request->guru . ', ' . $request->mapel;
-            $absensi = Absensi::where(function ($q) use ($request, $guru) {
-                $q->where('kelas', $request->kelas)
-                ->where('guru', $guru)
-                ->where('jenis_absen', $request->jenis_absen);
-            })
-            ->whereYear('tanggal', $tahun)
-            ->whereMonth('tanggal', $bulan)
-            ->get(['nis', 'nama', 'tanggal', 'status', 'kelas', 'guru', 'jenis_absen']);
 
-            // dd($absensi);
+            if ($request->jenis_absen == 'harian') {
+                    $absensi = Absensi::where('guru', $request->guru)->whereYear('tanggal', $tahun)
+                    ->whereMonth('tanggal', $bulan)
+                    ->get(['nis', 'nama', 'tanggal', 'status']);
+            } else {
+                $guru = $request->guru . ', ' . $request->mapel;
+                $absensi = Absensi::where(function ($q) use ($request, $guru) {
+                    $q->where('kelas', $request->kelas)
+                    ->where('guru', $guru)
+                    ->where('jenis_absen', $request->jenis_absen);
+                })
+                ->whereYear('tanggal', $tahun)
+                ->whereMonth('tanggal', $bulan)
+                ->get(['nis', 'nama', 'tanggal', 'status', 'kelas', 'guru', 'jenis_absen']);
+            }
 
             // Grouping berdasarkan NIS
             $dataAbsensi = $absensi->groupBy('nis');
@@ -530,4 +562,10 @@ class SiswaController extends Controller
             return redirect()->back()->with('error', 'Data tidak berhasil ditemukan');
         }
     }
+
+//data export siswa
+    public function exportDataSiswa(){
+        return Excel::download(new SiswaExport, 'data_siswa.xlsx');
+    }
+
 }

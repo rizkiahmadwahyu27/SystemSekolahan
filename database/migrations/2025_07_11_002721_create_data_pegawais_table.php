@@ -41,6 +41,9 @@ return new class extends Migration
             $table->text('alamat');
             $table->string('user_input');
             $table->string('user_edit');
+            $table->integer('id_conf');
+            $table->integer('id_user_input');
+            $table->integer('id_user_edit')->nullable();
             $table->timestamps();
         });
     }

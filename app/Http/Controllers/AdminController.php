@@ -7,6 +7,7 @@ use App\Models\DataKelas;
 use App\Models\DataPegawai;
 use App\Models\SiswaKelas;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller

@@ -34,7 +34,9 @@ return new class extends Migration
             $table->string('no_hp_ortu');
             $table->string('created_by');
             $table->string('edited_by');
-            $table->integer('id_user_edit_or_create');
+            $table->integer('id_conf');
+            $table->integer('id_user_input');
+            $table->integer('id_user_edit')->nullable();
             $table->timestamps();
         });
     }

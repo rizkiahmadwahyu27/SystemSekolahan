@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Configurasi;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 
 class ConfigurasiController extends Controller
@@ -30,7 +31,8 @@ class ConfigurasiController extends Controller
             'status' => $request->status,
             'user_create' => Auth::user()->name,
             'edit_user' => 'Null',
-            'id_user' => Auth::user()->id,
+            'id_user_input' => Auth::user()->id,
+            'id_user_edit' => null,
         ]);
         
         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
@@ -61,9 +63,8 @@ class ConfigurasiController extends Controller
             'semester' => $request->semester,
             'tahun_ajaran' => $request->tahun_ajaran,
             'status' => $request->status,
-            'user_create' => Auth::user()->name,
-            'edit_user' => Auth::user()->name, // null tanpa tanda kutip
-            'id_user' => Auth::user()->id,
+            'edit_user' => Auth::user()->name, 
+            'id_user_edit' => Auth::user()->id,
         ]);
         
         return redirect()->back()->with('success', 'Data Berhasil Diubah');

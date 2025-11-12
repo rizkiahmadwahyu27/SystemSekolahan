@@ -31,6 +31,8 @@ class DataSiswa extends Model
         'no_hp_ortu',
         'created_by',
         'edited_by',
-        'id_user_edit_or_create'
+        'id_conf',
+        'id_user_input',
+        'id_user_edit',
     ];
 }

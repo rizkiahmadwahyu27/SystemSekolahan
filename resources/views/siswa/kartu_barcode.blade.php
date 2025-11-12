@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="cetak bg-white rounded-md text-xs p-4">
+    <div class="bg-white rounded-md text-xs p-4">
         <div class="flex justify-center items-center font-bold text-2xl"><h1>SMK Pelita Jatibarang</h1></div>
         <div class="flex justify-center items-center font-bold text-xl"><h2>Kartu Absensi</h2></div>
         <div class="flex justify-center items-center mt-6">

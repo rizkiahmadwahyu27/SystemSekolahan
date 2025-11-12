@@ -15,6 +15,9 @@ class DataKelas extends Model
         'nama_wali_kelas',
         'user_input',
         'user_edit',
-        'id_user'
+        'id_conf',
+        'id_wali_kelas',
+        'id_user_input',
+        'id_user_edit',
     ];
 }
