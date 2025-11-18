@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AbsensiExport;
+use App\Imports\DataKelasImport;
+use App\Imports\DataPegawaiImport;
+use App\Imports\DataSiswaImport;
 use Illuminate\Http\Request;
 use App\Models\DataSiswa;
 use App\Models\DataKelas;
@@ -9,10 +13,12 @@ use App\Models\SiswaKelas;
 use App\Models\DataPegawai;
 use App\Models\Absensi;
 use App\Models\Configurasi;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DevController extends Controller
 {
@@ -288,5 +294,62 @@ class DevController extends Controller
         } else {
             Log::warning("Nomor tidak valid, pesan tidak dikirim: {$nomor}");
         }
+    }
+
+    //export
+    public function export_absensi(Request $request){
+        // Validasi supaya parameter wajib ada
+        $request->validate([
+            'tahun' => 'required|integer',
+            'bulan' => 'required|integer',
+            'jenis_absen' => 'required|string',
+        ]);
+        $nama_file = 'laporan absensi-' . $request->bulan . '-' . $request->tahun . '.xlsx';
+        // Download Excel
+        ob_end_clean();
+        return Excel::download(new AbsensiExport($request), $nama_file);
+    }
+
+    public function import_siswa(Request $request)
+    {
+        // Validasi file
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        // Import menggunakan Laravel Excel
+        Excel::import(new DataSiswaImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data berhasil diimport!');
+    }
+
+    public function import_pegawai(Request $request)
+    {
+        // Validasi file
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        // Import menggunakan Laravel Excel
+        Excel::import(new DataPegawaiImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data berhasil diimport!');
+    }
+
+    public function import_kelas(Request $request){
+        // Validasi file
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        // Import menggunakan Laravel Excel
+        Excel::import(new DataKelasImport($request->nama_kelas, $request->keterangan), $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data berhasil diimport!');
+    }
+
+    public function halaman_import(){
+        $data_kelas = DataKelas::all();
+        return view('dev.halaman_import', compact('data_kelas'));
     }
 }

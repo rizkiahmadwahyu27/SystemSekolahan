@@ -114,6 +114,14 @@ Route::middleware('auth')->group(function () {
     //export 
     Route::get('/export/data/siswa', [SiswaController::class, 'exportDataSiswa'])->name('exportDataSiswa');
     Route::get('/export/data/pegawai', [DataPegawaiController::class, 'exportDataPegawai'])->name('exportDataPegawai');
+    Route::get('/export/data/kelas', [DataKelasController::class, 'exportDataKelas'])->name('exportDataKelas');
+    Route::post('/export/data/absensi', [DevController::class, 'export_absensi'])->name('export_absensi');
+
+    //import
+    Route::get('/halaman/import', [DevController::class, 'halaman_import'])->name('halaman_import');
+    Route::post('/import/data/siswa', [DevController::class, 'import_siswa'])->name('import_siswa');
+    Route::post('/import/data/pegawai', [DevController::class, 'import_pegawai'])->name('import_pegawai');
+    Route::post('/import/data/kelas', [DevController::class, 'import_kelas'])->name('import_kelas');
 });
 
 

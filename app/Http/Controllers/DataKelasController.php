@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DataKelasExport;
 use App\Models\Configurasi;
 use Illuminate\Http\Request;
 use App\Models\DataKelas;
@@ -153,6 +154,10 @@ class DataKelasController extends Controller
         }
         
         return redirect()->back()->with('success', 'Data Berhasil Dihapus');
+    }
+
+    public function exportDataKelas(){
+        return Excel::download(new DataKelasExport, 'data_kelas.xlsx');
     }
 
 }
