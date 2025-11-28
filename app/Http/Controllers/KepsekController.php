@@ -23,13 +23,15 @@ class KepsekController extends Controller
             ->pluck('total', 'status')
             ->toArray();
         // Data yang akan dipass ke Chart.js
-        $labels = ['hadir', 'izin', 'sakit', 'alpa'];
+        $labels = ['hadir', 'izin', 'sakit', 'alpa', 'dispen', 'lainnya'];
         $dataCounts = [];
         $backgroundColors = [
             'hadir' => 'rgba(75, 192, 192, 0.6)',
             'izin' => 'rgba(255, 206, 86, 0.6)',
             'sakit' => 'rgba(54, 162, 235, 0.6)',
             'alpa' => 'rgba(255, 99, 132, 0.6)',
+            'dispen' => 'rgba(255, 19, 122, 0.6)',
+            'lainnya' => 'rgba(99, 19, 122, 0.6)',
         ];
         $chartData = [
             'labels' => [],

@@ -143,7 +143,7 @@
                 <div class="mb-4 groupX">
                     <div class="grid grid-cols-2 gap-1 justify-between items-center">
                         <div>
-                            <label class="block text-sm font-medium text-gray-200">Pilih Kelas</label>
+                            <label class="block text-sm font-medium">Pilih Kelas</label>
                             <select name="nama_kelas" id="kelasX" onchange="handleSelectChange('X')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
                                 <option value="{{$nama_kelas}}">{{$nama_kelas}}</option>
                                 <option value="X MPLBB">X MPLBB</option>
@@ -161,7 +161,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="from-walikelas block text-sm font-medium text-gray-200">Pilih Wali Kelas</label>
+                            <label class="from-walikelas block text-sm font-medium">Pilih Wali Kelas</label>
                             <select name="nama_wali_kelas" id="walikelasX" class="waliSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
                                 <option value="{{$nama_wali_kelas}}">{{$nama_wali_kelas}}</option>
                                 @foreach ($data_guru as $gurux)

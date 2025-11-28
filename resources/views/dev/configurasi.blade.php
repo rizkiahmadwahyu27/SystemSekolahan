@@ -128,23 +128,23 @@
                     Setting Konfigurasi
                 </h2>            
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Kode Sekolah</label>
+                    <label class="block text-sm font-medium">Kode Sekolah</label>
                     <input type="text" name="kode_sekolah" value="{{$kode_sekolah}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Nama Sekolah</label>
+                    <label class="block text-sm font-medium">Nama Sekolah</label>
                     <input type="text" name="nama_sekolah" value="{{$nama_sekolah}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Alamat</label>
+                    <label class="block text-sm font-medium">Alamat</label>
                     <textarea name="alamat" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>{{$alamat}}</textarea>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">NO Telpon/WA Sekolah</label>
+                    <label class="block text-sm font-medium">NO Telpon/WA Sekolah</label>
                     <input type="number" name="no_hp" value="{{$no_hp}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-slate-200 text-sm font-bold mb-2">Pilih Semester</label>
+                    <label class="block text-sm font-bold mb-2">Pilih Semester</label>
                     <select class="block w-full" placeholder="Ketik untuk cari siswa" name="semester">
                         <option value="{{$semester}}">{{$semester}}</option>
                         <option value="Semester 1">Semester 1</option>
@@ -152,7 +152,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Tahun</label>
+                    <label class="block text-sm font-medium">Pilih Tahun</label>
                     <select name="tahun_ajaran" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         <option value="{{$tahun1}}">{{$tahun1}}</option>
                         @php
@@ -170,7 +170,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-slate-200 text-sm font-bold mb-2">Aktifkan Status</label>
+                    <label class="block text-sm font-bold mb-2">Aktifkan Status</label>
                     <select class="block w-full" placeholder="Ketik untuk cari siswa" name="status">
                         <option value="{{$status}}">{{$status}}</option>
                         <option value="aktif">Aktif</option>

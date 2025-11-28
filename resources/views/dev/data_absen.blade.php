@@ -101,12 +101,12 @@
                         </td>
                         <td class="py-2 px-1 text-xs border">
                             <select name="status[{{$key}}]" class="mt-1 text-xs block w-full rounded border-gray-300 shadow-sm" required>
-                                {{-- <option value="{{$agama}}">{{$agama}}</option> --}}
-                                <option value="Hadir">Hadir</option>
-                                <option value="Alpa">Alpa</option>
-                                <option value="Sakit">Sakit</option>
-                                <option value="Izin">Izin</option>
-                                <option value="Lainnya">Lainnya</option>
+                                <option value="hadir">Hadir</option>
+                                <option value="alpa">Alpa</option>
+                                <option value="sakit">Sakit</option>
+                                <option value="izin">Izin</option>
+                                <option value="dispen">Dispen</option>
+                                <option value="lainnya">Lainnya</option>
                             </select>
                                 <input type="hidden" value="{{$p_kelas}}" name="s_kelas" class="block w-full rounded border-gray-300 shadow-sm">
                                 <input type="hidden" value="{{$p_guru}}" name="s_guru" class="block w-full rounded border-gray-300 shadow-sm">

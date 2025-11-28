@@ -48,67 +48,85 @@
         input[type="radio"]:checked + .custom-radio::after {
             opacity: 1;
         }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .video-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* supaya tidak gepeng */
+        }
+        .video-full {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: cover;
+        }
+
     </style>
 </head>
-<body style="background-color: rgb(38, 34, 34)">
+<body>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-3">
-                <!-- Place your left sidebar ads here -->
-            </div>
-            <div class="col">
-                <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-                <div class="col-sm-12">
-                    <video id="preview" class="p-1 border" style="width:100%; height: 80%;"></video>
-                </div>
-                <script type="text/javascript">
-                    var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
-                    scanner.addListener('scan', function (content) {
-                        window.location.href = `absen/post/${content}`;
-                    });
-                    Instascan.Camera.getCameras().then(function (cameras) {
-                        if (cameras.length > 0) {
-                            scanner.start(cameras[0]);
-                            $('[name="options"]').on('change', function () {
-                                if ($(this).val() == 1) {
-                                    if (cameras[0] != "") {
-                                        scanner.start(cameras[0]);
-                                    } else {
-                                        alert('No Front camera found!');
-                                    }
-                                } else if ($(this).val() == 2) {
-                                    if (cameras[1] != "") {
-                                        scanner.start(cameras[1]);
-                                    } else {
-                                        alert('No Back camera found!');
-                                    }
-                                }
-                            });
-                        } else {
-                            console.error('No cameras found.');
-                            alert('No cameras found.');
+ 
+    <div>
+        <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+        <div style="margin:0;">
+            <video id="preview" class="video-full"></video>
+        </div>
+        <script type="text/javascript">
+            var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), scanPeriod: 5, mirror: false });
+            scanner.addListener('scan', function (content) {
+                window.location.href = `absen/post/${content}`;
+            });
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                    scanner.start(cameras[0]);
+                    $('[name="options"]').on('change', function () {
+                        if ($(this).val() == 1) {
+                            if (cameras[0] != "") {
+                                scanner.start(cameras[0]);
+                            } else {
+                                alert('No Front camera found!');
+                            }
+                        } else if ($(this).val() == 2) {
+                            if (cameras[1] != "") {
+                                scanner.start(cameras[1]);
+                            } else {
+                                alert('No Back camera found!');
+                            }
                         }
-                    }).catch(function (e) {
-                        console.error(e);
-                        alert(e);
                     });
-                </script>
-                <div data-toggle="buttons" style="display: flex; justify-content: center;">
-                    <div style="margin-top: 10px; margin-right: 10px; background: #ffff; padding: 10px; border-radius: 10px;">
-                        <label>
-                            <input type="radio" name="options" class="custom-radio" value="1" autocomplete="off" checked> Front Camera
-                        </label>
-                    </div>
-                    <div style="margin-top: 10px; margin-left: 10px; background: #ffff; padding: 10px; border-radius: 10px;">
-                        <label>
-                            <input type="radio" name="options" class="custom-radio" value="2" autocomplete="off"> Back Camera
-                        </label>
-                    </div>
+                } else {
+                    console.error('No cameras found.');
+                    alert('No cameras found.');
+                }
+            }).catch(function (e) {
+                console.error(e);
+                alert(e);
+            });
+        </script>
+        <div data-toggle="buttons" style="display: absolute; justify-content: center; margin-top:-40px">
+            <div style="display: flex; justify-content: center;">
+                <div style="margin-right: 5px; background: #ffff; padding: 5px; border-radius: 10px;">
+                    <label style="font-size: 10px">
+                        <input type="radio" name="options" class="custom-radio" value="1" autocomplete="off" checked> Front Camera
+                    </label>
                 </div>
-            </div>
-            <div class="col-sm-3">
-                <!-- Place your right sidebar ads here -->
+                <div style="margin-left: 5px; background: #ffff; padding: 5px; border-radius: 10px;">
+                    <label style="font-size: 10px">
+                        <input type="radio" name="options" class="custom-radio" value="2" autocomplete="off"> Back Camera
+                    </label>
+                </div>
             </div>
         </div>
     </div>

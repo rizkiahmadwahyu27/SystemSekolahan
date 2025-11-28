@@ -5,6 +5,7 @@
             'sakit' => 'S',
             'izin'  => 'I',
             'alpa'  => 'A',
+            'dispen'  => 'D',
         ];
     @endphp
 

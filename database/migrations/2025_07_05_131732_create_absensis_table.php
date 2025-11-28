@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('jenis_absen', ['harian','mapel'])->default('harian');
             $table->string('hari');
             $table->date('tanggal');
-            $table->enum('status', ['hadir', 'sakit', 'izin', 'alpa'])->default('hadir');
+            $table->enum('status', ['hadir', 'sakit', 'izin', 'alpa', 'dispen', 'lainnya'])->default('hadir');
             $table->text('keterangan');
             $table->string('user_input');
             $table->string('user_edit');

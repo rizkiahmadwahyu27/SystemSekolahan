@@ -218,28 +218,28 @@
                 </h2>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">NIK</label>
+                    <label class="block text-sm font-medium">NIK</label>
                     <input type="number" name="nik" value="{{$nik}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                     <input type="hidden" name="id" value="{{$id}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">No KK</label>
+                    <label class="block text-sm font-medium">No KK</label>
                     <input type="number" name="no_kk" value="{{$no_kk}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">NIS</label>
+                    <label class="block text-sm font-medium">NIS</label>
                     <input type="text" name="nis" value="{{$nis}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">NISN</label>
+                    <label class="block text-sm font-medium">NISN</label>
                     <input type="text" name="nisn" value="{{$nisn}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Nama</label>
+                    <label class="block text-sm font-medium">Nama</label>
                     <input type="text" name="nama" value="{{$nama}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Jenis Kelamin</label>
+                    <label class="block text-sm font-medium">Jenis Kelamin</label>
                     <select name="jenis_kelamin" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                         <option value="{{$jenis_kelamin}}">{{$jenis_kelamin}}</option>
                         <option value="Perempuan">Perempuan</option>
@@ -247,11 +247,11 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Alamat</label>
+                    <label class="block text-sm font-medium">Alamat</label>
                     <textarea name="alamat" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>{{$alamat_ortu}}</textarea>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Agama</label>
+                    <label class="block text-sm font-medium">Agama</label>
                     <select name="agama" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                         <option value="{{$agama}}">{{$agama}}</option>
                         <option value="Islam">Islam</option>
@@ -264,33 +264,33 @@
                 </div>
                 <div class="flex justify-center items-center">
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-200">Tempat Lahir</label>
+                        <label class="block text-sm font-medium">Tempat Lahir</label>
                         <input type="text" name="tempat_lahir" value="{{$tempat_lahir}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                     </div>
                     <div class="text-white">-</div>
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-200">Tanggal Lahir</label>
+                        <label class="block text-sm font-medium">Tanggal Lahir</label>
                         <input type="date" name="tgl_lahir" value="{{$tgl_lahir}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Sekolah Asal</label>
+                    <label class="block text-sm font-medium">Sekolah Asal</label>
                     <input type="text" name="sekolah_asal" value="{{$sekolah_asal}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Anak ke</label>
+                    <label class="block text-sm font-medium">Anak ke</label>
                     <input type="number" name="anak_ke" value="{{$anak_ke}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">No HP</label>
+                    <label class="block text-sm font-medium">No HP</label>
                     <input type="number" name="no_hp" value="{{$no_hp}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Nama Ibu</label>
+                    <label class="block text-sm font-medium">Nama Ibu</label>
                     <input type="text" name="nama_ibu" value="{{$nama_ibu}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pekerjaan Ibu</label>
+                    <label class="block text-sm font-medium">Pekerjaan Ibu</label>
                     <select name="pekerjaan_ibu" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                         <option value="{{$pekerjaan_ibu}}">{{$pekerjaan_ibu}}</option>
                         <option value="Ibu Ramah Tangga">Ibu Ramah Tangga</option>
@@ -307,11 +307,11 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Nama Ayah</label>
+                    <label class="block text-sm font-medium">Nama Ayah</label>
                     <input type="text" name="nama_ayah" value="{{$nama_ayah}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pekerjaan Ayah</label>
+                    <label class="block text-sm font-medium">Pekerjaan Ayah</label>
                     <select name="pekerjaan_ayah" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                         <option value="{{$pekerjaan_ayah}}">{{$pekerjaan_ayah}}</option>
                         <option value="Wiraswata">Wiraswata</option>
@@ -327,12 +327,12 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Alamat Orang Tua</label>
+                    <label class="block text-sm font-medium">Alamat Orang Tua</label>
                     <textarea name="alamat_ortu" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>{{$alamat_ortu}}</textarea>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">No HP Orang Tua</label>
+                    <label class="block text-sm font-medium">No HP Orang Tua</label>
                     <input type="number" name="no_hp_ortu" value="{{$no_hp_ortu}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
 

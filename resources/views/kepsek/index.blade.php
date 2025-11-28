@@ -161,7 +161,7 @@
                 // *** PERBAIKAN: GUNAKAN chartData, bukan chartDataStatic ***
                 labels: chartData.labels,
                 datasets: [{
-                    label: 'Jumlah Hari',
+                    label: 'Jumlah Murid',
                     data: chartData.data, 
                     backgroundColor: chartData.backgroundColor,
                     borderColor: '#ffffff',

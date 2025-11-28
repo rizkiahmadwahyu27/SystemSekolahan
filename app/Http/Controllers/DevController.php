@@ -30,13 +30,15 @@ class DevController extends Controller
             ->pluck('total', 'status')
             ->toArray();
         // Data yang akan dipass ke Chart.js
-        $labels = ['hadir', 'izin', 'sakit', 'alpa'];
+        $labels = ['hadir', 'izin', 'sakit', 'alpa', 'dispen', 'lainnya'];
         $dataCounts = [];
         $backgroundColors = [
             'hadir' => 'rgba(75, 192, 192, 0.6)',
             'izin' => 'rgba(255, 206, 86, 0.6)',
             'sakit' => 'rgba(54, 162, 235, 0.6)',
             'alpa' => 'rgba(255, 99, 132, 0.6)',
+            'dispen' => 'rgba(255, 19, 122, 0.6)',
+            'lainnya' => 'rgba(99, 19, 122, 0.6)',
         ];
         $chartData = [
             'labels' => [],
@@ -262,13 +264,23 @@ class DevController extends Controller
 
     private function kirimPesanWali($siswa, $absen)
     {
+        if ($absen->created_at < '06.30.00') {
+            $ket = 'tepat waktu';
+        } elseif ($absen->created_at > '06.30.00' && $absen->created_at < '06.35.00') {
+            $ket = 'datang waktu toleransi';
+        }
+        else {
+            # code...
+        }
+        
+        
         $pesan = " Assalamu alaikum wr.wb \n \n"
 
                 ." Yth. Bapak/Ibu Wali Murid *{$siswa->nama}* \n \n"
 
                 ." Kami pihak SMK Pelita Jatibarang menginformasikan bahwa sanya pada : \n"
 
-                ." Hari, Tanggal : *{$absen->hari}*, *{$absen->tanggal}* \n" 
+                ." Hari, Tanggal : *{$absen->hari}*, *{$absen->created_at}* \n" 
                 ." Tempat : SMK Pelita Jatibarang \n" 
                 ." Satatus Kehadiran : *{$absen->status}* \n \n"
 

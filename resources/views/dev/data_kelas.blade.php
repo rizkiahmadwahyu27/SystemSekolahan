@@ -155,7 +155,7 @@
                     Data Kelas Siswa
                 </h2>            
                 <div class="mb-6">
-                    <label for="siswaSearch" class="block text-slate-200 text-sm font-bold mb-2">Pilih Siswa</label>
+                    <label for="siswaSearch" class="block text-sm font-bold mb-2">Pilih Siswa</label>
                     <select id="siswaSearch" class="block w-full" placeholder="Ketik untuk cari siswa" name="siswa">
                         @if ($update_kelas == null)
                             <option value="">Pilih Nama Siswa</option>
@@ -168,7 +168,7 @@
                     </select>
                 </div>
                 <div class="mb-6">
-                    <label for="kelasSearch" class="block text-slate-200 text-sm font-bold mb-2">Pilih Kelas</label>
+                    <label for="kelasSearch" class="block text-sm font-bold mb-2">Pilih Kelas</label>
                     <select id="kelasSearch" class="block w-full" placeholder="Ketik untuk cari kelas" name="kelas">
                         @if ($update_kelas == null)
                             <option value="">Pilih Kelas</option>
@@ -182,7 +182,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-200">Keterangan</label>
+                    <label class="block text-sm font-medium">Keterangan</label>
                     <select name="keterangan" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
                         <option value="{{$keterangan}}">{{$keterangan}}</option>
                         <option value="Siswa Baru">Siswa Baru</option>
