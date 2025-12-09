@@ -1,110 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preview Kamera</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-    body {
-        margin: 0;
-        background: #000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+    <title>QR Scanner</title>
 
-    video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        background: #000;
-    }
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-    #error {
-        color: red;
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        font-size: 18px;
-    }
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
 
-    #btnFlip {
-        position: absolute;
-        bottom: 30px;
-        right: 30px;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 10px;
-        background: rgba(255,255,255,0.8);
-        font-size: 16px;
-        cursor: pointer;
-    }
-</style>
+        video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+
+        /* --- Camera Switch Radio --- */
+        .camera-option {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        input[type="radio"] { display: none; }
+
+        .option-label {
+            background: rgba(0,0,0,0.5);
+            padding: 6px 12px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            border: 2px solid white;
+            border-radius: 50%;
+            margin-right: 6px;
+            position: relative;
+        }
+
+        input[type="radio"]:checked + .dot::after {
+            content:"";
+            width: 8px;
+            height: 8px;
+            background:white;
+            border-radius:50%;
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+        }
+    </style>
+
 </head>
 <body>
 
-<div id="error"></div>
-<video id="preview" autoplay playsinline></video>
+    <!-- Camera Preview -->
+    <video id="preview"></video>
 
-<button id="btnFlip">🔄 Ganti Kamera</button>
+    <!-- Camera Switch -->
+    <div class="camera-option">
+        <label class="option-label">
+            <input type="radio" name="camera" value="0" checked>
+            <span class="dot"></span> Front
+        </label>
 
-<script>
-let currentFacingMode = "user"; // default kamera depan
-let stream;
+        <label class="option-label">
+            <input type="radio" name="camera" value="1">
+            <span class="dot"></span> Back
+        </label>
+    </div>
 
-// Fungsi mulai kamera
-async function startCamera() {
-    const video = document.getElementById('preview');
-    const errorBox = document.getElementById('error');
+    <!-- LIBRARIES -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    if (stream) {
-        // hentikan stream lama
-        stream.getTracks().forEach(track => track.stop());
-    }
-
-    try {
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: currentFacingMode },
-            audio: false
+    <script>
+        let scanner = new Instascan.Scanner({
+            video: document.getElementById('preview'),
+            scanPeriod: 5,
+            mirror: false
         });
 
-        video.srcObject = stream;
+        // Redirect setelah scan
+        scanner.addListener('scan', function (content) {
+            window.location.href = `absen/post/${content}`;
+        });
 
-    } catch (error) {
-        console.error(error);
+        // Load camera
+        Instascan.Camera.getCameras().then(function(cameras) {
+            if (cameras.length < 1) {
+                Swal.fire("Error", "Tidak ada kamera ditemukan!", "error");
+                return;
+            }
 
-        if (error.name === "NotAllowedError") {
-            errorBox.innerHTML = "Izin kamera ditolak. Izinkan kamera di browser.";
-        } else if (error.name === "NotFoundError") {
-            errorBox.innerHTML = "Kamera tidak ditemukan.";
-        } else {
-            errorBox.innerHTML = "Error kamera: " + error.message;
-        }
-    }
-}
+            // Default kamera depan (index 0)
+            scanner.start(cameras[0]);
 
-// Tombol flip kamera
-document.getElementById("btnFlip").addEventListener("click", () => {
-    currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
-    startCamera();
-});
+            // Switch kamera
+            $('input[name="camera"]').on('change', function() {
+                let camID = $(this).val();
 
-// Jalankan kamera pertama kali (kamera depan default)
-startCamera();
-</script>
+                if (cameras[camID]) {
+                    scanner.start(cameras[camID]);
+                } else {
+                    Swal.fire("Error", "Kamera tidak tersedia!", "error");
+                }
+            });
 
-@if(session('success'))
-    <script>
-        Swal.fire({ icon: 'success', title: 'Berhasil!', text: {!! json_encode(session('success')) !!}, showConfirmButton: false, timer: 3000 }); 
-    </script> 
-@endif 
-@if(session('error')) 
-    <script> 
-        Swal.fire({ icon: 'error', title: 'Oops...', text: {!! json_encode(session('error')) !!}, showConfirmButton: true, }); 
-    </script> 
-@endif
+        }).catch(function(e) {
+            Swal.fire("Error", e.message, "error");
+        });
+    </script>
+
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: {!! json_encode(session('success')) !!},
+                showConfirmButton: false,
+                timer: 2500
+            });
+        </script>
+    @endif
+
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: {!! json_encode(session('error')) !!},
+            });
+        </script>
+    @endif
 
 </body>
 </html>
