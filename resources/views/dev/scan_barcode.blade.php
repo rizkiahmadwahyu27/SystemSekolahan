@@ -79,7 +79,7 @@
                 config,
                 qrCodeMessage => {
                     scanner.stop();
-                    window.location.href = `/absen/post/${qrCodeMessage}`;
+                    window.location.href = `/scann/barcode/absen/post/${qrCodeMessage}`;
                 },
                 errorMessage => {}
             );
