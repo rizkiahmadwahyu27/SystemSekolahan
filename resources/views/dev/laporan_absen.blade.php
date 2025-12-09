@@ -216,12 +216,12 @@
         <form method="POST" action="{{route('filter_absen_siswa')}}">
             @csrf
             <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
                     Filter Absen Siswa
                 </h2>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Kelas</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Kelas</label>
                     <select name="kelas" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @foreach ($data_kelas as $d_kelas)
                             <option value="{{$d_kelas->nama_kelas}}">{{$d_kelas->nama_kelas}}</option>
@@ -229,7 +229,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Nama Guru</label>
+                    <label class="block text-sm font-medium text-gray-900">Nama Guru</label>
                     <select name="nama_guru" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @if (Auth::user()->level == 'guru')
                             <option value="{{$data_guru->nama_pegawai}}">{{$data_guru->nama_pegawai}}</option>
@@ -241,7 +241,7 @@
                     </select>
                 </div>
                  <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Mata Pelajaran</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Mata Pelajaran</label>
                     <select name="mapel" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @foreach ($mapel_pegawai as $mapel)
                             @foreach ($mapel->mapel as $m)
@@ -251,18 +251,18 @@
                     </select> 
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Jenis Absen</label>
+                    <label class="block text-sm font-medium text-gray-900">Jenis Absen</label>
                     <select name="jenis_absen" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         <option value="harian">Harian</option>
                         <option value="mapel">Mapel</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Dari Tanggal</label>
+                    <label class="block text-sm font-medium text-gray-900">Dari Tanggal</label>
                     <input type="date" name="tgl1" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Sampai Tanggal</label>
+                    <label class="block text-sm font-medium text-gray-900">Sampai Tanggal</label>
                     <input type="date" name="tgl2" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                
@@ -282,18 +282,18 @@
             @csrf
             {{ $method }}
             <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
                     Update Absen Siswa
                 </h2>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Nama Siswa</label>
+                    <label class="block text-sm font-medium text-gray-900">Nama Siswa</label>
                     <input type="text" name="nama" value="{{ $nama }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                     <input type="hidden" name="nis" value="{{ $nis }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                     <input type="hidden" name="hari" value="{{ $hari }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                     <input type="hidden" name="guru" value="{{ $guruku }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Kelas</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Kelas</label>
                     <select name="kelas" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         <option value="{{$kelas}}">{{$kelas}}</option>
                         @foreach ($data_kelas as $d_kelas)
@@ -302,7 +302,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Jenis Absen</label>
+                    <label class="block text-sm font-medium text-gray-900">Jenis Absen</label>
                     <select name="jenis_absen" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         <option value="{{ $jenis_absen }}">{{ $jenis_absen }}</option>
                         <option value="harian">Harian</option>
@@ -310,7 +310,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Status</label>
+                    <label class="block text-sm font-medium text-gray-900">Status</label>
                     <select name="status" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                         <option value="{{ $status }}">{{ $status }}</option>
                         <option value="Hadir">Hadir</option>
@@ -321,11 +321,11 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Keterangan</label>
+                    <label class="block text-sm font-medium text-gray-900">Keterangan</label>
                     <input type="text" name="keterangan" value="{{ $keterangan }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Tanggal</label>
+                    <label class="block text-sm font-medium text-gray-900">Tanggal</label>
                     <input type="date" name="tanggal" value="{{ $tanggal }}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                 </div>
                

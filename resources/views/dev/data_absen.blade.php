@@ -132,7 +132,7 @@
      
     <x-modal name="buat_absen" :show="$show" max-width="4xl">
         <div class="flex justify-center items-center p-2">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
                 Data Absen
             </h2>
         </div>

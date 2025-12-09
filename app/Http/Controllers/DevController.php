@@ -272,7 +272,8 @@ class DevController extends Controller
         else {
             # code...
         }
-        
+        $tanggal = Carbon::parse($absen->created_at)->format('d-m-Y');
+        $jam = Carbon::parse($absen->created_at)->format('H:i:s');
         
         $pesan = " Assalamu alaikum wr.wb \n \n"
 
@@ -280,13 +281,14 @@ class DevController extends Controller
 
                 ." Kami pihak SMK Pelita Jatibarang menginformasikan bahwa sanya pada : \n"
 
-                ." Hari, Tanggal : *{$absen->hari}*, *{$absen->created_at}* \n" 
+                ." Hari, Tanggal : *{$absen->hari}*, *{$tanggal}*, *{$jam}* \n" 
                 ." Tempat : SMK Pelita Jatibarang \n" 
-                ." Satatus Kehadiran : *{$absen->status}* \n \n"
+                ." Satatus Kehadiran : *{$absen->status}* \n"
+                ." Keterangan : *{$ket}* \n \n"
 
                 ." Demikian informasi yang disampaikan. \n \n"
 
-                ." Jatibarang, *{$absen->tanggal}* \n"
+                ." Jatibarang, *{tanggal}* \n"
 
                 ." Kepala Sekolah, \n \n \n"
 

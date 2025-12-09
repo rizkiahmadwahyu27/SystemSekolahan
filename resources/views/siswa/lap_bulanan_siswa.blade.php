@@ -109,12 +109,12 @@
         <form method="POST" action="{{route('filter_lap_bulanan_siswa')}}">
             @csrf
             <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
                     Filter Absen Siswa
                 </h2>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Kelas</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Kelas</label>
                     <select name="kelas" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @foreach ($data_kelas as $d_kelas)
                             <option value="{{$d_kelas->nama_kelas}}">{{$d_kelas->nama_kelas}}</option>
@@ -122,7 +122,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Nama Guru</label>
+                    <label class="block text-sm font-medium text-gray-900">Nama Guru</label>
                     <select name="guru" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @if (Auth::user()->level == 'guru')
                             <option value="{{$data_guru->nama_pegawai}}">{{$data_guru->nama_pegawai}}</option>
@@ -134,7 +134,7 @@
                     </select>
                 </div>
                  <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Mata Pelajaran</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Mata Pelajaran</label>
                     <select name="mapel" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @foreach ($mapel_pegawai as $mapel)
                             @foreach ($mapel->mapel as $m)
@@ -144,14 +144,14 @@
                     </select> 
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Jenis Absen</label>
+                    <label class="block text-sm font-medium text-gray-900">Jenis Absen</label>
                     <select name="jenis_absen" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         <option value="harian">Harian</option>
                         <option value="mapel">Mapel</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Bulan</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Bulan</label>
                     <select name="bulan" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         <option value="1">Januari</option>
                         <option value="2">Februari</option>
@@ -168,7 +168,7 @@
                     </select> 
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Tahun</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Tahun</label>
                     <select name="tahun" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @php
                             $total_tahun = 500;
@@ -202,12 +202,12 @@
         <form method="POST" action="{{route('export_absensi')}}" target="_blank">
             @csrf
             <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
                     Filter Export Absen Siswa
                 </h2>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Kelas</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Kelas</label>
                     <select name="kelas" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @foreach ($data_kelas as $kelas)
                             <option value="{{$kelas->nama_kelas}}">{{$kelas->nama_kelas}}</option>
@@ -215,7 +215,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Nama Guru</label>
+                    <label class="block text-sm font-medium text-gray-900">Nama Guru</label>
                     <select name="guru" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @if (Auth::user()->level == 'guru')
                             <option value="{{$data_guru->nama_pegawai}}">{{$data_guru->nama_pegawai}}</option>
@@ -227,7 +227,7 @@
                     </select>
                 </div>
                  <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Mata Pelajaran</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Mata Pelajaran</label>
                     <select name="mapel" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @foreach ($mapel_pegawai as $pelajaran)
                             @foreach ($pelajaran->mapel as $m)
@@ -237,14 +237,14 @@
                     </select> 
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Jenis Absen</label>
+                    <label class="block text-sm font-medium text-gray-900">Jenis Absen</label>
                     <select name="jenis_absen" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         <option value="harian">Harian</option>
                         <option value="mapel">Mapel</option>
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Bulan</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Bulan</label>
                     <select name="bulan" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         <option value="1">Januari</option>
                         <option value="2">Februari</option>
@@ -261,7 +261,7 @@
                     </select> 
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-200">Pilih Tahun</label>
+                    <label class="block text-sm font-medium text-gray-900">Pilih Tahun</label>
                     <select name="tahun" class="form-select block w-full rounded border-gray-300 shadow-sm" >
                         @php
                             $total_tahun = 500;
