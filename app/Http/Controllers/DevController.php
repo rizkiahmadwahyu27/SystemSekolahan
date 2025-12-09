@@ -264,16 +264,20 @@ class DevController extends Controller
 
     private function kirimPesanWali($siswa, $absen)
     {
-        if ($absen->created_at < '06.30.00') {
-            $ket = 'tepat waktu';
-        } elseif ($absen->created_at > '06.30.00' && $absen->created_at < '06.35.00') {
-            $ket = 'datang waktu toleransi';
-        }
-        else {
-            # code...
-        }
         $tanggal = Carbon::parse($absen->created_at)->format('d-m-Y');
-        $jam = Carbon::parse($absen->created_at)->format('H:i:s');
+        $jam = Carbon::parse($absen->created_at);
+
+        $waktu_akhir_tepat   = Carbon::parse('06:30:00');
+        $waktu_toleransi     = Carbon::parse('06:35:00');
+
+        if ($jam < $waktu_akhir_tepat) {
+            $ket = 'tepat waktu';
+        } elseif ($jam >= $waktu_akhir_tepat && $jam < $waktu_toleransi) {
+            $ket = 'datang waktu toleransi';
+        } else {
+            $ket = 'terlambat';
+        }
+
         
         $pesan = " Assalamu alaikum wr.wb \n \n"
 
