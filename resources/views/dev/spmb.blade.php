@@ -17,218 +17,111 @@
         </style>
         <style>
           .bg-cover {
-            background-image: url("/img/foto_smk (5).jpeg");
+            background-image: url("/img/bg_spmb.png");
             background-repeat: no-repeat;
             background-position: center 75%;
             width: 100%;
-            height: 76vh;
-            opacity: 65%;
+            height: 100vh;
           }
         </style>
+         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
    
-<body class="bg-gray-100 font-sans">
+<body>
   @php
-      if (Auth::check()) {
-          $url = Auth::user()->level . '/dashboard';
-      }
+      $tahun = date('Y');
+      $sampai_thn = $tahun + 1;
   @endphp
-  <!-- Navbar -->
-  <nav class="bg-orange-500 text-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16 items-center">
-        <!-- Logo -->
-        <div class="flex flex-shrink-0 justify-center items-center">
-          <a href="#" class="text-xl font-bold">SMK Pelita Jatibarang</a>
-        </div>
-
-        <!-- Menu desktop -->
-        <div class="hidden md:flex space-x-6">
-          <a href="#tentang" class="hover:text-orange-100 transition">Tentang</a>
-          <a href="#fasilitas" class="hover:text-orange-100 transition">Fasilitas</a>
-          <a href="#testimoni" class="hover:text-orange-100 transition">Testimoni</a>
-          <a href="#kontak" class="hover:text-orange-100 transition">Kontak</a>
-        </div>
-
-        <!-- CTA Button -->
-        <div class="hidden md:block">
-          <div class="flex justify-center items-center">
-            @if (Auth::user())
-               <div class="mr-2"><a href="{{$url}}" class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition font-medium">Dashboard</a></div> 
-            @else
-                <div class="mr-2"><a href="{{ route('register') }}" class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition font-medium">Daftar</a></div>
-                <div><a href="{{ route('login') }}" class="bg-white text-orange-500 px-4 py-2 rounded hover:bg-orange-100 transition font-medium">Masuk</a></div>
-            @endif
-          </div>
-        </div>
-
-        <!-- Mobile button -->
-        <div class="md:hidden">
-          <button id="menu-toggle" class="focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="md:hidden hidden flex-col px-4 pb-4 bg-orange-500 text-white space-y-2 transition-all duration-300">
-      <a href="#tentang" class="block py-2 border-b border-orange-300">Tentang</a>
-      <a href="#fasilitas" class="block py-2 border-b border-orange-300">Fasilitas</a>
-      <a href="#testimoni" class="block py-2 border-b border-orange-300">Testimoni</a>
-      <a href="#kontak" class="block py-2 border-b border-orange-300">Kontak</a>
-      @if (Auth::user())
-          <a href="{{$url}}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Dashboard</a>
-      @else
-          <a href="{{ route('register') }}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Daftar</a>
-          <a href="{{ route('login') }}" class="block py-2 text-center bg-white text-orange-500 rounded hover:bg-orange-100 transition font-medium mt-2">Masuk</a>
-      @endif
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="bg-orange-500 text-white flex justify-center py-20 text-center bg-cover">
-    <div class="max-w-3xl mx-auto px-4">
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-4" style="text-shadow: 4px 4px 8px rgba(0,0,0,0.6);">Selamat Datang di Sekolah Kami</h1>
-      <p class="text-lg md:text-2xl mb-6 font-extrabold" style="text-shadow: 4px 4px 8px rgba(0,0,0,0.6);">Mewujudkan Pendidikan Berkualitas untuk Masa Depan yang Cerah</p>
-      <a href="{{route('spmb_daftar')}}" target="blank" class="bg-white text-orange-500 py-2 px-6 rounded-lg font-semibold hover:bg-orange-200 transition duration-300">Daftar Sekarang</a>
-    </div>
-  </section>
-
-  <!-- Tentang -->
-  <section id="tentang" class="py-20 bg-white text-center">
-    <div class="max-w-screen-md mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-6">Tentang Kami</h2>
-      <p class="text-lg text-gray-700 mb-6">Sekolah kami fokus pada pendidikan yang menyeluruh dengan pendekatan yang inovatif, mendorong siswa untuk berkembang dengan penuh percaya diri.</p>
-      <a href="#kontak" class="text-orange-500 font-semibold hover:underline">Hubungi Kami</a>
-    </div>
-  </section>
-
-  {{-- Gallery --}}
-   <section id="fasilitas" class="py-20 bg-gray-50 text-center">
-    <div class="max-w-screen-xl mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Gallery</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <img src="{{asset('/img/foto_smk (1).jpeg')}}" alt="" srcset="">
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <img src="{{asset('/img/foto_smk (2).jpeg')}}" alt="" srcset="">
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <img src="{{asset('/img/foto_smk (3).jpeg')}}" alt="" srcset="">
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <img src="{{asset('/img/foto_smk (4).jpeg')}}" alt="" srcset="">
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <img src="{{asset('/img/foto_smk (5).jpeg')}}" alt="" srcset="">
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <img src="{{asset('/img/foto_smk (6).jpeg')}}" alt="" srcset="">
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <img src="{{asset('/img/foto_smk (7).jpeg')}}" alt="" srcset="">
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <img src="{{asset('/img/foto_smk (8).jpeg')}}" alt="" srcset="">
+  <div class="relative">
+    <div class="bg-cover flex justify-center items-start p-4">
+      <div class="flex justify-center items-center w-5/12">
+        <div>
+            <div class="flex justify-center items-center">
+              <h1 class="font-extrabold text-2xl text-white">
+                PENERIMAAN PESERTA DIDIK BARU TAHUN {{$tahun}}/{{$sampai_thn}}
+              </h1>
+            </div>
+            <div class="flex justify-center items-center">
+              <h1 class="font-extrabold text-4xl text-white">
+                SMK PELITA JATIBARANG
+              </h1>
+            </div>
+            <div class="flex justify-center items-center">
+              <h1 class="font-extrabold text-lg text-white">
+                JL. RAYA BULAK KOMPLEK KANTOR CAMAT JATIBARANG KAB. INDRAMAYU 45273
+              </h1>
+            </div>
+            <div class="mt-20">
+              <div class="w-full aspect-video">
+                  <iframe 
+                      class="w-full h-full rounded-lg"
+                      src="https://www.youtube.com/embed/SLnAH7IXjK4?start=16&autoplay=1"
+                      title="YouTube video"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen>
+                  </iframe>
+              </div>
+              <div class="mt-10 w-full flex justify-center items-center">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="bg-yellow-400 w-full flex justify-center items-center hover:bg-yellow-500 text-gray-500 hover:text-white p-3 rounded-md">Daftar Sekarang</a>
+              </div>
+            </div>
+            <div class="mt-10 flex justify-center items-center">
+              <div class="grid grid-cols-3 gap-3 justify-center items-center">
+                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                  <div class="w-[60px] h-[60px] mr-3">
+                    <img src="{{ asset('img/logo tiktok.png') }}" alt="Logo TikTok" class=" rounded-full">
+                  </div>
+                  <div>
+                    <h1>@smkpelitajatibarang</h1>
+                  </div>
+                </div>
+                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                  <div class="w-[60px] h-[60px] mr-3">
+                    <img src="{{ asset('img/logo_ytb.png') }}" alt="Logo Youtube" class=" rounded-full">
+                  </div>
+                  <div>
+                    <h1>SMK Pelita Jatibarang</h1>
+                  </div>
+                </div>
+                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                  <div class="w-[60px] h-[60px] mr-3">
+                    <img src="{{ asset('img/logo_fb.png') }}" alt="Logo Facebook" class=" rounded-full">
+                  </div>
+                  <div>
+                    <h1>SMK Pelita Jatibarang</h1>
+                  </div>
+                </div>
+                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                  <div class="w-[60px] h-[60px] mr-3">
+                    <img src="{{ asset('img/logo_ig.png') }}" alt="Logo Instagram" class=" rounded-full">
+                  </div>
+                  <div>
+                    <h1>@smkpelitajatibarang</h1>
+                  </div>
+                </div>
+                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                  <div class="w-[60px] h-[60px] mr-3">
+                    <img src="{{ asset('img/logosmk.png') }}" alt="Logo TikTok" class=" rounded-full">
+                  </div>
+                  <div>
+                    <h1>Kompetensi Keahlian</h1>
+                  </div>
+                </div>
+                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                  <div class="w-[60px] h-[60px] mr-3">
+                    <img src="{{ asset('img/logosmk.png') }}" alt="Logo TikTok" class=" rounded-full">
+                  </div>
+                  <div>
+                    <h1>Beasiswa di SMK Pelita Jatibarang</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
     </div>
-  </section>
-  <!-- Fasilitas -->
-  <section id="fasilitas" class="py-20 bg-gray-50 text-center">
-    <div class="max-w-screen-xl mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Fasilitas Kami</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <h3 class="text-xl font-semibold text-orange-500 mb-3">Kelas Modern</h3>
-          <p class="text-gray-700">Ruang kelas yang nyaman dengan teknologi terkini.</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <h3 class="text-xl font-semibold text-orange-500 mb-3">Laboratorium</h3>
-          <p class="text-gray-700">Laboratorium lengkap untuk mendukung pembelajaran praktis.</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <h3 class="text-xl font-semibold text-orange-500 mb-3">Fasilitas Olahraga</h3>
-          <p class="text-gray-700">Lapangan dan sarana olahraga untuk aktivitas fisik siswa.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimoni -->
-  <section id="testimoni" class="py-20 bg-white text-center">
-    <div class="max-w-screen-xl mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Apa Kata Mereka?</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-gray-100 p-6 rounded-lg shadow">
-          <p class="italic text-gray-700">"Sekolah ini membantu saya tumbuh dan belajar dengan baik."</p>
-          <h4 class="mt-4 font-semibold text-orange-500">Siswa A</h4>
-        </div>
-        <div class="bg-gray-100 p-6 rounded-lg shadow">
-          <p class="italic text-gray-700">"Guru yang peduli dan fasilitas yang lengkap."</p>
-          <h4 class="mt-4 font-semibold text-orange-500">Orang Tua B</h4>
-        </div>
-        <div class="bg-gray-100 p-6 rounded-lg shadow">
-          <p class="italic text-gray-700">"Saya bangga pernah menjadi bagian dari sekolah ini."</p>
-          <h4 class="mt-4 font-semibold text-orange-500">Alumni C</h4>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Kontak -->
-  <section id="kontak" class="py-20 bg-orange-500 text-white text-center">
-    <div class="max-w-screen-md mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6">Hubungi Kami</h2>
-      <p class="text-lg mb-6">Ingin tahu lebih banyak? Kami siap membantu Anda.</p>
-      <a href="https://wa.me/62895392244879?text=saya%20mau%20daftar%20bagaimana%20caranya?" target="blank" class="bg-white text-orange-500 py-2 px-6 rounded-lg font-semibold hover:bg-orange-200 transition">Kirim Pesan</a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white text-center py-6">
-    <p>&copy; 2025 SMK Pelita Jatibarang. Semua Hak Dilindungi.</p>
-  </footer>
-
-  <!-- Mobile Menu Toggle Script -->
-  <script>
-    const toggle = document.getElementById("menu-toggle");
-    const menu = document.getElementById("mobile-menu");
-
-    toggle.addEventListener("click", () => {
-      menu.classList.toggle("hidden");
-    });
-  </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
-    
-    @if(session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success', 
-                title: 'Berhasil!',
-                text: {!! json_encode(session('success')) !!}, // Pastikan menggunakan json_encode untuk amannya
-                showConfirmButton: false,
-                timer: 3000
-            });
-        </script>
-    @endif
-
-    @if(session('error'))
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: {!! json_encode(session('error')) !!},
-                showConfirmButton: true,
-            });
-        </script>
-    @endif
+  </div>
 </body>
 </html>
 
