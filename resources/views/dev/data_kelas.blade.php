@@ -25,9 +25,9 @@
         </div>
     </div>
 
-    <div class="w-full md:block hidden mt-6 rounded-xl p-3 shadow-lg bg-gray-50 overflow-scroll max-[450px] appearance-none">
-        <table class="table-auto" id="data_kelas">
-            <thead class="sticky top-0 bg-slate-300">
+    <div class="w-full overflow-y-scroll md:block hidden max-h-[570px]">
+        <table class="table-auto" id="data_pegawai">
+            <thead class="bg-gray-100 sticky top-0">
             <tr>
                 <th class="px-3 py-2 font-medium border">No</th>
                 <th class="px-3 py-2 font-medium border">NIS</th>
@@ -39,7 +39,7 @@
                 <th class="px-3 py-2 font-medium border">Aksi</th>
             </tr>
             </thead>
-            <tbody class="">
+            <tbody class="bg-white">
             @php
                 $no = 1;
             @endphp

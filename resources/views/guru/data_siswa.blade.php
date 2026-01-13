@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="w-full overflow-y-scroll md:block hidden max-h-[470px]">
+    <div class="w-full overflow-y-scroll md:block hidden max-h-[570px]">
         <table class="table-auto" id="data_siswa">
             <thead class="bg-gray-100 sticky top-0">
             <tr>

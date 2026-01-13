@@ -25,9 +25,9 @@
         </div>
     </div>
 
-    <div class="w-full md:block hidden mt-6 rounded-xl p-3 shadow-lg bg-gray-50 overflow-scroll max-[450px] appearance-none">
-        <table class="table-auto" id="data_kelas">
-            <thead class="sticky top-0 bg-slate-300">
+    <div class="w-full overflow-y-scroll md:block hidden max-h-[570px]">
+        <table class="table-auto" id="data_pegawai">
+            <thead class="bg-gray-100 sticky top-0">
             <tr>
                 <th class="px-3 py-2 font-medium border">No</th>
                 <th class="px-3 py-2 font-medium border">Kode Kelas</th>
@@ -36,7 +36,7 @@
                 <th class="px-3 py-2 font-medium border">Aksi</th>
             </tr>
             </thead>
-            <tbody class="">
+            <tbody class="bg-white">
             @php
                 $no = 1;
             @endphp
@@ -121,7 +121,7 @@
             $method = method_field('patch'); 
             $id = $update_kelas->id;
             $nama_kelas = $update_kelas->nama_kelas;
-            $nama_wali_kelas = $update_kelas->nama_wali_kelas;
+            $nama_wali_kelas = $update_kelas->id_wali_kelas . '-' . $update_kelas->nama_wali_kelas;
          }else{
             $show = false;
             $action = route('create_data_kelas');
@@ -143,22 +143,8 @@
                 <div class="mb-4 groupX">
                     <div class="grid grid-cols-2 gap-1 justify-between items-center">
                         <div>
-                            <label class="block text-sm font-medium">Pilih Kelas</label>
-                            <select name="nama_kelas" id="kelasX" onchange="handleSelectChange('X')" class="kelasSelect form-select mt-1 block w-full rounded border-gray-300 shadow-sm" >
-                                <option value="{{$nama_kelas}}">{{$nama_kelas}}</option>
-                                <option value="X MPLBB">X MPLBB</option>
-                                <option value="X PM">X PM</option>
-                                <option value="X TJKT">X TJKT</option>
-                                <option value="X DKV">X DKV</option>
-                                <option value="XI MPLBB">XI MPLBB</option>
-                                <option value="XI PM">XI PM</option>
-                                <option value="XI TJKT">XI TJKT</option>
-                                <option value="XI DKV">XI DKV</option>
-                                <option value="XII MPLBB">XII MPLBB</option>
-                                <option value="XII PM">XII PM</option>
-                                <option value="XII TJKT">XII TJKT</option>
-                                <option value="XII DKV">XII DKV</option>
-                            </select>
+                            <label class="block text-sm font-medium">Nama Kelas</label>
+                            <input type="text" name="nama_kelas" value="{{$nama_kelas}}" class="mt-1 block w-full rounded border-gray-300 shadow-sm" required>
                         </div>
                         <div>
                             <label class="from-walikelas block text-sm font-medium">Pilih Wali Kelas</label>

@@ -136,7 +136,7 @@ class SiswaController extends Controller
     }
 
     public function cetak_kartu_absen(){
-        $data_siswa = DataSiswa::select('nis', 'nisn', 'nama', 'jenis_kelamin', 'agama', 'alamat', 'nama_ibu', 'nama_ayah', 'id')->get();
+        $data_siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')->get(['data_siswas.*', 'siswa_kelas.kode_kelas']);
         return view('dev.cetak_kartu_absen', compact('data_siswa'));
     }
 

@@ -4,8 +4,10 @@ namespace App\Imports;
 
 use App\Models\Configurasi;
 use App\Models\DataSiswa;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class DataSiswaImport implements ToModel, WithHeadingRow
 {
@@ -25,6 +27,20 @@ class DataSiswaImport implements ToModel, WithHeadingRow
             return null;
         }
 
+        $tgl_lahir = '2000-01-01';
+
+        if (isset($row['tgl_lahir']) && $row['tgl_lahir'] !== '-') {
+            if (is_numeric($row['tgl_lahir'])) {
+                // Jika SERIAL EXCEL
+                $tgl_lahir = Date::excelToDateTimeObject($row['tgl_lahir'])
+                    ->format('Y-m-d');
+            } else {
+                // Jika sudah STRING tanggal
+                $tgl_lahir = Carbon::parse($row['tgl_lahir'])
+                    ->format('Y-m-d');
+            }
+        }
+
         // Jika belum ada, buat data baru
         return new DataSiswa([
             'nik'           => $row['nik'] ?? '-',
@@ -36,9 +52,9 @@ class DataSiswaImport implements ToModel, WithHeadingRow
             'alamat'        => $row['alamat'] ?? '-',
             'agama'         => $row['agama'] ?? '-',
             'tempat_lahir'  => $row['tempat_lahir'] ?? '-',
-            'tgl_lahir'     => $row['tgl_lahir'] ?? '2000-01-01',
+            'tgl_lahir'     => $tgl_lahir,
             'sekolah_asal'  => $row['sekolah_asal'] ?? '-',
-            'anak_ke'       => $row['anak_ke'] ?? 0,
+            'anak_ke'       => $row['anak_ke'] ?? 1,
             'no_hp'         => $row['no_hp'] ?? '-',
             'nama_ibu'      => $row['nama_ibu'] ?? '-',
             'pekerjaan_ibu' => $row['pekerjaan_ibu'] ?? '-',

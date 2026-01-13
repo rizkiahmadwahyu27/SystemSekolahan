@@ -34,8 +34,28 @@ class DataKelasController extends Controller
     public function create_data_kelas(Request $request){
         $conf = Configurasi::where('status', 'aktif')->first();
         $id_wali_kelas = explode('-', $request->nama_wali_kelas);
+
+        $stopWords = [
+            'DAN','KE','DI','DARI','PADA','UNTUK','DENGAN','THE','OF'
+        ];
+
+        $kata = preg_split('/\s+/', strtoupper(trim($request->nama_kelas)));
+
+       // Ambil tingkat (X / XI / XII)
+        $tingkat = array_shift($kata);
+
+        $singkatan = '';
+        foreach ($kata as $k) {
+            if (!in_array($k, $stopWords)) {
+                $singkatan .= $k[0];
+            }
+            if ($k == 'PEMASARAN') {
+                $singkatan = 'PM';
+            }
+        }
+        $kode_kelas = $tingkat . ' ' . $singkatan;
         $datakelas = DataKelas::create([
-            'kode_kelas' => $request->nama_kelas,
+            'kode_kelas' => $kode_kelas,
             'nama_kelas' => $request->nama_kelas,
             'nama_wali_kelas' => $id_wali_kelas[1],
             'user_input' => Auth::user()->name,
@@ -59,9 +79,28 @@ class DataKelasController extends Controller
 
     public function updated_data_kelas(Request $request, $id){
         $update_kelas = DataKelas::where('id', $id)->first();
-          $id_wali_kelas = explode('-', $request->nama_wali_kelas);
+        $id_wali_kelas = explode('-', $request->nama_wali_kelas);
+          $stopWords = [
+            'DAN','KE','DI','DARI','PADA','UNTUK','DENGAN','THE','OF'
+        ];
+
+        $kata = preg_split('/\s+/', strtoupper(trim($request->nama_kelas)));
+
+       // Ambil tingkat (X / XI / XII)
+        $tingkat = array_shift($kata);
+
+        $singkatan = '';
+        foreach ($kata as $k) {
+            if (!in_array($k, $stopWords)) {
+                $singkatan .= $k[0];
+            }
+            if ($k == 'PEMASARAN') {
+                $singkatan = 'PM';
+            }
+        }
+        $kode_kelas = $tingkat . ' ' . $singkatan;
         $datakelas = $update_kelas->update([
-            'kode_kelas' => $request->nama_kelas,
+            'kode_kelas' => $kode_kelas,
             'nama_kelas' => $request->nama_kelas,
             'nama_wali_kelas' => $id_wali_kelas[1],
             'id_wali_kelas' => $id_wali_kelas[0],

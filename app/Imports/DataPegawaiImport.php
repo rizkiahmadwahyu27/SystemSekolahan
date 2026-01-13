@@ -4,8 +4,10 @@ namespace App\Imports;
 
 use App\Models\Configurasi;
 use App\Models\DataPegawai;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class DataPegawaiImport implements ToModel, WithHeadingRow
 {
@@ -25,9 +27,40 @@ class DataPegawaiImport implements ToModel, WithHeadingRow
             return null;
         }
 
+        $no_urut = DataPegawai::where('jabatan', $row['jabatan'])->count();
+        $id_belakang = $no_urut + 1;
+        if($row['jabatan'] == 'Ketua Yayasan'){
+            $id_pegawai = 'kta_yys' . date('Y') . '000_' . $id_belakang;
+        }
+        elseif ($row['jabatan'] == 'Kepala Sekolah') {
+            $id_pegawai = 'kpls' . date('Y') . '001_' . $id_belakang;
+        }elseif ($row['jabatan'] == 'Waka Kurikulum' || $row['jabatan'] == 'Waka Kesiswaan' || $row['jabatan'] == 'Waka Humas') {
+            $id_pegawai = 'waka' . date('Y') . '002_' . $id_belakang;
+        }elseif ($row['jabatan'] == 'Kepala Tata Usaha') {
+            $id_pegawai = 'kptu' . date('Y') . '003_' . $id_belakang;
+        }elseif ($row['jabatan'] == 'Guru') {
+            $id_pegawai = 'guru' . date('Y') . '004_' . $id_belakang;
+        }else {
+            $id_pegawai = 'stf' . date('Y') . '005_' . $id_belakang;
+        }
+
+        $tgl_lahir = '2000-01-01';
+
+        if (isset($row['tgl_lahir']) && $row['tgl_lahir'] !== '-') {
+            if (is_numeric($row['tgl_lahir'])) {
+                // Jika SERIAL EXCEL
+                $tgl_lahir = Date::excelToDateTimeObject($row['tgl_lahir'])
+                    ->format('Y-m-d');
+            } else {
+                // Jika sudah STRING tanggal
+                $tgl_lahir = Carbon::parse($row['tgl_lahir'])
+                    ->format('Y-m-d');
+            }
+        }
+
         // Jika belum ada, buat data baru
         return new DataPegawai([
-            'id_pegawai' => $row['id_pegawai'] ?? '-',
+            'id_pegawai' => $id_pegawai ?? '-',
             'id_pegawai_mutasi' => $row['id_pegawai_mutasi'] ?? '-',
             'nuptk' => $row['nuptk'] ?? '-',
             'nip' => $row['nip'] ?? '-',
@@ -38,7 +71,7 @@ class DataPegawaiImport implements ToModel, WithHeadingRow
             'jurusan' => $row['jurusan'] ?? '-',
             'jenis_kelamin' => $row['jenis_kelamin'] ?? '-',
             'tempat_lahir' => $row['tempat_lahir'] ?? '-',
-            'tgl_lahir' => $row['tgl_lahir'] ?? '-',
+            'tgl_lahir' => $tgl_lahir,
             'agama' => $row['agama'] ?? '-',
             'pangkat_or_golongan' => $row['pangkat_or_golongan'] ?? '-',
             'jabatan' => $row['jabatan'] ?? '-',
