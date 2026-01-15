@@ -31,6 +31,10 @@ Route::get('/spmb/daftar', function () {
     return view('dev.spmb');
 })->name('spmb_daftar');
 
+//SPMB
+Route::get('/daftar/online/spmb', [DevController::class, 'daftar_online'])->name('daftar_online');
+Route::post('/daftar/online/spmb/created', [DevController::class, 'created_spmb'])->name('created_spmb');
+
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.index');
    

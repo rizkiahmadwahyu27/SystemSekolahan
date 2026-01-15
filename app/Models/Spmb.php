@@ -10,12 +10,14 @@ class Spmb extends Model
     use HasFactory;
 
     protected $fillable = [
+        'no_daftar',
+        'nis',
         'nisn',
         'nama_lengkap',
         'email',
         'tempat_tgl_lahir',
-        'jenis_kelamin', 
-        'agama', 
+        'jenis_kelamin',
+        'agama',
         'status_dalam_keluarga',
         'anak_ke',
         'alamat',
@@ -28,6 +30,8 @@ class Spmb extends Model
         'alamat_ortu',
         'no_hp_ortu',
         'minat_kompetensi',
+        'daftar_ulang',
+        'dokumen_pendaftaran',
     ];
 
     protected $casts = [

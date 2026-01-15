@@ -13,6 +13,7 @@ use App\Models\SiswaKelas;
 use App\Models\DataPegawai;
 use App\Models\Absensi;
 use App\Models\Configurasi;
+use App\Models\Spmb;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -369,5 +370,62 @@ class DevController extends Controller
     public function halaman_import(){
         $data_kelas = DataKelas::all();
         return view('dev.halaman_import', compact('data_kelas'));
+    }
+
+    public function daftar_online(){
+        return view('dev.daftar_online');
+    }
+    public function created_spmb(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+            'nisn' => 'required',
+            'nama_lengkap' => 'required',
+            'tempat_lahir' => 'required',
+            'tgl_lahir' => 'required',
+            'jenis_kelamin' => 'required',
+            'agama' => 'required',
+            'status_dalam_keluarga' => 'required',
+            'anak_ke' => 'required|numeric',
+            'alamat' => 'required',
+            'no_hp' => 'required',
+            'asal_sekolah' => 'required',
+            'nama_ayah' => 'required',
+            'pekerjaan_ayah' => 'required',
+            'nama_ibu' => 'required',
+            'pekerjaan_ibu' => 'required',
+            'alamat_ortu' => 'required',
+            'no_hp_ortu' => 'required',
+            'minat_kompetensi' => 'required',
+        ]);
+        $data_spmb = Spmb::where('nisn', $request->nisn)->where('nama_lengkap', $request->nama_lengkap)->first();
+        $last = Spmb::orderBy('no_daftar', 'desc')->first();
+        $no_daftar = $last ? $last->no_daftar + 1 : 1;
+        $tmp_tgl_lahir = $request->tempat_lahir . ', ' . $request->tgl_lahir;
+        if ($data_spmb) {
+            return redirect()->back()->with('error', 'Maaf Data Kamu Sudah Terdaftar');
+        }else{
+            $data_spmb = Spmb::create([
+                'no_daftar' => $no_daftar,
+                'nisn' => $request->nisn,
+                'nama_lengkap' => $request->nama_lengkap,
+                'email' => $request->email,
+                'tempat_tgl_lahir'=> $tmp_tgl_lahir,
+                'jenis_kelamin'=> $request->jenis_kelamin,
+                'agama'=> $request->agama,
+                'status_dalam_keluarga'=> $request->status_dalam_keluarga,
+                'anak_ke'=> $request->anak_ke,
+                'alamat'=> $request->alamat,
+                'no_hp'=> $request->no_hp,
+                'asal_sekolah'=> $request->asal_sekolah,
+                'nama_ayah'=> $request->nama_ayah,
+                'pekerjaan_ayah'=> $request->pekerjaan_ayah,
+                'nama_ibu'=> $request->nama_ibu,
+                'pekerjaan_ibu'=> $request->pekerjaan_ibu,
+                'alamat_ortu'=> $request->alamat_ortu,
+                'no_hp_ortu'=> $request->no_hp_ortu,
+                'minat_kompetensi'=> $request->minat_kompetensi,
+            ]);
+            return redirect()->back()->with('success', 'Terimakasih Pendaftaran Kamu Sudah Kami Simpan');
+        }
     }
 }

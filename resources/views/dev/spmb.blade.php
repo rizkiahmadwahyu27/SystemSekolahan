@@ -18,11 +18,60 @@
         <style>
           .bg-cover {
             background-image: url("/img/bg_spmb.png");
-            background-repeat: no-repeat;
             background-position: center 75%;
+            background-repeat: no-repeat;
             width: 100%;
-            height: 100vh;
+            height: screen;
           }
+          .layer-text {
+              font-size: 18px;
+              font-weight: 900;
+              font-family: 'Arial Black', sans-serif;
+              color: #ffffff;
+              position: relative;
+              text-transform: uppercase;
+              letter-spacing: 4px;
+
+              /* layer effect */
+              text-shadow:
+                  1px 3px 0 #00e5ff,
+                  4px 4px 0 #ff3d81;
+          }
+
+          .diskon {
+            background-image: url("/img/diskon.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+
+            /* efek tambahan */
+            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.3));
+            transform: rotate(-8deg);
+          }
+          .ppdb-text {
+              font-size: 72px;
+              font-weight: 900;
+              font-family: sans-serif;
+
+              color: #1e88e5; /* biru */
+
+              /* outline putih + oranye */
+              text-shadow:
+                  /* outline putih */
+                  -3px -3px 0 #fff,
+                  3px -3px 0 #fff,
+                  -3px  3px 0 #fff,
+                  3px  3px 0 #fff,
+
+                  /* outline oranye */
+                  -6px -6px 0 #ff9800,
+                  6px -6px 0 #ff9800,
+                  -6px  6px 0 #ff9800,
+                  6px  6px 0 #ff9800;
+
+              letter-spacing: 2px;
+          }
+
         </style>
          @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -37,21 +86,31 @@
       <div class="flex justify-center items-center w-5/12">
         <div>
             <div class="flex justify-center items-center">
-              <h1 class="font-extrabold text-2xl text-white">
+              <h1 class="layer-text">
                 PENERIMAAN PESERTA DIDIK BARU TAHUN {{$tahun}}/{{$sampai_thn}}
               </h1>
             </div>
             <div class="flex justify-center items-center">
-              <h1 class="font-extrabold text-4xl text-white">
+              <h1 class="layer-text text-4xl">
                 SMK PELITA JATIBARANG
               </h1>
             </div>
             <div class="flex justify-center items-center">
-              <h1 class="font-extrabold text-lg text-white">
+              <h1 class="md:font-extrabold md:text-lg text-sm text-white">
                 JL. RAYA BULAK KOMPLEK KANTOR CAMAT JATIBARANG KAB. INDRAMAYU 45273
               </h1>
             </div>
-            <div class="mt-20">
+            <div class="relative">
+              <div class="absolute top-0 md:-top-8 md:-right-80 md:w-80 md:h-80 w-56 h-52 diskon flex items-center justify-center text-center">
+                  <div class="text-white font-bold leading-tight mt-10 -ml-2">
+                      <h1 class="text-xl md:text-3xl ppdb-text">GRATIS</h1>
+                      <p class="text-sm md:text-lg leading-tight ppdb-text">Uang Pendaftaran</p>
+                      <p class="text-sm md:text-lg leading-tight ppdb-text">&</p>
+                      <p class="text-sm md:text-lg leading-tight ppdb-text">Gedung</p>
+                  </div>
+              </div>
+            </div>
+            <div class="md:mt-20 mt-56">
               <div class="w-full aspect-video">
                   <iframe 
                       class="w-full h-full rounded-lg"
@@ -63,59 +122,61 @@
                   </iframe>
               </div>
               <div class="mt-10 w-full flex justify-center items-center">
-                <a href="#" target="_blank" rel="noopener noreferrer" class="bg-yellow-400 w-full flex justify-center items-center hover:bg-yellow-500 text-gray-500 hover:text-white p-3 rounded-md">Daftar Sekarang</a>
+                <a href="{{route('daftar_online')}}" target="_blank" rel="noopener noreferrer" class="bg-yellow-400 w-full flex justify-center items-center hover:bg-yellow-500 text-gray-500 hover:text-white p-3 rounded-md">Daftar Sekarang</a>
               </div>
             </div>
             <div class="mt-10 flex justify-center items-center">
-              <div class="grid grid-cols-3 gap-3 justify-center items-center">
-                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
-                  <div class="w-[60px] h-[60px] mr-3">
-                    <img src="{{ asset('img/logo tiktok.png') }}" alt="Logo TikTok" class=" rounded-full">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 justify-center items-center">
+                <a href="https://www.youtube.com/channel/UC_RGeoYkcIwBiAi14fse8WQ" target="blank">
+                  <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                    <div class="w-[60px] h-[60px] mr-3">
+                      <img src="{{ asset('img/logo_ytb.png') }}" alt="Logo Youtube" class=" rounded-full">
+                    </div>
+                    <div>
+                      <h1>SMK Pelita Jatibarang</h1>
+                    </div>
                   </div>
-                  <div>
-                    <h1>@smkpelitajatibarang</h1>
+                </a>
+                <a href="https://www.facebook.com/smkpelitajatibarang/" target="blank">
+                  <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                    <div class="w-[60px] h-[60px] mr-3">
+                      <img src="{{ asset('img/logo_fb.png') }}" alt="Logo SMK" class=" rounded-full">
+                    </div>
+                    <div>
+                      <h1>SMK Pelita Jatibarang</h1>
+                    </div>
                   </div>
-                </div>
-                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
-                  <div class="w-[60px] h-[60px] mr-3">
-                    <img src="{{ asset('img/logo_ytb.png') }}" alt="Logo Youtube" class=" rounded-full">
+                </a>
+                <a href="https://www.instagram.com/smkspelitajatibarang/" target="blank">
+                  <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                    <div class="w-[60px] h-[60px] mr-3">
+                      <img src="{{ asset('img/logo_ig.png') }}" alt="Logo SMK" class=" rounded-full">
+                    </div>
+                    <div>
+                      <h1>@smkpelitajatibarang</h1>
+                    </div>
                   </div>
-                  <div>
-                    <h1>SMK Pelita Jatibarang</h1>
+                </a>
+                <a href="https://sites.google.com/view/smkpelitajatibarangindramayu/kompetensi-keahlian" target="blank">
+                  <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                    <div class="w-[60px] h-[60px] mr-3">
+                      <img src="{{ asset('img/logosmk.png') }}" alt="Logo TikTok" class=" rounded-full">
+                    </div>
+                    <div>
+                      <h1>Kompetensi Keahlian</h1>
+                    </div>
                   </div>
-                </div>
-                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
-                  <div class="w-[60px] h-[60px] mr-3">
-                    <img src="{{ asset('img/logo_fb.png') }}" alt="Logo Facebook" class=" rounded-full">
+                </a>
+                <a href="https://sites.google.com/view/smkpelitajatibarangindramayu/beasiswa" target="blank">
+                  <div class="bg-white flex justify-center items-center p-2 rounded-lg">
+                    <div class="w-[60px] h-[60px] mr-3">
+                      <img src="{{ asset('img/logosmk.png') }}" alt="Logo TikTok" class=" rounded-full">
+                    </div>
+                    <div>
+                      <h1>Beasiswa di SMK Pelita Jatibarang</h1>
+                    </div>
                   </div>
-                  <div>
-                    <h1>SMK Pelita Jatibarang</h1>
-                  </div>
-                </div>
-                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
-                  <div class="w-[60px] h-[60px] mr-3">
-                    <img src="{{ asset('img/logo_ig.png') }}" alt="Logo Instagram" class=" rounded-full">
-                  </div>
-                  <div>
-                    <h1>@smkpelitajatibarang</h1>
-                  </div>
-                </div>
-                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
-                  <div class="w-[60px] h-[60px] mr-3">
-                    <img src="{{ asset('img/logosmk.png') }}" alt="Logo TikTok" class=" rounded-full">
-                  </div>
-                  <div>
-                    <h1>Kompetensi Keahlian</h1>
-                  </div>
-                </div>
-                <div class="bg-white flex justify-center items-center p-2 rounded-lg">
-                  <div class="w-[60px] h-[60px] mr-3">
-                    <img src="{{ asset('img/logosmk.png') }}" alt="Logo TikTok" class=" rounded-full">
-                  </div>
-                  <div>
-                    <h1>Beasiswa di SMK Pelita Jatibarang</h1>
-                  </div>
-                </div>
+                </a>
               </div>
             </div>
         </div>

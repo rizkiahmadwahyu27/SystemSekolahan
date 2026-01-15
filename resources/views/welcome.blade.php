@@ -95,7 +95,7 @@
     <div class="max-w-3xl mx-auto px-4">
       <h1 class="text-4xl md:text-5xl font-extrabold mb-4" style="text-shadow: 4px 4px 8px rgba(0,0,0,0.6);">Selamat Datang di Sekolah Kami</h1>
       <p class="text-lg md:text-2xl mb-6 font-extrabold" style="text-shadow: 4px 4px 8px rgba(0,0,0,0.6);">Mewujudkan Pendidikan Berkualitas untuk Masa Depan yang Cerah</p>
-      <a href="{{route('spmb_daftar')}}" target="blank" class="bg-white text-orange-500 py-2 px-6 rounded-lg font-semibold hover:bg-orange-200 transition duration-300">Daftar Sekarang</a>
+      <a href="{{route('spmb_daftar')}}" target="blank" class="bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-800 transition duration-300">Daftar Sekarang</a>
     </div>
   </section>
 

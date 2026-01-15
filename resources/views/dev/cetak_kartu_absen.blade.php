@@ -14,7 +14,7 @@
     <style>
        @page {
             size: A4;
-            margin: 1cm;
+            margin: 1.3cm;
         }
 
         @media print {
@@ -61,8 +61,9 @@
         $url = Auth::user()->level . '.index';
     @endphp
         <div class="no-print">
-            <div class="w-full flex justify-center mt-2 mb-2 items-center">
-                <button onclick="window.print()" class="bg-slate-400 p-2 rounded-lg z-0 sticky">Cetak</button>
+            <div class="w-full flex justify-start mt-2 mb-2 items-center p-2">
+                {{ $data_siswa->links() }}
+                <button onclick="window.print()" class="bg-slate-400 p-2 rounded-lg z-0 sticky ml-2">Cetak</button>
                 <a href="{{route($url)}}" class="bg-green-400 ml-2 p-2 rounded-lg z-0 sticky">Back</a>
             </div>
         </div>
@@ -73,22 +74,22 @@
                     <div class="cetak bg-white rounded-md text-xs w-full">
                         <div class="grid grid-cols-4">
                             <div>
-                                <div class="w-14 h-9 flex justify-center items-center -mt-1">
-                                    <img src="{{asset('/img/logosmk.png')}}" alt="logo smk">
+                                <div class="w-11 h-6 flex justify-center items-center mt-0.5">
+                                    <img src="{{asset('/img/logosmknew.png')}}" alt="logo smk">
                                 </div>
                             </div>
                             <div class="col-span-3 -ml-7">
-                                <div class="flex justify-center items-center text-[15px] font-bold -mt-4"><h1>KARTU PELAJAR</h1></div>
-                                <div class="flex justify-center items-center text-[15px] font-bold"><h2>SMK PELITA JATIBARANG</h2></div>
-                                <div class="flex justify-center items-center text-[9px]"><h4>Jl. Raya Bulak Komplek Kantor Camat</h4></div>
-                                <div class="flex justify-center items-center text-[9px] -mt-1"><h4>Jatibarang - Indramayu Telp. (0234) 352078</h4></div>
+                                <div class="flex justify-center items-center text-[14px] leading-tight font-bold -mt-3"><h1>KARTU PELAJAR</h1></div>
+                                <div class="flex justify-center items-center text-[14px] leading-tight font-bold"><h2>SMK PELITA JATIBARANG</h2></div>
+                                <div class="flex justify-center items-center text-[9px] leading-tight"><h4>Jl. Raya Bulak Komplek Kantor Camat</h4></div>
+                                <div class="flex justify-center items-center text-[9px] leading-tight"><h4>Jatibarang - Indramayu Telp. (0234) 352078</h4></div>
                             </div>
                         </div>
                         <div class="w-full h-1 bg-orange-800 mb-2"></div>
                         <div class="grid grid-cols-4 gap-1">
                             <div>
                                 <div class="flex justify-center items-center">
-                                    <div class="w-[2.1cm] h-[3.1cm]">
+                                    <div class="w-[2cm] h-[3cm]">
                                         <img src="{{ asset('FOTO_KERTU_OSIS/' . trim($siswa->nama) . '.JPG') }}" alt="foto siswa">
                                     </div>
                                 </div>
@@ -128,18 +129,18 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex justify-end items-end w-56 -mt-1">
+                                <div class="flex justify-end items-end w-56">
                                     <div>
-                                        <p class="text-[7px] -mt-2">Jatibarang, Januari 2026</p>
+                                        <p class="text-[7px] -mt-3">Jatibarang, Januari 2026</p>
                                         <p class="text-[7px] -mt-2">Kepala Sekolah,</p>
-                                        <img src="{{asset('/img/ttd_kepsek.gif')}}" alt="ttd kepsek" class="w-[58px] h-[50px] absolute -mt-3 -ml-7">
-                                        <p class="text-[7px] font-bold mt-6">LINDA TRI APSARI, S.Pd</p>
+                                        <img src="{{asset('/img/ttd_kepsek.gif')}}" alt="ttd kepsek" class="w-[65px] h-[55px] absolute -mt-3 -ml-7">
+                                        <p class="text-[7px] font-bold mt-8">LINDA TRI APSARI, S.Pd</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex justify-start items-center -mt-2 text-[7.5px] opacity-75">
-                            <span class="border-b-2 border-blue-400 leading-tight font-bold text-blue-400">BERLAKU SELAMA MENJADI SISWA</span>
+                        <div class="flex justify-start items-center -mt-4 text-[7.5px]">
+                            <span class="border-b-2 border-black leading-tight font-bold text-black">BERLAKU SELAMA MENJADI SISWA</span>
                         </div>
                     </div>
                     {{-- bagian belakang --}}
@@ -151,24 +152,24 @@
                                 </div>
                                 <div class="text-[7.5px] space-y-1">
                                     <div class="flex items-start">
-                                        <span class="mr-1">-</span>
-                                        <span>Setiap Siswa Mentaati Tata Tertib Sekolah</span>
+                                        <span class="mr-1 leading-tight">-</span>
+                                        <span class="leading-tight">Setiap Siswa Mentaati Tata Tertib Sekolah</span>
                                     </div>
                                     <div class="flex items-start">
-                                        <span class="mr-1 -mt-2">-</span>
-                                        <span class="-mt-2">Menjunjung Tinggi Kesopanan, Kejujuran dan Akhlak Mulia</span>
+                                        <span class="mr-1 leading-tight">-</span>
+                                        <span class="leading-tight">Menjunjung Tinggi Kesopanan, Kejujuran dan Akhlak Mulia</span>
                                     </div>
                                     <div class="flex items-start">
-                                        <span class="mr-1 -mt-2">-</span>
-                                        <span class="-mt-2">Menjaga Nama Baik Diri Sendiri, Keluarga dan Sekolah</span>
+                                        <span class="mr-1 leading-tight">-</span>
+                                        <span class="leading-tight">Menjaga Nama Baik Diri Sendiri, Keluarga dan Sekolah</span>
                                     </div>
                                     <div class="flex items-start">
-                                        <span class="mr-1 -mt-2">-</span>
-                                        <span class="-mt-2">Belajar Dengan Rajin dan Bersungguh-Sungguh</span>
+                                        <span class="mr-1 leading-tight">-</span>
+                                        <span class="leading-tight">Belajar Dengan Rajin dan Bersungguh-Sungguh</span>
                                     </div>
                                     <div class="flex items-start">
-                                        <span class="mr-1 -mt-2">-</span>
-                                        <span class="-mt-2">Setiap Siswa Wajib Mematuhi Aturan Sekolah</span>
+                                        <span class="mr-1 leading-tight">-</span>
+                                        <span class="leading-tight">Setiap Siswa Wajib Mematuhi Aturan Sekolah</span>
                                     </div>
                                 </div>
                             </div>
@@ -179,9 +180,12 @@
                                 <div class="flex justify-center items-center mt-2">
                                     {!! DNS2D::getBarcodeHTML($siswa->nis, 'QRCODE', 4.9, 4.9) !!}
                                 </div>
+                                <div class="flex justify-center items-center mt-2">
+                                    <span class="text-xs">{{$siswa->nis}}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex justify-center items-center -mt-1">
+                        <div class="flex justify-center items-center mt-2">
                             <div class="w-full h-6 bg-slate-200 opacity-45 text-[10px] font-bold rounded-lg p-1.5 flex justify-center items-center">
                                 <span><i>Kartu Jangan Hilang, Jika Menemukan Harap Dikembalikan</i></span>
                             </div>

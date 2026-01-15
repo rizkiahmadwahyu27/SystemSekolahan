@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('spmbs', function (Blueprint $table) {
             $table->id();
+            $table->string('no_daftar')->unique();
+            $table->string('nis')->nullable();
             $table->string('nisn')->unique();
             $table->string('nama_lengkap');
             $table->string('email');
@@ -31,6 +33,7 @@ return new class extends Migration
             $table->string('alamat_ortu');
             $table->string('no_hp_ortu');
             $table->string('minat_kompetensi');
+            $table->string('daftar_ulang')->nullable();
             $table->json('dokumen_pendaftaran')->nullable();
             $table->timestamps();
         });
