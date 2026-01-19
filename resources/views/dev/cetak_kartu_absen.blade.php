@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="flex justify-end items-end w-56">
                                     <div>
-                                        <p class="text-[7px] -mt-3">Jatibarang, Januari 2026</p>
+                                        <p class="text-[7px] -mt-3">Jatibarang, Juli 2025</p>
                                         <p class="text-[7px] -mt-2">Kepala Sekolah,</p>
                                         <img src="{{asset('/img/ttd_kepsek.gif')}}" alt="ttd kepsek" class="w-[65px] h-[55px] absolute -mt-3 -ml-7">
                                         <p class="text-[7px] font-bold mt-8">LINDA TRI APSARI, S.Pd</p>
@@ -186,7 +186,7 @@
                             </div>
                         </div>
                         <div class="flex justify-center items-center mt-2">
-                            <div class="w-full h-6 bg-slate-200 opacity-45 text-[10px] font-bold rounded-lg p-1.5 flex justify-center items-center">
+                            <div class="w-full h-6 bg-slate-200 text-[10px] font-bold rounded-lg p-1.5 flex justify-center items-center">
                                 <span><i>Kartu Jangan Hilang, Jika Menemukan Harap Dikembalikan</i></span>
                             </div>
                         </div>

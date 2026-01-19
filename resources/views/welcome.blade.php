@@ -45,6 +45,7 @@
         <!-- Menu desktop -->
         <div class="hidden md:flex space-x-6">
           <a href="#tentang" class="hover:text-orange-100 transition">Tentang</a>
+          <a href="#gallery" class="hover:text-orange-100 transition">Gallery</a>
           <a href="#fasilitas" class="hover:text-orange-100 transition">Fasilitas</a>
           <a href="#testimoni" class="hover:text-orange-100 transition">Testimoni</a>
           <a href="#kontak" class="hover:text-orange-100 transition">Kontak</a>
@@ -78,6 +79,7 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="md:hidden hidden flex-col px-4 pb-4 bg-orange-500 text-white space-y-2 transition-all duration-300">
       <a href="#tentang" class="block py-2 border-b border-orange-300">Tentang</a>
+      <a href="#gallery" class="block py-2 border-b border-orange-300">Gallery</a>
       <a href="#fasilitas" class="block py-2 border-b border-orange-300">Fasilitas</a>
       <a href="#testimoni" class="block py-2 border-b border-orange-300">Testimoni</a>
       <a href="#kontak" class="block py-2 border-b border-orange-300">Kontak</a>
@@ -91,25 +93,59 @@
   </nav>
 
   <!-- Hero -->
-  <section class="bg-orange-500 text-white flex justify-center py-20 text-center bg-cover">
+  <section class="bg-orange-500 text-white flex justify-center items-end py-20 text-center bg-cover">
     <div class="max-w-3xl mx-auto px-4">
       <h1 class="text-4xl md:text-5xl font-extrabold mb-4" style="text-shadow: 4px 4px 8px rgba(0,0,0,0.6);">Selamat Datang di Sekolah Kami</h1>
       <p class="text-lg md:text-2xl mb-6 font-extrabold" style="text-shadow: 4px 4px 8px rgba(0,0,0,0.6);">Mewujudkan Pendidikan Berkualitas untuk Masa Depan yang Cerah</p>
-      <a href="{{route('spmb_daftar')}}" target="blank" class="bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-800 transition duration-300">Daftar Sekarang</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeF9cokgmirHcY0FgQ2CWOC_67QufFZSntkS9a0AgTWp8Ffcw/viewform" target="blank" class="bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-800 transition duration-300">Daftar Sekarang</a>
     </div>
   </section>
 
   <!-- Tentang -->
-  <section id="tentang" class="py-20 bg-white text-center">
+  <section id="tentang" class="py-20 bg-white">
     <div class="max-w-screen-md mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-6">Tentang Kami</h2>
-      <p class="text-lg text-gray-700 mb-6">Sekolah kami fokus pada pendidikan yang menyeluruh dengan pendekatan yang inovatif, mendorong siswa untuk berkembang dengan penuh percaya diri.</p>
-      <a href="#kontak" class="text-orange-500 font-semibold hover:underline">Hubungi Kami</a>
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-orange-500 mb-6">Tentang Kami</h2>
+      <div class="grid grid-cols-1 gap-3">
+        <div class="rounded-xl shadow-xl p-5">
+          <div class="flex justify-center items-center text-xl font-extrabold border-b-2 border-gray-400">Visi</div>
+          <div class="flex justify-center items-center text-center text-sm font-bold mt-2">
+            Menjadikan Lembaga Pendidikan dan Pelatihan 
+            Bisnis dan Manajemen serta Teknologi Informasi 
+            dan Komunikasi dalam mewujudkan lulusan yang 
+            berbudi pekerti, kerja keras, inovatif dan 
+            berakhlak mulia dalam rangka menciptakan 
+            Sumber Daya Manusia yang Berkualitas.
+          </div>
+        </div>
+        <div class="rounded-xl shadow-xl p-5">
+          <div class="flex justify-center items-center text-xl font-extrabold border-b-2 border-gray-400">Misi</div>
+          <div class="flex justify-between text-sm font-bold mt-2">
+            <div>
+              <div class="flex justify-between">
+                <p class="mr-1">1. </p>
+                <p class="flex justify-start">Mendidik dan melatih tenaga kerja terampil tingkat menengah dalam bidang keahlian bisnis dan Manajemen serta Informatika dan Komunikasi.</p>
+              </div>
+              <div class="flex justify-between">
+                <p class="mr-1">2. </p>
+                <p class="flex justify-start">Membekali tamatan dengan Ilmu Pengetahuan dan Keterampilan, Kejujuran yang berjiwa profesional dan mandiri.</p>
+              </div>
+              <div class="flex justify-between">
+                <p class="mr-1">3. </p>
+                <p class="flex justify-start">Menjalin kemitraan yang baik dengan pihak terkait dalam upaya mengembangkan dan meningkatkan kualitas sekolah dan tamatan.</p>
+              </div>
+              <div class="flex justify-between">
+                <p class="mr-1">4. </p>
+                <p class="flex justify-start">Mewujudkan kualitas siswa yang memiliki kemampuan berpikir kritis, kreatif, inovatif, menyelesaikan masalah dan berjiwa kewirausahaan</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   {{-- Gallery --}}
-   <section id="fasilitas" class="py-20 bg-gray-50 text-center">
+   <section id="gallery" class="py-20 bg-gray-50 text-center">
     <div class="max-w-screen-xl mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Gallery</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -168,15 +204,15 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-gray-100 p-6 rounded-lg shadow">
           <p class="italic text-gray-700">"Sekolah ini membantu saya tumbuh dan belajar dengan baik."</p>
-          <h4 class="mt-4 font-semibold text-orange-500">Siswa A</h4>
+          <h4 class="mt-4 font-semibold text-orange-500">Siswa Kelas X</h4>
         </div>
         <div class="bg-gray-100 p-6 rounded-lg shadow">
           <p class="italic text-gray-700">"Guru yang peduli dan fasilitas yang lengkap."</p>
-          <h4 class="mt-4 font-semibold text-orange-500">Orang Tua B</h4>
+          <h4 class="mt-4 font-semibold text-orange-500">Orang Tua Wali</h4>
         </div>
         <div class="bg-gray-100 p-6 rounded-lg shadow">
           <p class="italic text-gray-700">"Saya bangga pernah menjadi bagian dari sekolah ini."</p>
-          <h4 class="mt-4 font-semibold text-orange-500">Alumni C</h4>
+          <h4 class="mt-4 font-semibold text-orange-500">Alumni SMK Pelita Jatibarang</h4>
         </div>
       </div>
     </div>
@@ -187,7 +223,7 @@
     <div class="max-w-screen-md mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold mb-6">Hubungi Kami</h2>
       <p class="text-lg mb-6">Ingin tahu lebih banyak? Kami siap membantu Anda.</p>
-      <a href="https://wa.me/62895392244879?text=saya%20mau%20daftar%20bagaimana%20caranya?" target="blank" class="bg-white text-orange-500 py-2 px-6 rounded-lg font-semibold hover:bg-orange-200 transition">Kirim Pesan</a>
+      <a href="https://wa.me/6287848294127?text=saya%20mau%20daftar%20bagaimana%20caranya?" target="blank" class="bg-white text-orange-500 py-2 px-6 rounded-lg font-semibold hover:bg-orange-200 transition">Kirim Pesan</a>
     </div>
   </section>
 
