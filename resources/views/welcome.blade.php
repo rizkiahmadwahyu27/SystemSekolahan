@@ -22,7 +22,7 @@
             background-position: center 75%;
             width: 100%;
             height: 76vh;
-            opacity: 65%;
+            filter: brightness(0.7);
           }
         </style>
     </head>
@@ -44,9 +44,12 @@
 
         <!-- Menu desktop -->
         <div class="hidden md:flex space-x-6">
-          <a href="#tentang" class="hover:text-orange-100 transition">Tentang</a>
-          <a href="#gallery" class="hover:text-orange-100 transition">Gallery</a>
-          <a href="#fasilitas" class="hover:text-orange-100 transition">Fasilitas</a>
+          <a href="#beranda" class="hover:text-orange-100 transition">Beranda</a>
+          <a href="#news" class="spelza-news hover:text-orange-100 transition">Spelza News</a>
+          <a href="#gallery" class="hover:text-orange-100 transition click-gallery">Gallery</a>
+          <a href="#fasilitas" class="hover:text-orange-100 transition click-fasilitas" >Fasilitas</a>
+          <a href="#ekstrakurikuler" class="hover:text-orange-100 transition click-ekstrakurikuler" >Ekstrakurikuler</a>
+          <a href="#beasiswa" class="hover:text-orange-100 transition click-beasiswa" >Beasiswa</a>
           <a href="#testimoni" class="hover:text-orange-100 transition">Testimoni</a>
           <a href="#kontak" class="hover:text-orange-100 transition">Kontak</a>
         </div>
@@ -78,9 +81,12 @@
 
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="md:hidden hidden flex-col px-4 pb-4 bg-orange-500 text-white space-y-2 transition-all duration-300">
-      <a href="#tentang" class="block py-2 border-b border-orange-300">Tentang</a>
-      <a href="#gallery" class="block py-2 border-b border-orange-300">Gallery</a>
-      <a href="#fasilitas" class="block py-2 border-b border-orange-300">Fasilitas</a>
+      <a href="#beranda" class="block py-2 border-b border-orange-300">Beranda</a>
+      <a href="#news" class="spelza-news block py-2 border-b border-orange-300">Spelza News</a>
+      <a href="#gallery" class="block py-2 border-b border-orange-300 click-gallery">Gallery</a>
+      <a href="#fasilitas" class="block py-2 border-b border-orange-300 click-fasilitas" >Fasilitas</a>
+      <a href="#ekstrakurikuler" class="block py-2 border-b border-orange-300 click-ekstrakurikuler" >Ekstrakurikuler</a>
+      <a href="#beasiswa" class="block py-2 border-b border-orange-300 click-beasiswa" >Beasiswa</a>
       <a href="#testimoni" class="block py-2 border-b border-orange-300">Testimoni</a>
       <a href="#kontak" class="block py-2 border-b border-orange-300">Kontak</a>
       @if (Auth::user())
@@ -93,16 +99,37 @@
   </nav>
 
   <!-- Hero -->
-  <section class="bg-orange-500 text-white flex justify-center items-end py-20 text-center bg-cover">
-    <div class="max-w-3xl mx-auto px-4">
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-4" style="text-shadow: 4px 4px 8px rgba(0,0,0,0.6);">Selamat Datang di Sekolah Kami</h1>
-      <p class="text-lg md:text-2xl mb-6 font-extrabold" style="text-shadow: 4px 4px 8px rgba(0,0,0,0.6);">Mewujudkan Pendidikan Berkualitas untuk Masa Depan yang Cerah</p>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeF9cokgmirHcY0FgQ2CWOC_67QufFZSntkS9a0AgTWp8Ffcw/viewform" target="blank" class="bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-800 transition duration-300">Daftar Sekarang</a>
+  <section id="beranda" class="relative h-[70vh] overflow-hidden">
+
+    <!-- BACKGROUND SAJA -->
+    <div
+        class="absolute inset-0 bg-cover">
     </div>
+
+    <!-- OVERLAY GELAP (HANYA KENA BG) -->
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <!-- KONTEN (TIDAK TERKENA APA PUN) -->
+    <div class="relative z-10 h-full flex justify-center items-start py-20 text-center text-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+                Selamat Datang di Sekolah Kami
+            </h1>
+            <p class="text-lg md:text-2xl mb-6 font-extrabold">
+                Mewujudkan Pendidikan Berkualitas untuk Masa Depan yang Cerah
+            </p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeF9cokgmirHcY0FgQ2CWOC_67QufFZSntkS9a0AgTWp8Ffcw/viewform"
+               target="_blank"
+               class="inline-block bg-blue-700 py-2 px-6 rounded-lg font-semibold hover:bg-blue-800 transition">
+                Daftar Sekarang
+            </a>
+        </div>
+    </div>
+
   </section>
 
   <!-- Tentang -->
-  <section id="tentang" class="py-20 bg-white">
+  <section class="py-20 bg-white">
     <div class="max-w-screen-md mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold text-center text-orange-500 mb-6">Tentang Kami</h2>
       <div class="grid grid-cols-1 gap-3">
@@ -143,9 +170,208 @@
       </div>
     </div>
   </section>
+  {{-- {{spelza news}} --}}
+  <section id="news" class="py-20 bg-gray-50 hidden">
+    <div class="max-w-screen-xl mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Spelza News</h2>
+      <div class="grid grid-cols-1 gap-1 md:grid-cols-3">
+        <div class="p-2 rounded-lg shadow-md">
+          <div class="flex justify-center items-center">
+            <video
+                controls
+                class="w-full max-w-xl mx-auto rounded-lg shadow"
+              >
+                <source src="{{ asset('/img/ajakan ppdb lucky.mp4') }}" type="video/mp4">
+                Browser kamu tidak mendukung video.
+              </video>
+          </div>
+        </div>
+        <div class="col-span-2 p-2 rounded-lg shadow-md">
+          <div class="p-5">
+            <span class="md:text-lg text-sm font-semibold text-gray-600">
+              Bersama Bapak Bupati Indramayu Bapak Lucky Hakim, SMK Pelita Jatibarang mengajak bapak/ibu di sekitar wilayah Indramayu khususnya Kecamatan Jatibarang dan sekitarnya untuk menyekolahkan putra & putrinya di SMK Pelita Jatibarang.
+            </span>
+            <p class="mt-2">
+              Kegiatan ini diambil dalam rangka kunjungan Bapak Bupati Indramayu Bapak Lucky Hakim ke sekolah-sekolah di wilayah Indramayu khususnya SMK (Sekolah Menengah Kejuruan), serta meninjau kualitas lulusan dalam menghadapai perkembangan globalisasi
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 gap-1 md:grid-cols-3 mt-5">
+        <div class="p-2 rounded-lg shadow-md">
+          <div class="flex justify-center items-center">
+            <div class="relative w-full max-w-3xl h-64 mx-auto overflow-hidden rounded-xl">
+              <img src="{{ asset('/img/panen karya.jpg') }}"
+                  class="slide absolute w-full h-full object-cover opacity-100 transition-opacity duration-1000">
 
+              <img src="{{ asset('/img/panen karya 1.jpg') }}"
+                  class="slide absolute w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+
+              <img src="{{ asset('/img/panen karya 2.jpg') }}"
+                  class="slide absolute w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+            </div>
+          </div>
+        </div>
+        <div class="col-span-2 p-2 rounded-lg shadow-md">
+          <div class="p-5">
+            <span class="md:text-lg text-sm font-semibold text-gray-600">
+              Panen Karya CGP Angkatan 11 Kabupaten Indramayu: SMK Pelita Jatibarang Siap Berkontribusi!
+            </span>
+            <p class="mt-2">
+              Program Pendidikan Guru Penggerak (PGP) merupakan salah satu inisiatif unggulan Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi (Kemendikbudristek) dalam membentuk guru sebagai pemimpin pembelajaran. Salah satu momen puncak dari program ini adalah Panen Karya Guru Penggerak. Pada tahun ini, Panen Karya CGP Angkatan 11 di Kabupaten Indramayu akan diselenggarakan pada Minggu, 8 Desember 2024, bertempat di SMAN 1 Sindang.
+            </p>
+            
+            <div class="mt-2 hidden" id="read">
+              <p>Acara tersebut akan diikuti oleh para Calon Guru Penggerak (CGP) dari berbagai sekolah, termasuk empat guru dari SMK Pelita Jatibarang, yaitu:</p>
+              <div class="mt-2 flex">
+                <p class="mr-1">1. </p>
+                <p>Ibu Septi Diah Atiningtyas, S.Pd.</p>
+              </div>
+              <div class="mt-2 flex">
+                <p class="mr-1">2. </p>
+                <p>Ibu Linda Tri Apsari, S.Pd.</p>
+              </div>
+              <div class="mt-2 flex">
+                <p class="mr-1">3. </p>
+                <p>Ibu Nur Khasanah Alfian, S.Pd.</p>
+              </div>
+              <div class="mt-2 flex">
+                <p class="mr-1">4. </p>
+                <p>Ibu Nina Duniati, S.Pd</p>
+              </div>
+              <p class="text-sm md:text-md font-semibold text-gray-600 mt-2">Apa Itu Panen Karya CGP?</p>
+              <p class="mt-2">Panen Karya CGP adalah kegiatan puncak yang bertujuan untuk memamerkan hasil pembelajaran, inovasi, dan praktik baik yang telah dilakukan oleh para Calon Guru Penggerak selama masa pelatihan. Karya-karya yang ditampilkan mencakup berbagai inovasi pembelajaran, proyek kepemimpinan, hingga solusi kreatif untuk meningkatkan mutu pendidikan di sekolah masing-masing. </p>
+              <p class="mt-2">Kegiatan ini bukan sekadar ajang unjuk karya, tetapi juga wadah berbagi inspirasi dan kolaborasi antar sesama guru. Dalam acara ini, para CGP akan mempresentasikan proyek mereka kepada rekan sejawat, pengawas, kepala sekolah, hingga masyarakat umum yang hadir.</p>
+              <p class="text-sm md:text-md font-semibold text-gray-600 mt-2">Manfaat Panen Karya untuk Rekan Sejawat Guru</p>
+              <p class="mt-2">Panen Karya CGP memiliki banyak manfaat, baik bagi para peserta maupun rekan sejawat guru di sekolah, diantaranya:</p>
+              <div class="mt-2 flex">
+                <p class="mr-1">1. </p>
+                <p>Berbagi Inspirasi dan Inovasi</p>
+              </div>
+              <p class="ml-4">Rekan sejawat dapat mengambil ide-ide baru dari karya yang dipamerkan untuk diterapkan di kelas mereka. Hal ini akan memperkaya metode pembelajaran dan memotivasi guru lain untuk terus berinovasi.</p>
+              <div class="mt-2 flex">
+                <p class="mr-1">2. </p>
+                <p>Penguatan Jaringan Kolaborasi</p>
+              </div>
+              <p class="ml-4">Kegiatan ini mempertemukan guru-guru dari berbagai sekolah, sehingga membuka peluang kolaborasi dalam pengembangan program pendidikan yang lebih baik.</p>
+              <div class="mt-2 flex">
+                <p class="mr-1">3. </p>
+                <p>Pemahaman tentang Kepemimpinan Pembelajaran</p>
+              </div>
+              <p class="ml-4">Rekan sejawat dapat belajar bagaimana seorang Guru Penggerak memimpin perubahan di sekolah, termasuk bagaimana mengelola tantangan dalam implementasi inovasi.</p>
+              <div class="mt-2 flex">
+                <p class="mr-1">4. </p>
+                <p>Motivasi untuk Mengikuti Program PGP</p>
+              </div>
+              <p class="ml-4">Dengan menyaksikan hasil karya CGP, guru-guru lain akan termotivasi untuk mengikuti jejak mereka, sehingga semakin banyak guru yang terlibat dalam program ini dan berkontribusi pada transformasi pendidikan.</p>
+              <p class="text-sm md:text-md font-semibold text-gray-600 mt-2">Persiapan Tim CGP SMK Pelita Jatibarang</p>
+              <p class="mt-2">
+                Empat guru dari SMK Pelita Jatibarang telah mempersiapkan karya mereka dengan matang, mulai dari perencanaan hingga eksekusi proyek di sekolah. Dalam kegiatan Panen Karya nanti, mereka akan mempresentasikan hasil kerja keras yang mencerminkan semangat kepemimpinan pembelajaran.
+              </p>
+              <p class="mt-2">
+                Proses persiapan melibatkan refleksi mendalam terhadap tantangan yang dihadapi di lingkungan pendidikan, pengembangan solusi kreatif, hingga penerapan nyata di kelas atau komunitas sekolah. Dukungan dari rekan sejawat, kepala sekolah, dan komunitas pendidikan di SMK Pelita Jatibarang juga menjadi salah satu kunci keberhasilan mereka.
+              </p>
+              <p class="mt-2">
+                Selain menampilkan karya mereka sebagai seorang guru, 4 orang CGP di SMKS Pelita Jatibarang juga akan menampilkan karya seni dari kelas masing-masing, salah satunya dari kelas 2 yang diikuti oleh Ibu Septi Diah A, Ibu Linda Tri A, dan Ibu Nur Khasanah A yang akan menampilkan persembahan tari, lagu, dan puisi yang berjudul Wonderland Indonesia dan dari kelas 8 ada Ibu Nina yang akan menampilkan paduan suara beserta rekan-rekan sekelasnya. 
+              </p>
+              <p class="mt-2">
+                Panen Karya CGP bukan hanya momen apresiasi atas perjuangan para guru penggerak, tetapi juga sarana untuk menyebarkan manfaat lebih luas kepada dunia pendidikan. Dengan semangat kolaborasi, kegiatan ini diharapkan dapat membawa dampak positif, tidak hanya bagi CGP dan rekan sejawat, tetapi juga untuk seluruh ekosistem pendidikan di Kabupaten Indramayu.
+              </p>
+              <p class="mt-2">
+                Mari kita dukung dan apresiasi perjuangan para Calon Guru Penggerak, termasuk guru-guru dari SMK Pelita Jatibarang, yang telah berkomitmen membawa perubahan positif bagi pendidikan Indonesia!
+              </p>
+            </div>
+            <button id="read_more" type="button" class="py-1.5 px-2 rounded-md bg-blue-300 mt-2 hover:bg-blue-400 text-white">Read More...</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 gap-1 md:grid-cols-3 mt-5">
+        <div class="p-2 rounded-lg shadow-md">
+          <div class="flex justify-center items-center">
+            <div class="relative w-full max-w-3xl h-64 mx-auto overflow-hidden rounded-xl">
+              <img src="{{ asset('/img/kegiatan praktik.jpg') }}"
+                  class="slide1 absolute w-full h-full object-cover opacity-100 transition-opacity duration-1000">
+
+              <img src="{{ asset('/img/foto-praktik (1).jpeg') }}"
+                  class="slide1 absolute w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+
+              <img src="{{ asset('/img/foto-praktik (2).jpeg') }}"
+                  class="slide1 absolute w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+              <img src="{{ asset('/img/foto-praktik (3).jpeg') }}"
+                  class="slide1 absolute w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+              <img src="{{ asset('/img/foto-praktik (4).jpeg') }}"
+                  class="slide1 absolute w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+            </div>
+          </div>
+        </div>
+        <div class="col-span-2 p-2 rounded-lg shadow-md">
+          <div class="p-5">
+            <span class="md:text-lg text-sm font-semibold text-gray-600">
+              SAS/PAS PRAKTIK JAUHH LEBIH MENYENANGKAN LOH...
+            </span>
+            <p class="mt-2">
+              Sekolah Menengah Kejuruan (SMK) memiliki peran penting dalam menyiapkan generasi muda untuk siap menghadapi tantangan dunia kerja melalui pendidikan yang berbasis keterampilan. Salah satu tahap penting dalam proses pembelajaran di SMK adalah penilaian akhir semester, yang bertujuan untuk mengukur sejauh mana kompetensi siswa dalam bidang keahlian yang telah diajarkan. Di SMK Pelita Jatibarang Kabupaten Indramayu, pelaksanaan <span class="font-bold"> Sumatif Akhir Semester (SAS)</span> dan <span class="font-bold">Penilaian Akhir Semester (PAS)</span> pada tahun ajaran 2024/2025 dilaksanakan dari tanggal 2 hingga 5 Desember 2024.
+            </p>
+            
+            <div class="mt-2 hidden" id="read1">
+              <p>
+                Penilaian kali ini dirancang dengan metode yang lebih inovatif dan kolaboratif, mengingat pentingnya penguasaan keterampilan praktis yang relevan dengan kebutuhan industri. Dengan melibatkan sistem ujian praktik yang meliputi <span class="font-bold">jobsheet, proyek, dan praktik langsung</span>, SMK Pelita Jatibarang bertujuan untuk memberikan kesempatan kepada siswa untuk menunjukkan kemampuannya secara nyata. Kolaborasi antar guru dari berbagai bidang keahlian juga menjadi bagian penting dalam memastikan proses penilaian berjalan secara objektif dan menyeluruh. Melalui pendekatan ini, diharapkan siswa tidak hanya menguasai teori, tetapi juga siap untuk menghadapi dunia profesional dengan keterampilan yang mumpuni.
+              </p>
+              <p class="mt-2 font-bold text-md">
+                Metode Penilaian Praktik
+              </p>
+              <p>
+                Penilaian praktik di SMK Pelita Jatibarang mengadopsi pendekatan kolaboratif antar guru untuk memastikan objektivitas dan keberagaman dalam mengevaluasi keterampilan siswa. Sistem penilaian yang diterapkan terdiri dari tiga metode utama:
+              </p>
+              <div class="mt-2 flex">
+                <p class="mr-1">1. </p>
+                <p>Jobsheet</p>
+              </div>
+              <p class="ml-4">Pada metode ini, siswa akan diberi tugas atau pekerjaan yang berbentuk sheet atau lembar kerja yang harus diselesaikan dalam waktu tertentu. Jobsheet ini menguji pemahaman siswa terhadap teori dan praktik yang telah mereka pelajari. Proses ini menggabungkan elemen praktis dengan aspek penulisan atau dokumentasi.</p>
+              <div class="mt-2 flex">
+                <p class="mr-1">2. </p>
+                <p>Proyek</p>
+              </div>
+              <p class="ml-4">Siswa akan diberikan proyek yang harus diselesaikan dalam periode tertentu. Proyek ini bertujuan untuk mengukur kemampuan siswa dalam merencanakan, melaksanakan, dan menyelesaikan sebuah tugas yang relevan dengan bidang keahlian mereka. Proyek ini dapat berupa pembuatan produk, desain, atau tugas kelompok yang memerlukan kolaborasi antar siswa.</p>
+              <div class="mt-2 flex">
+                <p class="mr-1">3. </p>
+                <p>Praktik Langsung</p>
+              </div>
+              <p class="ml-4">Sistem ujian praktik langsung akan dilakukan untuk menguji keterampilan teknis siswa secara real-time. Misalnya, untuk jurusan Teknik Komputer dan Jaringan, siswa akan diminta untuk melakukan instalasi perangkat keras atau perangkat lunak, sedangkan untuk jurusan Pemasaran, siswa akan diuji kemampuan untuk menata produk.</p>
+              
+              <p class="text-sm md:text-md font-semibold text-gray-600 mt-2">Kolaborasi Antar Guru</p>
+              <p class="mt-2">Keunikan dari pelaksanaan ujian praktik kali ini adalah adanya kolaborasi antar guru yang mengajar mata pelajaran produktif. Guru-guru dari berbagai bidang keahlian bekerja sama dalam menyusun soal dan penilaian, serta membantu dalam proses evaluasi. Kolaborasi ini bertujuan untuk memastikan bahwa penilaian yang diberikan tidak hanya melihat dari satu sisi kompetensi siswa, tetapi juga dari berbagai sudut pandang keahlian yang relevan. Misalnya, seorang guru desain grafis mungkin juga akan memberikan umpan balik mengenai keterampilan komunikasi visual yang diterapkan dalam proyek multimedia.</p>
+              
+              <p class="text-sm md:text-md font-semibold text-gray-600 mt-2">Tujuan dan Harapan</p>
+              <p class="mt-2">Pelaksanaan sumatif dan penilaian akhir semester ini diharapkan dapat memberikan gambaran yang lebih lengkap mengenai kompetensi siswa di bidang praktis. Selain itu, ujian ini juga bertujuan untuk:</p>
+              <div class="mt-2 flex">
+                <p class="mr-1">▶</p>
+                <p>Meningkatkan pemahaman siswa mengenai materi yang telah dipelajari.</p>
+              </div>
+              
+              <div class="mt-2 flex">
+                <p class="mr-1">▶</p>
+                <p>Mengukur sejauh mana keterampilan dan keahlian yang telah dikuasai siswa sesuai dengan standar industri.</p>
+              </div>
+              
+              <div class="mt-2 flex">
+                <p class="mr-1">▶</p>
+                <p>Memberikan kesempatan bagi siswa untuk mengaplikasikan pengetahuan secara langsung di lapangan kerja.</p>
+              </div>
+              
+              <p class="mt-2">
+               Diharapkan dengan penerapan metode ini, siswa tidak hanya menguasai teori, tetapi juga mampu menghadapi tantangan dunia kerja yang membutuhkan keterampilan praktis yang tinggi. Kolaborasi antar guru juga diharapkan dapat meningkatkan kualitas penilaian dan memberikan pengalaman yang lebih mendalam bagi siswa.
+              </p>
+              
+            </div>
+            <button id="read_more1" type="button" class="py-1.5 px-2 rounded-md bg-blue-300 mt-2 hover:bg-blue-400 text-white">Read More...</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   {{-- Gallery --}}
-   <section id="gallery" class="py-20 bg-gray-50 text-center">
+   <section id="gallery" class="py-20 bg-gray-50 text-center hidden">
     <div class="max-w-screen-xl mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Gallery</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -177,22 +403,267 @@
     </div>
   </section>
   <!-- Fasilitas -->
-  <section id="fasilitas" class="py-20 bg-gray-50 text-center">
+  <section id="fasilitas" class="py-20 bg-gray-50 text-center hidden">
+    <div class="flex justify-center items-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-orange-500">Fasilitas</h2>
+    </div>
+    <div class="flex justify-center items-center">
+      <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition relative w-full md:w-6/12">
+        <!-- CARD CONTENT -->
+        <div class="card-slider text-center"
+          data-cards='[
+            {
+              "img": "{{ asset('/img/gedung-sekolah.png') }}",
+              "title": "Gedung Sekolah",
+              "desc": "Gedung SMK Pelita Jatibarang dengan tinggi 1-3 lantai"
+            },
+            {
+              "img": "{{ asset('/img/alat-praktik.png') }}",
+              "title": "Alat Praktek Mesin Kasir dan Timbangan",
+              "desc": "Alat praktik yang tersedia lengkap untuk menunjang pembelajaran"
+            },
+            {
+              "img": "{{ asset('/img/alat-praktik-press.png') }}",
+              "title": "Alat Praktik Sablon Kaos",
+              "desc": "Alat praktik ini digunakan untuk membuat kaos sablon yang menarik"
+            },
+            {
+              "img": "{{ asset('/img/alat-praktik-dkv.png') }}",
+              "title": "Alat Praktek Videografi, Fotografi, dan Perkantoran",
+              "desc": "Diharapkan dengan kelengkapan alat praktik ini siswa menjadi lebih kreatif"
+            },
+            {
+              "img": "{{ asset('/img/ruang-guru.png') }}",
+              "title": "Ruangan Guru",
+              "desc": "Ruang Guru yang Luas dan Rapih"
+            },
+            {
+              "img": "{{ asset('/img/ruang-tu.png') }}",
+              "title": "Ruangan Tata Usaha",
+              "desc": "Ruangan Tata Usaha untuk proses administrasi siswa dan guru"
+            },
+            {
+              "img": "{{ asset('/img/perpus.png') }}",
+              "title": "Perpustakaan",
+              "desc": "Buku-buku di perpustakaan lengkap untuk menunjangan pembelajaran"
+            },
+            {
+              "img": "{{ asset('/img/ruang-bk.png') }}",
+              "title": "Ruangan Bimbingan Konseling",
+              "desc": "Ruangan BK yang rapih dan bersih"
+            },
+            {
+              "img": "{{ asset('/img/lab-mplb.png') }}",
+              "title": "Lab Kom Pemasaran",
+              "desc": "Lab Komputer ini sudah dilengkapi dengan server dan internet"
+            },
+            {
+              "img": "{{ asset('/img/lab-pm.png') }}",
+              "title": "Lab Kom Perkantoran",
+              "desc": "Lab Komputer ini sudah dilengkapi dengan server dan internet"
+            },
+            {
+              "img": "{{ asset('/img/lab-dkv.png') }}",
+              "title": "Lab Kom DKV & TJKT",
+              "desc": "Lab Komputer ini sudah dilengkapi dengan server dan internet"
+            },
+            {
+              "img": "{{ asset('/img/ruang-kelas.png') }}",
+              "title": "Ruang Kelas",
+              "desc": "Ruang kelas yang bersih dan nyaman"
+            },
+            {
+              "img": "{{ asset('/img/mushola.png') }}",
+              "title": "Tempat Ibadah",
+              "desc": "Tempat ibadah yang lumayan luas dan nyaman"
+            },
+            {
+              "img": "{{ asset('/img/uks.png') }}",
+              "title": "UKS",
+              "desc": "Ruang UKS digunakan untuk perawatan bagi murid yang sakit"
+            },
+            {
+              "img": "{{ asset('/img/ruang-osis.png') }}",
+              "title": "Ruang Osis",
+              "desc": "Organisasi Siswa memiliki rungan sendiri"
+            },
+            {
+              "img": "{{ asset('/img/toilet-pria.png') }}",
+              "title": "Toilet Pria",
+              "desc": "Toilet yang bersih dan tidak bau"
+            },
+            {
+              "img": "{{ asset('/img/toilet-wanita.png') }}",
+              "title": "Toilet Wanita",
+              "desc": "Toilet yang bersih dan tidak bau"
+            },
+            
+            {
+              "img": "{{ asset('/img/kantin.png') }}",
+              "title": "Kantin",
+              "desc": "Kantin yang terawat dan bersih"
+            },
+            {
+              "img": "{{ asset('/img/olahraga.png') }}",
+              "title": "Perlengkapan Olahraga",
+              "desc": "Perlengkapan olahraga yang lengkap"
+            },
+            {
+              "img": "{{ asset('/img/lap-sekolah.png') }}",
+              "title": "Tempat Wudhu",
+              "desc": "Tempat wudhu terpisah dan terawat"
+            },
+            {
+              "img": "{{ asset('/img/bursa-kerja.png') }}",
+              "title": "Bursa Kerja",
+              "desc": "Bursa Kerja disediakan untuk lulusan untuk mempercepat penerimaan pekerjaan"
+            }
+          ]'
+          data-index="0"
+        >
+
+          <img class="card-img w-full object-cover rounded-md mb-3 transition duration-300">
+
+          <h3 class="card-title text-md font-semibold text-orange-500"></h3>
+          <p class="card-desc text-gray-700 text-xs"></p>
+
+        </div>
+
+        <!-- BUTTON -->
+        <div class="flex justify-between mt-3">
+          <button onclick="prevCard(this)"
+            class="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">
+            &lt;
+          </button>
+
+          <button onclick="nextCard(this)"
+            class="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">
+            &gt;
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  {{-- <Ekstrakurikuler> --}}
+  <section id="ekstrakurikuler" class="py-20 bg-gray-50 hidden">
+    <div class="max-w-screen-md mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 md:gap-2 gap-0">
+        <div class="shadow-lg">
+          <div class="flex justify-center items-center p-1 rounded-lg">
+            <img src="{{asset('/img/pramuka.jpg')}}" alt="pramuka">
+          </div>
+        </div>
+        <div class="shadow-lg">
+          <div class="text-xs md:text-sm text-gray-600 p-4 text-justify">
+            <p class="text-xl font-bold mb-2">Pramuka</p>
+            <p>
+              Pramuka adalah salah satu organisasi kepemudaan yang memiliki banyak manfaat dan nilai bagi anggotanya. Pramuka tidak hanya mengajarkan kedisiplinan, kerja sama, dan kemandirian, tetapi juga memberikan inspirasi dan semangat untuk berkontribusi bagi masyarakat dan negara.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 md:gap-2 gap-0">
+        <div class="shadow-lg">
+          <div class="flex justify-center items-center p-1 rounded-lg">
+            <img src="{{asset('/img/pmr.jpg')}}" alt="pmr">
+          </div>
+        </div>
+        <div class="shadow-lg">
+          <div class="text-xs md:text-sm text-gray-600 p-4 text-justify">
+            <p class="text-xl font-bold mb-2">Palang Merah Remaja</p>
+            <p>
+              Organisasi palang merah memang identik dengan aksi kemanusiaannya. Ada banyak kegiatan palang merah yang bermanfaat seperit aksi cepat tanggap ketika terjadi bencana hingga kegiatan amal lainnya yang bernilai positif. Ada begitu banyak kegiatan positif yang bisa kamu lakukan bila masuk menjadi anggota PMR ini.  
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 md:gap-2 gap-0">
+        <div class="shadow-lg">
+          <div class="flex justify-center items-center p-1 rounded-lg">
+            <img src="{{asset('/img/paskibra.jpg')}}" alt="paskibra">
+          </div>
+        </div>
+        <div class="shadow-lg">
+          <div class="text-xs md:text-sm text-gray-600 p-4 text-justify">
+            <p class="text-xl font-bold mb-2">Paskibra</p>
+            <p>
+              Tidak perlu kata kata ajakan bergabung organisasi paskibra Karena menjadi paskibra hanya untuk kalian yang kuat Kalau kamu merasa tertantang, ayo bergabung bersama kami!
+            </p>
+            <p class="mt-2">
+              Semakin kuat seorang maka semakin besar cobaan yang akan dihadapinya. Jadilah orang kuat yang selalu peduli dengan sekitar. yang menjadi anggota Paskibra sudah diajarkan Bagaimana cara menjadi sosok yang peduli dengan sekitar.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-center items-center mt-5 mb-3 text-center text-2xl font-bold text-gray-600">
+        <h1>Pengembangan Diri Futsal</h1>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div ><img src="{{asset('/img/futsal-putra.jpg')}}" alt="futsal putra"></div>
+        <div><img src="{{asset('/img/futsal-putri.png')}}" alt="futsal putri"></div>
+      </div>
+      <div class="mt-5 mb-3 text-justify text-xs md:text-sm">
+        <p>
+          Hampir sama dengan bermain sepak bola, futsal juga bertujuan mencetak gol lebih banyak supaya menjadi pemenang. Bedanya, olahraga ini berlangsung di lapangan lebih kecil, serta dimainkan dua tim dengan masing-masing menurunkan lima pemain.
+        </p>
+        <p class="mt-2">
+          Anak futsal itu pasti punya jiwa pantang menyerah dan semangat yang nggak tergoyahkan. Karena kerja sama tim adalah kunci kejayaan tim kami.
+        </p>
+      </div>
+      <div class="flex justify-center items-center mt-5 mb-3 text-center text-2xl font-bold text-gray-600">
+        <h1>Pengembangan Diri Seni Tari</h1>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div ><img src="{{asset('/img/tari-satu.jpg')}}" alt="tari satu"></div>
+        <div><img src="{{asset('/img/tari-dua.jpg')}}" alt="tari dua"></div>
+      </div>
+      <div class="flex justify-center items-center mt-5 mb-3 text-justify text-xs md:text-sm">
+        <p>
+         Tari adalah bahasa tersembunyi dari jiwa. Anda harus menari seakan tidak ada yang melihat Anda, mencintai seperti Anda tidak pernah tersakiti, bernyanyi seakan tidak ada yang mendengarkan Anda, dan hidu seakan ini adalah surga di bumi. Musik dan tari adalah dua seni yang memiliki hubungan erat. Mengapa tidak belajar menari dengan musik favorit Anda?
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimoni -->
+  <section id="beasiswa" class="py-20 bg-gray-50 text-center hidden">
     <div class="max-w-screen-xl mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Fasilitas Kami</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <h3 class="text-xl font-semibold text-orange-500 mb-3">Kelas Modern</h3>
-          <p class="text-gray-700">Ruang kelas yang nyaman dengan teknologi terkini.</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Beasiswa</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+        <div class="flex justify-center items-center">
+          <img 
+            src="{{asset('/img/baner-beasiswa.jpg')}}"
+            class="w-80 cursor-pointer transition hover:scale-105"
+            onclick="openImage(this.src)"
+          >
         </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <h3 class="text-xl font-semibold text-orange-500 mb-3">Laboratorium</h3>
-          <p class="text-gray-700">Laboratorium lengkap untuk mendukung pembelajaran praktis.</p>
+
+        <div class="flex justify-center items-center">
+          <img 
+            src="{{asset('/img/baner-beasiswa-1.jpg')}}"
+            class="w-80 cursor-pointer transition hover:scale-105"
+            onclick="openImage(this.src)"
+          >
         </div>
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-          <h3 class="text-xl font-semibold text-orange-500 mb-3">Fasilitas Olahraga</h3>
-          <p class="text-gray-700">Lapangan dan sarana olahraga untuk aktivitas fisik siswa.</p>
+
+        <div class="flex justify-center items-center">
+          <img 
+            src="{{asset('/img/baner-beasiswa-2.jpg')}}"
+            class="w-80 cursor-pointer transition hover:scale-105"
+            onclick="openImage(this.src)"
+          >
         </div>
+
+        <div class="flex justify-center items-center">
+          <img 
+            src="{{asset('/img/baner-beasiswa-3.jpg')}}"
+            class="w-80 cursor-pointer transition hover:scale-105"
+            onclick="openImage(this.src)"
+          >
+        </div>
+      </div>
+      <div class="mt-10 text-blue-600 underline text-lg">
+        <span>Klik untuk memperbesar gambar</span>
       </div>
     </div>
   </section>
@@ -265,6 +736,182 @@
             });
         </script>
     @endif
+    {{-- //slide image --}}
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.slide');
+        let index = 0;
+
+        if (slides.length === 0) return;
+
+        setInterval(() => {
+          slides[index].classList.remove('opacity-100');
+          slides[index].classList.add('opacity-0');
+
+          index = (index + 1) % slides.length;
+
+          slides[index].classList.remove('opacity-0');
+          slides[index].classList.add('opacity-100');
+        }, 3000);
+      });
+      document.addEventListener('DOMContentLoaded', () => {
+        const slide1 = document.querySelectorAll('.slide1');
+        let index = 0;
+
+        if (slide1.length === 0) return;
+
+        setInterval(() => {
+          slide1[index].classList.remove('opacity-100');
+          slide1[index].classList.add('opacity-0');
+
+          index = (index + 1) % slide1.length;
+
+          slide1[index].classList.remove('opacity-0');
+          slide1[index].classList.add('opacity-100');
+        }, 3000);
+      });
+    </script>
+
+    {{-- card slide  --}}
+    <script>
+      document.querySelectorAll('.card-slider').forEach(slider => {
+        const cards = JSON.parse(slider.dataset.cards);
+        slider.dataset.index = 0;
+        updateCard(slider, cards, 0);
+      });
+
+      function updateCard(slider, cards, index) {
+        slider.querySelector('.card-img').src = cards[index].img;
+        slider.querySelector('.card-title').innerText = cards[index].title;
+        slider.querySelector('.card-desc').innerText = cards[index].desc;
+      }
+
+      function nextCard(btn) {
+        const slider = btn.closest('.bg-white').querySelector('.card-slider');
+        const cards = JSON.parse(slider.dataset.cards);
+        let index = parseInt(slider.dataset.index);
+
+        index = (index + 1) % cards.length;
+        slider.dataset.index = index;
+        updateCard(slider, cards, index);
+      }
+
+      function prevCard(btn) {
+        const slider = btn.closest('.bg-white').querySelector('.card-slider');
+        const cards = JSON.parse(slider.dataset.cards);
+        let index = parseInt(slider.dataset.index);
+
+        index = (index - 1 + cards.length) % cards.length;
+        slider.dataset.index = index;
+        updateCard(slider, cards, index);
+      }
+    </script>
+
+
+    {{-- read more --}}
+    <script>
+      const read_more = document.getElementById('read_more');
+      const read_more1 = document.getElementById('read_more1');
+      const read1 = document.getElementById('read1');
+
+      read_more.addEventListener('click', (e) => {
+        e.preventDefault();
+        read.classList.toggle('hidden');
+
+        read_more.textContent = read.classList.contains('hidden')
+          ? 'Read More...'
+          : 'Read Less';
+      });
+
+       read_more1.addEventListener('click', (e) => {
+        e.preventDefault();
+        read1.classList.toggle('hidden');
+
+        read_more1.textContent = read1.classList.contains('hidden')
+          ? 'Read More...'
+          : 'Read Less';
+      });
+    </script>
+
+    {{-- scale untuk klik image --}}
+    <script>
+      function openImage(src) {
+        const overlay = document.createElement("div");
+        overlay.className = `
+          fixed inset-0 bg-black/80
+          flex items-center justify-center
+          z-[9999]
+        `;
+        overlay.onclick = () => overlay.remove();
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.className = "max-w-[95%] max-h-[95%] rounded-lg";
+
+        overlay.appendChild(img);
+        document.body.appendChild(overlay);
+      }
+    </script>
+
+    {{-- navbar --}}
+    
+    <script>
+      document.querySelectorAll('.spelza-news').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const news = document.getElementById('news');
+          news.classList.remove('hidden');
+
+          // optional: scroll
+          news.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+      document.querySelectorAll('.click-gallery').forEach(btn1 => {
+        btn1.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const gallery = document.getElementById('gallery');
+          gallery.classList.remove('hidden');
+
+          // optional: scroll
+          gallery.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+      document.querySelectorAll('.click-fasilitas').forEach(btn2 => {
+        btn2.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const fasilitas = document.getElementById('fasilitas');
+          fasilitas.classList.remove('hidden');
+
+          // optional: scroll
+          fasilitas.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+      document.querySelectorAll('.click-ekstrakurikuler').forEach(btn2 => {
+        btn2.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const ekstrakurikuler = document.getElementById('ekstrakurikuler');
+          ekstrakurikuler.classList.remove('hidden');
+
+          // optional: scroll
+          ekstrakurikuler.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+      document.querySelectorAll('.click-beasiswa').forEach(btn2 => {
+        btn2.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const beasiswa = document.getElementById('beasiswa');
+          beasiswa.classList.remove('hidden');
+
+          // optional: scroll
+          beasiswa.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    </script>
 </body>
 </html>
 
