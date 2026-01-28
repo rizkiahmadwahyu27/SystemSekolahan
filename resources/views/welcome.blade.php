@@ -176,14 +176,12 @@
       <h2 class="text-3xl md:text-4xl font-bold text-orange-500 mb-12">Spelza News</h2>
       <div class="grid grid-cols-1 gap-1 md:grid-cols-3">
         <div class="p-2 rounded-lg shadow-md">
-          <div class="flex justify-center items-center">
-            <video
-                controls
-                class="w-full max-w-xl mx-auto rounded-lg shadow"
-              >
-                <source src="{{ asset('/img/ajakan ppdb lucky.mp4') }}" type="video/mp4">
-                Browser kamu tidak mendukung video.
-              </video>
+          <div class="relative w-full max-w-xl mx-auto pt-[56.25%]">
+            <iframe
+              src="https://drive.google.com/file/d/1bsmKSC334xVb_plDG-Qh_5wZ6vL3BrxE/preview"
+              class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
+              allow="autoplay"
+            ></iframe>
           </div>
         </div>
         <div class="col-span-2 p-2 rounded-lg shadow-md">
