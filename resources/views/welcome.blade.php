@@ -4,9 +4,16 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Aplikasi_Sekolahan</title>
+        <title>SMK Pelita Jatibarang | Website Resmi</title>
 
-        <!-- Fonts -->
+
+        <meta name="description" content="Website resmi SMK Pelita Jatibarang. Informasi sekolah, PPDB, jurusan, berita, dan kegiatan siswa.">
+
+
+        <meta name="keywords" content="SMK Pelita Jatibarang, SMK di Jatibarang, Sekolah Kejuruan Jatibarang">
+
+
+        <meta name="robots" content="index, follow">
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
         <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css”> 
@@ -112,8 +119,11 @@
     <!-- KONTEN (TIDAK TERKENA APA PUN) -->
     <div class="relative z-10 h-full flex justify-center items-start py-20 text-center text-white">
         <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-2xl md:text-3xl font-extrabold mb-4">
+                Selamat Datang di
+            </h2>
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
-                Selamat Datang di Sekolah Kami
+              SMK Pelita Jatibarang
             </h1>
             <p class="text-lg md:text-2xl mb-6 font-extrabold">
                 Mewujudkan Pendidikan Berkualitas untuk Masa Depan yang Cerah
@@ -132,6 +142,9 @@
   <section class="py-20 bg-white">
     <div class="max-w-screen-md mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold text-center text-orange-500 mb-6">Tentang Kami</h2>
+      <div class="mt-3">
+        <p>Profile SMK Pelita Jatibarang adalah sekolah Menengah Kejuruan yang berlokasi di Jl. Raya Bulak Komplek Kantor Camat Jatibarang RT. 08 RW. 03 Desa Bulak Kecamatan Jatibarang Indramayu. SMK Pelita Jatibarang sebagai sekolah swasta yang telah terakreditasi "A" berikut <b>visi & misi</b> kami:</p>
+      </div>
       <div class="grid grid-cols-1 gap-3">
         <div class="rounded-xl shadow-xl p-5">
           <div class="flex justify-center items-center text-xl font-extrabold border-b-2 border-gray-400">Visi</div>
@@ -167,6 +180,38 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="mt-5">
+        <div class="w-full text-left">
+            <table class="table-auto">
+                <thead class="sticky top-0">
+                  <tr>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2 border-r-2">NPSN</th>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2">20215994</th>
+                  </tr>
+                  <tr>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2 border-r-2">Nama</th>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2">SMKS PELITA JATIBARANG</th>
+                  </tr>
+                  <tr>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2 border-r-2">Status</th>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2">SWASTA</th>
+                  </tr>
+                  <tr>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2 border-r-2">Alamat</th>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2">Jl. Raya Bulak Komplek Kantor Camat Jatibarang RT. 08 RW. 03 Desa Bulak Kecamatan Jatibarang Indramayu</th>
+                  </tr>
+                  <tr>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2 border-r-2">Bentuk Pendidikan</th>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2">Sekolah Menengah Kejuruan (SMK)</th>
+                  </tr>
+                  <tr>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2 border-r-2">Akreditasi</th>
+                    <th class="py-2 px-1 text-xs font-medium border-b-2"><p class="bg-green-200 w-8 h-8 text-center border-green-500 p-1 text-green-700 font-bold">A</p></th>
+                  </tr>
+                  </tr>
+                </thead>
+            </table>
       </div>
     </div>
   </section>
