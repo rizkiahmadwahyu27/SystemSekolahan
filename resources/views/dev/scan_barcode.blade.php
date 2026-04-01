@@ -1,6 +1,155 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <title>QR Scanner Absensi</title>
+
+    <!-- Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            font-family: sans-serif;
+        }
+
+        #reader {
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: red;
+            animation: scan 2s infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 10%; }
+            100% { top: 90%; }
+        }
+
+        .info {
+            color: white;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="reader">
+    <div class="scan-line"></div>
+</div>
+
+<div class="info">Arahkan QR ke kamera...</div>
+
+<!-- SOUND -->
+<audio id="beep" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+
+<script>
+   let isScanning = true;
+    let lastResult = null;
+
+    const html5QrCode = new Html5Qrcode("reader");
+
+    function onScanSuccess(decodedText) {
+
+        // 🔒 cegah scan berulang
+        if (!isScanning) return;
+
+        // 🔒 cegah QR sama kebaca terus
+        if (decodedText === lastResult) return;
+
+        lastResult = decodedText;
+        isScanning = false;
+
+        console.log("QR:", decodedText);
+
+        fetch(`/scann/barcode/absen/post/${decodedText}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            Swal.fire({
+                icon: data.status ? 'success' : 'error',
+                title: data.message,
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            // 🔊 suara (optional)
+            let beep = new Audio('/beep.mp3');
+            beep.play().catch(()=>{});
+
+            // ⏱ reset scan setelah delay
+            setTimeout(() => {
+                isScanning = true;
+                lastResult = null;
+            }, 2000);
+
+        })
+        .catch(err => {
+            console.error(err);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Server error',
+                text: 'Gagal koneksi ke server',
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            setTimeout(() => {
+                isScanning = true;
+            }, 2000);
+        });
+    }
+
+    function onScanError(errorMessage) {
+        // biarin aja (jangan spam console)
+    }
+
+    // 🚀 START CAMERA
+    Html5Qrcode.getCameras().then(devices => {
+
+        if (devices && devices.length) {
+
+            let cameraId = devices[0].id;
+
+            html5QrCode.start(
+                cameraId,
+                {
+                    fps: 10,
+                    qrbox: 250
+                },
+                onScanSuccess,
+                onScanError
+            );
+
+        }
+    }).catch(err => {
+        console.error("Camera error:", err);
+    });
+</script>
+
+</body>
+</html>
+{{-- <!DOCTYPE html>
+<html lang="id">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>QR Scanner</title>
@@ -121,4 +270,4 @@
 @endif
 
 </body>
-</html>
+</html> --}}

@@ -74,15 +74,15 @@
                     <div class="cetak bg-white rounded-md text-xs w-full">
                         <div class="grid grid-cols-4">
                             <div>
-                                <div class="w-11 h-6 flex justify-center items-center mt-0.5">
+                                <div class="w-9 h-4 flex justify-center items-center mb-0.5">
                                     <img src="{{asset('/img/logosmknew.png')}}" alt="logo smk">
                                 </div>
                             </div>
                             <div class="col-span-3 -ml-7">
-                                <div class="flex justify-center items-center text-[14px] leading-tight font-bold -mt-3"><h1>KARTU PELAJAR</h1></div>
-                                <div class="flex justify-center items-center text-[14px] leading-tight font-bold"><h2>SMK PELITA JATIBARANG</h2></div>
-                                <div class="flex justify-center items-center text-[9px] leading-tight"><h4>Jl. Raya Bulak Komplek Kantor Camat</h4></div>
-                                <div class="flex justify-center items-center text-[9px] leading-tight"><h4>Jatibarang - Indramayu Telp. (0234) 352078</h4></div>
+                                <div class="flex justify-center items-center text-[14px] leading-tight font-bold -mt-[15px]"><h1>KARTU PELAJAR</h1></div>
+                                <div class="flex justify-center items-center text-[14px] leading-tight font-bold -mt-1"><h2>SMK PELITA JATIBARANG</h2></div>
+                                <div class="flex justify-center items-center text-[9px] leading-tight -mt-1"><h4>Jl. Raya Bulak Komplek Kantor Camat</h4></div>
+                                <div class="flex justify-center items-center text-[9px] leading-tight -mt-0.5"><h4>Jatibarang - Indramayu Telp. (0234) 352078</h4></div>
                             </div>
                         </div>
                         <div class="w-full h-1 bg-orange-800 mb-2"></div>
@@ -97,41 +97,41 @@
                             <div class="col-span-3">
                                 <div class="flex justify-center items-center mt-3">
                                     <div class="grid grid-cols-[auto_min-content_1fr] w-full max-w-md -mt-4">
-                                        <div class="col-span-3 text-[7.5px] pb-1 flex">
-                                            <div class="w-1/6">Nama</div>
-                                            <div class="mx-2">:</div>
-                                            <div class="flex-1 break-words">{{$siswa->nama}}</div>
+                                        <div class="col-span-3 text-[7.5px] pb-1 flex leading-tight">
+                                            <div class="w-1/6 leading-tight" >Nama</div>
+                                            <div class="mx-2 leading-tight">:</div>
+                                            <div class="flex-1 break-words leading-tight">{{$siswa->nama}}</div>
                                         </div>
-                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-3">
-                                            <div class="w-1/6">No. Induk</div>
-                                            <div class="mx-2">:</div>
-                                            <div class="flex-1 break-words">{{$siswa->nis}}</div>
+                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
+                                            <div class="w-1/6 leading-tight">No. Induk</div>
+                                            <div class="mx-2 leading-tight">:</div>
+                                            <div class="flex-1 break-words leading-tight">{{$siswa->nis}}</div>
                                         </div>
-                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-3">
-                                            <div class="w-1/6">NISN</div>
-                                            <div class="mx-2">:</div>
-                                            <div class="flex-1 break-words">{{$siswa->nisn}}</div>
+                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
+                                            <div class="w-1/6 leading-tight">NISN</div>
+                                            <div class="mx-2 leading-tight">:</div>
+                                            <div class="flex-1 break-words leading-tight">{{$siswa->nisn}}</div>
                                         </div>
-                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-3">
-                                            <div class="w-1/6">TTL</div>
-                                            <div class="mx-2">:</div>
-                                            <div class="flex-1 break-words">{{$siswa->tempat_lahir}}, {{ \Carbon\Carbon::parse($siswa->tgl_lahir)->format('d-m-Y') }}</div>
+                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
+                                            <div class="w-1/6 leading-tight">TTL</div>
+                                            <div class="mx-2 leading-tight">:</div>
+                                            <div class="flex-1 break-words leading-tight">{{$siswa->jenis_kelamin}}</div>
                                         </div>
-                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-3">
-                                            <div class="w-1/6">Kelas</div>
-                                            <div class="mx-2">:</div>
-                                            <div class="flex-1 break-words">{{$siswa->kode_kelas}}</div>
+                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
+                                            <div class="w-1/6 leading-tight">Kelas</div>
+                                            <div class="mx-2 leading-tight">:</div>
+                                            <div class="flex-1 break-words leading-tight">X {{$siswa->agama}}</div>
                                         </div>
-                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-2">
-                                            <div class="w-1/6">Alamat</div>
-                                            <div class="mx-2">:</div>
+                                        <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
+                                            <div class="w-1/6 leading-tight">Alamat</div>
+                                            <div class="mx-2 leading-tight">:</div>
                                             <div class="flex-1 break-words leading-tight">{{$siswa->alamat}}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex justify-end items-end w-56">
                                     <div>
-                                        <p class="text-[7px] -mt-3">Jatibarang, Juli 2025</p>
+                                        <p class="text-[7px] -mt-2">Jatibarang, Juli 2025</p>
                                         <p class="text-[7px] -mt-2">Kepala Sekolah,</p>
                                         <img src="{{asset('/img/ttd_kepsek.gif')}}" alt="ttd kepsek" class="w-[65px] h-[55px] absolute -mt-3 -ml-7">
                                         <p class="text-[7px] font-bold mt-8">LINDA TRI APSARI, S.Pd</p>

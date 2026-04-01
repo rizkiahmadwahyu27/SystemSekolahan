@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Jobs\KirimWaWali;
 
 class DevController extends Controller
 {
@@ -64,55 +65,129 @@ class DevController extends Controller
         ], compact('data_siswa', 'data_pegawai', 'data_kelas'));
     }
 
-    public function scan_post($nis){
-        $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
-        $data_kelas = $siswa->join('data_kelas', 'data_kelas.kode_kelas', '=', 'kode_kelas')->where('data_kelas.kode_kelas', $siswa->kode_kelas)->first();
-        $conf = Configurasi::where('status', 'aktif')->first();
-         if (!$siswa && !$data_kelas) {
-            return redirect(route('scan_barcode'))->with('error', 'Data Siswa Tidak Ada');
-        }
+    // public function scan_post($nis){
+    //     $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')->where('data_siswas.nis', $nis)->first();
+    //     $data_kelas = $siswa->join('data_kelas', 'data_kelas.kode_kelas', '=', 'kode_kelas')->where('data_kelas.kode_kelas', $siswa->kode_kelas)->first();
+    //     $conf = Configurasi::where('status', 'aktif')->first();
+    //      if (!$siswa && !$data_kelas) {
+    //         return redirect(route('scan_barcode'))->with('error', 'Data Siswa Tidak Ada');
+    //     }
 
-        $hariInggris = date('l', strtotime(date('Y-m-d')));
-        $hariIndonesia = [
-            'Sunday'    => 'Minggu',
-            'Monday'    => 'Senin',
-            'Tuesday'   => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday'  => 'Kamis',
-            'Friday'    => 'Jumat',
-            'Saturday'  => 'Sabtu'
-        ];
+    //     $hariInggris = date('l', strtotime(date('Y-m-d')));
+    //     $hariIndonesia = [
+    //         'Sunday'    => 'Minggu',
+    //         'Monday'    => 'Senin',
+    //         'Tuesday'   => 'Selasa',
+    //         'Wednesday' => 'Rabu',
+    //         'Thursday'  => 'Kamis',
+    //         'Friday'    => 'Jumat',
+    //         'Saturday'  => 'Sabtu'
+    //     ];
 
-        $absensi = Absensi::where('nis', $nis)->where('tanggal', date('Y-m-d'))->where('guru', $data_kelas->nama_wali_kelas)->where('jenis_absen', 'harian')->first();
+    //     $absensi = Absensi::where('nis', $nis)->where('tanggal', date('Y-m-d'))->where('guru', $data_kelas->nama_wali_kelas)->where('jenis_absen', 'harian')->first();
 
-        if (!$absensi) {
-            $absen = Absensi::create([
-                'nis' => $siswa->nis,
-                'nama' => $siswa->nama,
-                'kelas' => $siswa->nama_kelas,
-                'guru' => $data_kelas->nama_wali_kelas,
-                'jenis_absen' => 'harian',
-                'hari' => $hariIndonesia[$hariInggris],
-                'tanggal' => date('Y-m-d'),
-                'status' => 'Hadir',
-                'keterangan' => 'Hadir di Kelas',
-                'user_input' => Auth::user()->name,
-                'user_edit' => 'Null',
-                'id_conf' => $conf->id,
-                'id_user_input' => Auth::user()->id,
-                'id_user_edit' => null,
-                'id_siswa' => $siswa->id,
-                'id_wali_kelas' => $data_kelas->id_wali_kelas,
-                'id_kelas' => $data_kelas->id,
-            ]); 
-            $this->kirimPesanWali($siswa, $absen);
-            //MENAMBAHA
-            return redirect()->back()->with('success', 'Data Berhasil Disimpan');
-        }else{
-            return redirect()->back()->with('error', 'Maaf kamu sudah absen');
-        }
+    //     if (!$absensi) {
+    //         $absen = Absensi::create([
+    //             'nis' => $siswa->nis,
+    //             'nama' => $siswa->nama,
+    //             'kelas' => $siswa->nama_kelas,
+    //             'guru' => $data_kelas->nama_wali_kelas,
+    //             'jenis_absen' => 'harian',
+    //             'hari' => $hariIndonesia[$hariInggris],
+    //             'tanggal' => date('Y-m-d'),
+    //             'status' => 'Hadir',
+    //             'keterangan' => 'Hadir di Kelas',
+    //             'user_input' => Auth::user()->name,
+    //             'user_edit' => 'Null',
+    //             'id_conf' => $conf->id,
+    //             'id_user_input' => Auth::user()->id,
+    //             'id_user_edit' => null,
+    //             'id_siswa' => $siswa->id,
+    //             'id_wali_kelas' => $data_kelas->id_wali_kelas,
+    //             'id_kelas' => $data_kelas->id,
+    //         ]); 
+    //          $this->kirimPesanWali($siswa, $absen);
+    //         //MENAMBAHA
+    //         return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+    //     }else{
+    //         return redirect()->back()->with('error', 'Maaf kamu sudah absen');
+    //     }
         
+    // }
+
+    public function scan_post($nis)
+{
+    $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')
+        ->where('data_siswas.nis', $nis)
+        ->first();
+
+    if (!$siswa) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Data Siswa Tidak Ada'
+        ]);
     }
+
+    $data_kelas = DB::table('data_kelas')
+        ->where('kode_kelas', $siswa->kode_kelas)
+        ->first();
+
+    if (!$data_kelas) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Data Kelas Tidak Ada'
+        ]);
+    }
+
+    $conf = Configurasi::where('status', 'aktif')->first();
+
+    $hari = [
+        'Sunday'=>'Minggu','Monday'=>'Senin','Tuesday'=>'Selasa',
+        'Wednesday'=>'Rabu','Thursday'=>'Kamis','Friday'=>'Jumat','Saturday'=>'Sabtu'
+    ];
+
+    $today = date('Y-m-d');
+
+    $absensi = Absensi::where('nis', $nis)
+        ->where('tanggal', $today)
+        ->first();
+
+    if (!$absensi) {
+
+        $userEdit = Auth::check() ? Auth::user()->name : 'system';
+
+        $absen = Absensi::create([
+            'nis' => $siswa->nis,
+            'nama' => $siswa->nama,
+            'kelas' => $siswa->nama_kelas,
+            'guru' => $data_kelas->nama_wali_kelas,
+            'jenis_absen' => 'harian',
+            'hari' => $hari[date('l')],
+            'tanggal' => $today,
+            'status' => 'Hadir',
+            'keterangan' => 'Hadir di Kelas',
+            'user_input' => $userEdit,
+            'user_edit' => $userEdit, // ✅ TAMBAHKAN INI
+            'id_user_input' => Auth::check() ? Auth::user()->id : null,
+            'id_user_edit' => null,
+            'id_conf' => $conf ? $conf->id : null,
+            'id_siswa' => $siswa->id,
+            'id_wali_kelas' => $data_kelas->id_wali_kelas,
+            'id_kelas' => $data_kelas->id,
+        ]);
+         KirimWaWali::dispatch($siswa, $absen);
+        return response()->json([
+            'status' => true,
+            'message' => 'Absensi berhasil'
+        ]);
+
+    } else {
+        return response()->json([
+            'status' => false,
+            'message' => 'Sudah absen hari ini'
+        ]);
+    }
+}
 
     public function data_absen(){
         $data_absen = Absensi::all();
