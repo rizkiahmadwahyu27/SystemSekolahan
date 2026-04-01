@@ -117,16 +117,16 @@ class DevController extends Controller
 
     public function scan_post($nis)
 {
+    $nis = preg_replace('/[^0-9.]/', '', $nis);
     $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')
         ->where('data_siswas.nis', $nis)
         ->first();
-
     if (!$siswa) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Data Siswa Tidak Ada'
-        ]);
-    }
+    return response()->json([
+        'status' => false,
+        'message' => 'Data Siswa Tidak Ada',
+    ]);
+}
 
     $data_kelas = DB::table('data_kelas')
         ->where('kode_kelas', $siswa->kode_kelas)
