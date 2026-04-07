@@ -2,6 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Scanner Absensi</title>
 
     <!-- Library -->
@@ -220,7 +222,22 @@ input.addEventListener('keydown', function(e) {
 setInterval(() => input.focus(), 500);
 
 </script>
+<script>
+function masukFullscreen() {
+    const el = document.documentElement;
 
+    if (el.requestFullscreen) {
+        el.requestFullscreen();
+    } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+    } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
+    }
+}
+
+// auto jalan saat klik pertama
+document.addEventListener('click', masukFullscreen, { once: true });
+</script>
 </body>
 </html>
 
