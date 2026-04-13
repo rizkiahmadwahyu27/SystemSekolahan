@@ -1,246 +1,181 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="theme-color" content="#000000">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Scanner Absensi</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanner Absensi</title>
 
-    <!-- Library -->
-    <script src="https://unpkg.com/html5-qrcode@2.3.8"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        body {
-            margin: 0;
-            background: #000;
-            overflow: hidden;
-        }
+<style>
+body {
+    margin: 0;
+    background: #000;
+    overflow: hidden;
+}
 
-        /* 🔥 Kamera Fullscreen */
-        #reader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-        }
+/* Kamera fullscreen */
+#camera {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
 
-        video {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover;
-        }
+/* Overlay text */
+.overlay {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    z-index: 3;
+    font-size: 16px;
+}
 
-        /* 🔴 Garis scan */
-        .scan-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: red;
-            animation: scan 2s infinite;
-            z-index: 3;
-        }
+/* Flash sukses */
+#flash {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,255,0,0.25);
+    display: none;
+    z-index: 5;
+}
 
-        @keyframes scan {
-            0% { top: 20%; }
-            100% { top: 80%; }
-        }
-
-        /* 🟩 Box scanner */
-        .scan-box {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 260px;
-            height: 260px;
-            transform: translate(-50%, -50%);
-            border: 2px solid rgba(255,255,255,0.7);
-            border-radius: 12px;
-            z-index: 2;
-        }
-
-        /* 📝 Text bawah */
-        .overlay-text {
-            position: fixed;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-size: 14px;
-            z-index: 4;
-        }
-
-        /* 🟢 Flash sukses */
-        .success-flash {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,255,0,0.2);
-            z-index: 5;
-            display: none;
-        }
-    </style>
+/* Nama siswa */
+#resultBox {
+    position: fixed;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    z-index: 4;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+}
+</style>
 </head>
 
 <body>
 
-    <!-- Kamera -->
-    <div id="reader">
-        <div class="scan-box"></div>
-        <div class="scan-line"></div>
-    </div>
+<!-- Kamera -->
+<video id="camera" autoplay playsinline></video>
 
-    <!-- Overlay -->
-    <div class="overlay-text">
-        Scan Barcode / QR Siswa
-    </div>
+<!-- Nama -->
+<div id="resultBox"></div>
 
-    <!-- Flash sukses -->
-    <div id="flash" class="success-flash"></div>
+<!-- Text -->
+<div class="overlay">Silakan Scan Kartu Absensi</div>
 
-    <!-- Input scanner -->
-    <input type="text" id="scan" autofocus style="position:absolute; left:-9999px;">
+<!-- Flash -->
+<div id="flash"></div>
 
-    <!-- Sound -->
-    <audio id="beep" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<!-- Hidden input -->
+<input type="text" id="scan" autofocus style="position:absolute; left:-9999px;">
+
+<!-- Sound -->
+<audio id="beep" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 
 <script>
+const input = document.getElementById('scan');
+const flash = document.getElementById('flash');
+const resultBox = document.getElementById('resultBox');
+
 let isScanning = true;
-let lastResult = null;
+let lastKode = null;
 
-const html5QrCode = new Html5Qrcode("reader");
+// 🔥 Fokus terus (WAJIB untuk scanner)
+setInterval(() => input.focus(), 300);
 
+// 🔥 DETEKSI SCAN SUPER CEPAT (ENTER)
+input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
 
-// 🔥 KIRIM ABSEN
-function kirimAbsen(rawKode) {
+        let kode = input.value.trim();
+        input.value = '';
 
-    let kode = String(rawKode).trim();
-    kode = kode.replace(/[^0-9.]/g, '');
+        if (!kode || !isScanning) return;
 
-    if (!kode) return;
-    if (!isScanning) return;
-    if (kode === lastResult) return;
+        // filter
+        kode = kode.replace(/[^0-9.]/g, '');
+
+        // anti double scan
+        if (kode === lastKode) return;
+        lastKode = kode;
+
+        kirimAbsen(kode);
+    }
+});
+
+// 🔥 FUNCTION ABSEN
+function kirimAbsen(kode) {
 
     isScanning = false;
-    lastResult = kode;
 
-    fetch(`/scann/barcode/absen/post/${encodeURIComponent(kode)}`, {
-        method: "GET",
-        headers: { "Accept": "application/json" }
-    })
+    fetch(`/scann/barcode/absen/post/${encodeURIComponent(kode)}`)
     .then(res => res.json())
     .then(data => {
 
-        // 🔊 sound
+        // 🔊 suara
         document.getElementById('beep').play().catch(()=>{});
 
-        // 🟢 flash effect
-        const flash = document.getElementById('flash');
+        // 🟢 flash
         flash.style.display = 'block';
-        setTimeout(() => flash.style.display = 'none', 300);
+        setTimeout(() => flash.style.display = 'none', 200);
 
+        // tampilkan nama
+        resultBox.innerHTML = data.nama ?? data.message;
+
+        // popup
         Swal.fire({
             icon: data.status ? 'success' : 'error',
             title: data.message,
-            timer: 1500,
+            timer: 1000,
             showConfirmButton: false
         });
 
+        // reset cepat
         setTimeout(() => {
             isScanning = true;
-            lastResult = null;
-        }, 2000);
+            lastKode = null;
+            resultBox.innerHTML = '';
+        }, 800);
+
     })
     .catch(() => {
-
         Swal.fire({
             icon: 'error',
             title: 'Server error',
-            timer: 1500,
+            timer: 1000,
             showConfirmButton: false
         });
 
-        setTimeout(() => {
-            isScanning = true;
-        }, 2000);
+        isScanning = true;
     });
 }
 
+// 🎥 KAMERA (PREVIEW SAJA)
+navigator.mediaDevices.getUserMedia({
+    video: { facingMode: "environment" }
+})
+.then(stream => {
+    document.getElementById('camera').srcObject = stream;
+})
+.catch(err => console.error("Camera error:", err));
 
-// 🎥 START CAMERA (TANPA SCAN)
-Html5Qrcode.getCameras().then(devices => {
-    if (devices.length) {
-        html5QrCode.start(
-            { facingMode: "environment" },
-            {
-                fps: 10,
-                qrbox: { width: 250, height: 250 }
-            },
-            () => {}, // ❌ disable scan kamera
-            () => {}
-        );
-    }
-}).catch(err => console.error("Camera error:", err));
-
-
-// 🔥 SCANNER ALAT
-let buffer = '';
-let timeout = null;
-
-const input = document.getElementById('scan');
-
-input.addEventListener('input', function() {
-
-    buffer += this.value;
-    this.value = '';
-
-    clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
-        let kode = buffer.trim();
-        kode = kode.replace(/[^0-9.]/g, '');
-
-        kirimAbsen(kode);
-
-        buffer = '';
-    }, 150);
-});
-
-
-// ⚡ DETEKSI ENTER (lebih cepat)
-input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        kirimAbsen(buffer);
-        buffer = '';
-    }
-});
-
-
-// 🔒 AUTO FOCUS
-setInterval(() => input.focus(), 500);
-
-</script>
-<script>
-function masukFullscreen() {
+// 🔒 FULLSCREEN saat klik pertama
+document.addEventListener('click', function() {
     const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+}, { once: true });
 
-    if (el.requestFullscreen) {
-        el.requestFullscreen();
-    } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
-    } else if (el.msRequestFullscreen) {
-        el.msRequestFullscreen();
-    }
-}
-
-// auto jalan saat klik pertama
-document.addEventListener('click', masukFullscreen, { once: true });
 </script>
+
 </body>
 </html>
-
 {{-- <!DOCTYPE html>
 <html lang="id">
 <head>
