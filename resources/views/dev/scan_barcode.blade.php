@@ -25,7 +25,7 @@ body {
     z-index: 1;
 }
 
-/* Overlay text */
+/* Overlay bawah */
 .overlay {
     position: fixed;
     bottom: 20px;
@@ -36,7 +36,7 @@ body {
     font-size: 16px;
 }
 
-/* Flash sukses */
+/* Flash */
 #flash {
     position: fixed;
     inset: 0;
@@ -53,7 +53,7 @@ body {
     text-align: center;
     z-index: 4;
     color: white;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: bold;
 }
 </style>
@@ -64,16 +64,16 @@ body {
 <!-- Kamera -->
 <video id="camera" autoplay playsinline></video>
 
-<!-- Nama -->
+<!-- Nama siswa -->
 <div id="resultBox"></div>
 
-<!-- Text -->
+<!-- Info -->
 <div class="overlay">Silakan Scan Kartu Absensi</div>
 
 <!-- Flash -->
 <div id="flash"></div>
 
-<!-- Hidden input -->
+<!-- Input hidden -->
 <input type="text" id="scan" autofocus style="position:absolute; left:-9999px;">
 
 <!-- Sound -->
@@ -86,11 +86,23 @@ const resultBox = document.getElementById('resultBox');
 
 let isScanning = true;
 let lastKode = null;
+let reloadTimer;
 
-// 🔥 Fokus terus (WAJIB untuk scanner)
+// 🔥 AUTO FOCUS (WAJIB)
 setInterval(() => input.focus(), 300);
 
-// 🔥 DETEKSI SCAN SUPER CEPAT (ENTER)
+// 🔥 TIMER AUTO RELOAD (IDLE 10 MENIT)
+function startReloadTimer() {
+    clearTimeout(reloadTimer);
+    reloadTimer = setTimeout(() => {
+        location.reload();
+    }, 10 * 60 * 1000);
+}
+
+// start pertama
+startReloadTimer();
+
+// 🔥 DETEKSI SCAN SUPER CEPAT
 input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
 
@@ -99,10 +111,9 @@ input.addEventListener('keydown', function(e) {
 
         if (!kode || !isScanning) return;
 
-        // filter
         kode = kode.replace(/[^0-9.]/g, '');
 
-        // anti double scan
+        // anti double
         if (kode === lastKode) return;
         lastKode = kode;
 
@@ -119,7 +130,10 @@ function kirimAbsen(kode) {
     .then(res => res.json())
     .then(data => {
 
-        // 🔊 suara
+        // 🔁 reset timer karena ada aktivitas
+        startReloadTimer();
+
+        // 🔊 sound
         document.getElementById('beep').play().catch(()=>{});
 
         // 🟢 flash
