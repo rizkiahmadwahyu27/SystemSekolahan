@@ -25,4 +25,9 @@ class SiswaKelas extends Model
         'id_kelas',
         'id_wali_kelas',
     ];
+
+    public function siswa()
+{
+    return $this->belongsTo(\App\Models\DataSiswa::class, 'id_siswa');
+}
 }

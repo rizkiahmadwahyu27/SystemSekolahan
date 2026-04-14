@@ -166,6 +166,8 @@ class DevController extends Controller
             'tanggal' => $today,
             'status' => 'Hadir',
             'keterangan' => 'Hadir di Kelas',
+            'is_sent' => 0,
+            'status_sent' => 'pending',
             'user_input' => $userEdit,
             'user_edit' => $userEdit, // ✅ TAMBAHKAN INI
             'id_user_input' => Auth::check() ? Auth::user()->id : null,
@@ -175,7 +177,7 @@ class DevController extends Controller
             'id_wali_kelas' => $data_kelas->id_wali_kelas,
             'id_kelas' => $data_kelas->id,
         ]);
-         KirimWaWali::dispatch($siswa, $absen);
+        //  KirimWaWali::dispatch($siswa, $absen);
         return response()->json([
             'status' => true,
             'message' => 'Absensi berhasil'

@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\Absensi;
+use App\Models\SiswaKelas;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Http;
@@ -13,62 +15,79 @@ class KirimWaWali implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
-    protected $siswa;
-    protected $absen;
+    public $tries = 3;
+    public $backoff = 10;
 
-    public function __construct($siswa, $absen)
+    protected $absen_id;
+
+    public function __construct($absen_id)
     {
-        $this->siswa = $siswa;
-        $this->absen = $absen;
+        $this->absen_id = $absen_id;
     }
 
-    public function handle()
+   public function handle()
     {
-        $tanggal = Carbon::parse($this->absen->created_at)->format('d-m-Y');
-        $jam = Carbon::parse($this->absen->created_at);
+        $absen = Absensi::with('siswaKelas.siswa')->find($this->absen_id);
 
-        $waktu_akhir_tepat = Carbon::parse('06:30:00');
-        $waktu_toleransi   = Carbon::parse('06:35:00');
+        if (!$absen || !$absen->siswaKelas || !$absen->siswaKelas->siswa) {
+            Log::error('DATA TIDAK VALID', [
+                'absen_id' => $this->absen_id
+            ]);
+            return;
+        }
+
+        $siswa = $absen->siswaKelas->siswa;
+
+        if (!$siswa->no_hp_ortu) {
+            Log::warning('No HP kosong', ['absen_id' => $this->absen_id]);
+            return;
+        }
+
+        $tanggal = Carbon::parse($absen->created_at)->format('d-m-Y'); 
+        $jam = Carbon::parse($absen->created_at); 
+
+        $waktu_akhir_tepat = Carbon::parse('06:30:00'); 
+        $waktu_toleransi = Carbon::parse('07:00:00'); 
 
         if ($jam < $waktu_akhir_tepat) {
             $ket = 'tepat waktu';
-        } elseif ($jam >= $waktu_akhir_tepat && $jam < $waktu_toleransi) {
+        } elseif ($jam < $waktu_toleransi) {
             $ket = 'datang waktu toleransi';
         } else {
             $ket = 'terlambat';
         }
 
-        $pesan = "Assalamu alaikum wr.wb \n\n"
-            ."Yth. Bapak/Ibu Wali Murid *{$this->siswa->nama}*\n\n"
-            ."Kami pihak SMK Pelita Jatibarang menginformasikan bahwa:\n"
-            ."Hari, Tanggal : *{$this->absen->hari}*, *{$tanggal}*\n"
-            ."Jam : *{$jam->format('H:i:s')}*\n"
-            ."Tempat : SMK Pelita Jatibarang\n"
-            ."Status Kehadiran : *{$this->absen->status}*\n"
-            ."Keterangan : *{$ket}*\n\n"
-            ."Demikian informasi yang disampaikan.\n\n"
-            ."Jatibarang, *{$tanggal}*\n"
-            ."Kepala Sekolah,\n\n\n"
-            ."Linda Tri Apsari, S.Pd";
+        $no = preg_replace('/[^0-9]/', '', $siswa->no_hp_ortu);
+        if (substr($no, 0, 1) == '0') {
+            $no = '62' . substr($no, 1);
+        }
 
-        $nomor = $this->siswa->no_hp_ortu;
+        $pesan = "Assalamu alaikum wr.wb \n\n".
+            "Yth. Bapak/Ibu Wali Murid *{$siswa->nama}*\n\n".
+            "Kami pihak SMK Pelita Jatibarang menginformasikan bahwa:\n".
+            "Hari, Tanggal : *{$absen->hari}*, *{$tanggal}*\n".
+            "Jam : *".$jam->format('H:i:s')."*\n".
+            "Status Kehadiran : *{$absen->status}*\n".
+            "Keterangan : *{$ket}*\n\n".
+            "Demikian informasi yang disampaikan.";
 
-        if (preg_match('/^62\d{9,15}$/', $nomor)) {
+        $response = Http::post('http://127.0.0.1:4000/send-message', [
+            'number' => $no,
+            'message' => $pesan
+        ]);
 
-            try {
-                $response = Http::post(env('WA_BOT', 'http://localhost:4000/send-message'), [
-                    'number' => $nomor,
-                    'message' => $pesan
-                ]);
-
-                Log::info('Kirim WA sukses', $response->json());
-
-            } catch (\Exception $e) {
-                Log::error('Gagal kirim WA: '.$e->getMessage());
-            }
-
+        if ($response->successful()) {
+            $absen->update([
+                'is_sent' => 1,
+                'status_sent' => 'success',
+                'sent_at' => now()
+            ]);
         } else {
-            Log::warning("Nomor tidak valid: {$nomor}");
+            $absen->update([
+                'status_sent' => 'failed'
+            ]);
+
+            throw new \Exception('Gagal kirim WA');
         }
     }
 }

@@ -115,7 +115,7 @@
                                         <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
                                             <div class="w-1/6 leading-tight">TTL</div>
                                             <div class="mx-2 leading-tight">:</div>
-                                            <div class="flex-1 break-words leading-tight">{{$siswa->jenis_kelamin}}</div>
+                                            <div class="flex-1 break-words leading-tight">{{$siswa->tempat_lahir}}, {{Carbon\Carbon::parse($siswa->tgl_lahir)->format('d-m-Y')}}</div>
                                         </div>
                                         <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
                                             <div class="w-1/6 leading-tight">Kelas</div>

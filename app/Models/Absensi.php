@@ -19,6 +19,9 @@ class Absensi extends Model
         'tanggal',
         'status',
         'keterangan',
+        'is_sent',
+        'status_sent',
+        'sent_at',
         'user_input',
         'user_edit',
         'id_conf',
@@ -28,4 +31,9 @@ class Absensi extends Model
         'id_wali_kelas',
         'id_kelas',
     ];
+
+    public function siswaKelas()
+    {
+        return $this->belongsTo(\App\Models\SiswaKelas::class, 'id_siswa');
+    }
 }
