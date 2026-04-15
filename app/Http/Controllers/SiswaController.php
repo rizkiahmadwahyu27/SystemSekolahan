@@ -347,7 +347,7 @@ class SiswaController extends Controller
 
             // Ambil absensi untuk bulan & tahun sekarang
             $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
-            $absensi = Absensi::where('gurujen', $data_guru->nama_pegawai)->whereYear('tanggal', $tahun)
+            $absensi = Absensi::where('guru', $data_guru->nama_pegawai)->whereYear('tanggal', $tahun)
                 ->whereMonth('tanggal', $bulan)
                 ->get(['nis', 'nama', 'tanggal', 'status']);
 
@@ -459,7 +459,7 @@ class SiswaController extends Controller
             // Ambil absensi untuk bulan & tahun sekarang
             $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
             if ($request->jenis_absen == 'harian') {
-                    $absensi = Absensi::where('guru', $data_guru->nama_pegawai)->whereYear('tanggal', $tahun)
+                    $absensi = Absensi::where('kelas', $request->kelas)->whereYear('tanggal', $tahun)
                     ->whereMonth('tanggal', $bulan)
                     ->get(['nis', 'nama', 'tanggal', 'status']);
             } else {
@@ -505,7 +505,7 @@ class SiswaController extends Controller
             $bulan = $request->bulan;
 
             if ($request->jenis_absen == 'harian') {
-                    $absensi = Absensi::where('guru', $request->guru)->whereYear('tanggal', $tahun)
+                    $absensi = Absensi::where('kelas', $request->kelas)->whereYear('tanggal', $tahun)
                     ->whereMonth('tanggal', $bulan)
                     ->get(['nis', 'nama', 'tanggal', 'status']);
             } else {

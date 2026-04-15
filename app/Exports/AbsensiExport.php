@@ -50,7 +50,7 @@ class AbsensiExport implements FromView
         } else {
 
             if ($request->jenis_absen == 'harian') {
-                $absensi = Absensi::where('guru', $request->guru)
+                $absensi = Absensi::where('kelas', $request->kelas)
                     ->whereYear('tanggal', $tahun)
                     ->whereMonth('tanggal', $bulan)
                     ->get(['nis', 'nama', 'tanggal', 'status']);

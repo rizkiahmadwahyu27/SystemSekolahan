@@ -294,6 +294,8 @@ class DevController extends Controller
                     'tanggal' => $tgl,
                     'status'  => $status[$key],
                     'keterangan' => $keterangan[$key],
+                    'is_sent' => 0,
+                    'status_sent' => 'pending',
                     'user_input' => Auth::user()->name,
                     'user_edit' => 'Null',
                     'id_conf' => $conf->id,
@@ -304,9 +306,7 @@ class DevController extends Controller
                     'id_kelas' => $data_kelas->id,
                 ]);
 
-                if ($jenis == 'harian') {
-                    $this->kirimPesanWali($siswa, $absen);
-                }
+                
             }
         }
         

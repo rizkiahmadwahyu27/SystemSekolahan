@@ -112,7 +112,6 @@
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">
                     Filter Absen Siswa
                 </h2>
-
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-900">Pilih Kelas</label>
                     <select name="kelas" class="form-select block w-full rounded border-gray-300 shadow-sm" >
