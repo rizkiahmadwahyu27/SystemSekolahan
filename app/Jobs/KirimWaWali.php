@@ -62,16 +62,50 @@ class KirimWaWali implements ShouldQueue
             $no = '62' . substr($no, 1);
         }
 
-        $pesan = "Assalamu alaikum wr.wb \n\n".
-            "Yth. Bapak/Ibu Wali Murid *{$siswa->nama}*\n\n".
-            "Kami pihak SMK Pelita Jatibarang menginformasikan bahwa:\n".
-            "Hari, Tanggal : *{$absen->hari}*, *{$tanggal}*\n".
-            "Jam : *".$jam->format('H:i:s')."*\n".
-            "Status Kehadiran : *{$absen->status}*\n".
-            "Keterangan : *{$ket}*\n\n".
-            "Demikian informasi yang disampaikan.";
+        $opening = [
+            "Assalamu alaikum wr.wb 🙏",
+            "Assalamualaikum wr wb 🙏",
+            "Assalamu'alaikum Warahmatullahi Wabarakatuh 🙏"
+        ];
 
-        $response = Http::post('http://127.0.0.1:4000/send-message', [
+        $intro = [
+            "Kami dari SMK Pelita Jatibarang ingin menyampaikan informasi terkait kehadiran siswa:",
+            "Berikut kami informasikan data absensi siswa hari ini:",
+            "Dengan hormat, kami sampaikan informasi kehadiran siswa sebagai berikut:",
+        ];
+
+        $penutup = [
+            "Demikian informasi yang dapat kami sampaikan. Terima kasih atas perhatian Bapak/Ibu 🙏",
+            "Terima kasih atas perhatian dan kerjasamanya 🙏",
+            "Demikian pemberitahuan ini kami sampaikan 🙏",
+        ];
+
+        $emojiStatus = [
+            "hadir" => "✅",
+            "izin" => "🟡",
+            "sakit" => "🤒",
+            "alpha" => "❌",
+        ];
+
+        $statusEmoji = $emojiStatus[strtolower($absen->status)] ?? "ℹ️";
+
+        $pesan = $opening[array_rand($opening)] . "\n\n" .
+
+            "Yth. Bapak/Ibu Wali Murid\n" .
+            "👤 *{$siswa->nama}*\n\n" .
+
+            $intro[array_rand($intro)] . "\n\n" .
+
+            "📅 *Hari, Tanggal* : {$absen->hari}, {$tanggal}\n" .
+            "⏰ *Jam* : ".$jam->format('H:i:s')."\n" .
+            "{$statusEmoji} *Status* : {$absen->status}\n" .
+            "📝 *Keterangan* : {$ket}\n\n" .
+
+            $penutup[array_rand($penutup)];
+
+        sleep(rand(5,15));
+
+        $response = Http::timeout(10)->post('http://127.0.0.1:4000/send-message', [
             'number' => $no,
             'message' => $pesan
         ]);
