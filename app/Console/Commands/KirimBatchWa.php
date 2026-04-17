@@ -41,7 +41,7 @@ class KirimBatchWa extends Command
         KirimWaWali::dispatch($item->id)
             ->delay(now()->addSeconds($delay));
 
-        $delay += rand(120, 360);
+        $delay += 240;
     }
 
     Log::info("Batch kirim: ".$data->count());

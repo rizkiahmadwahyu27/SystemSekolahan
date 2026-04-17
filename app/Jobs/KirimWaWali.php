@@ -103,7 +103,7 @@ class KirimWaWali implements ShouldQueue
 
             $penutup[array_rand($penutup)];
 
-        sleep(rand(5,15));
+        sleep(rand(20,45));
 
         $response = Http::timeout(10)->post('http://127.0.0.1:4000/send-message', [
             'number' => $no,
