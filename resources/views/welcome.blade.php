@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <meta name="facebook-domain-verification" content="ynxp7rhghw68zxn8hjmata8m46gyow" />
         <title>SMK Pelita Jatibarang | Website Resmi</title>
 
 
