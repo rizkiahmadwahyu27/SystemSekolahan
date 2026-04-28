@@ -181,12 +181,12 @@ class DevController extends Controller
             'id_wali_kelas' => $data_kelas->id_wali_kelas,
             'id_kelas' => $data_kelas->id,
         ]);
-        KirimWaWali::dispatch($absen->id);
+        KirimWaWali::dispatch($absen->id)->onQueue('wa');
         KirimNotifJob::dispatch(
             $siswa->nis,
             "Absensi Siswa",
             "Diinformasikan kepada bapak/ibu wali dari ". $siswa->nama ." telah hadir pukul " . now()->format('H:i')
-        );
+        )->onQueue('notif');
         
         return response()->json([
             'status' => true,
