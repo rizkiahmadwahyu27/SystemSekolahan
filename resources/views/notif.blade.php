@@ -58,9 +58,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-
 <script>
 let swReg = null;
+
+// REGISTER SW DULU
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then(reg => {
+            swReg = reg;
+            console.log('SW ready');
+        })
+        .catch(err => console.error(err));
+}
 
 async function getSW() {
     if (!swReg) {
@@ -68,25 +77,26 @@ async function getSW() {
     }
     return swReg;
 }
+
 window.aktifkanNotif = async function () {
 
     let nis = document.getElementById('siswaSearch').value;
-
     if (!nis) return alert("Pilih siswa dulu!");
+
+    // CEK PERMISSION DULU
+    if (Notification.permission === 'denied') {
+        return alert('Notifikasi diblokir, silakan aktifkan di setting browser');
+    }
 
     const permission = await Notification.requestPermission();
     if (permission !== "granted") return alert("Izin ditolak");
 
-    const key = "<?= env('VAPID_PUBLIC_KEY') ?>";
+    const key = "{{ $vapidKey }}";
 
     const reg = await getSW();
 
-    // FIX ERROR DUPLIKAT SUBSCRIPTION
     let existing = await reg.pushManager.getSubscription();
-
-    if (existing) {
-        await existing.unsubscribe();
-    }
+    if (existing) await existing.unsubscribe();
 
     const subscription = await reg.pushManager.subscribe({
         userVisibleOnly: true,
@@ -107,16 +117,6 @@ window.aktifkanNotif = async function () {
 
     alert("Notifikasi aktif!");
 };
-
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
-
-    const raw = atob(base64);
-    return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
-}
 </script>
 </body>
 </html>
