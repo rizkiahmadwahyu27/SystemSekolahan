@@ -57,65 +57,68 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
 <script>
-let swReg = null;
+window.urlBase64ToUint8Array = function(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
 
-// REGISTER SW DULU
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-        .then(reg => {
-            swReg = reg;
-            console.log('SW ready');
-        })
-        .catch(err => console.error(err));
+    const raw = atob(base64);
+    return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
 }
-
-async function getSW() {
-    if (!swReg) {
-        swReg = await navigator.serviceWorker.ready;
-    }
-    return swReg;
-}
-
+</script>
+<script>
 window.aktifkanNotif = async function () {
 
-    let nis = document.getElementById('siswaSearch').value;
-    if (!nis) return alert("Pilih siswa dulu!");
+    try {
+        let nis = document.getElementById('siswaSearch').value;
+        if (!nis) return alert("Pilih siswa dulu!");
 
-    // CEK PERMISSION DULU
-    if (Notification.permission === 'denied') {
-        return alert('Notifikasi diblokir, silakan aktifkan di setting browser');
+        if (Notification.permission === 'denied') {
+            return alert('Notifikasi diblokir, aktifkan di setting browser');
+        }
+
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") return alert("Izin ditolak");
+
+        const key = "{{ $vapidKey }}";
+
+        if (!key) {
+            alert('VAPID key kosong!');
+            return;
+        }
+
+        const reg = await getSW();
+
+        let existing = await reg.pushManager.getSubscription();
+        if (existing) await existing.unsubscribe();
+
+        const subscription = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(key)
+        });
+
+        console.log('SUBSCRIPTION:', subscription);
+
+        await fetch('/save-subscription', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                nis: nis,
+                subscription: subscription
+            })
+        });
+
+        alert("Notifikasi aktif!");
+
+    } catch (err) {
+        console.error('ERROR NOTIF:', err);
+        alert('Terjadi error, cek console');
     }
-
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") return alert("Izin ditolak");
-
-    const key = "{{ $vapidKey }}";
-
-    const reg = await getSW();
-
-    let existing = await reg.pushManager.getSubscription();
-    if (existing) await existing.unsubscribe();
-
-    const subscription = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(key)
-    });
-
-    await fetch('/save-subscription', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({
-            nis: nis,
-            subscription: subscription
-        })
-    });
-
-    alert("Notifikasi aktif!");
 };
 </script>
 </body>
