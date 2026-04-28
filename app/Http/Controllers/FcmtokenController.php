@@ -15,7 +15,7 @@ class FcmtokenController extends Controller
 {
     public function index_token()
     {
-        $vapidKey = config('webpush.vapid.public_key');
+        $vapidKey = config('webpush.vapid.publicKey');
         $data_siswa = DataSiswa::select('id', 'nis', 'nama')->get();
         return view('notif', compact('data_siswa', 'vapidKey'));
     }

@@ -40,19 +40,12 @@ class KirimNotifJob implements ShouldQueue
             // ✅ VAPID config
             $auth = [
                 'VAPID' => [
-                    'subject' => config('webpush.vapid.subject'),
-                    'publicKey' => config('webpush.vapid.public_key'),
-                    'privateKey' => config('webpush.vapid.private_key'),
+                    'subject' => 'mailto:admin@sekolah.local',
+                    'publicKey' => env('VAPID_PUBLIC_KEY'),
+                    'privateKey' => env('VAPID_PRIVATE_KEY'),
                 ],
             ];
 
-
-            Log::info('VAPID FINAL', [
-                'subject' => config('webpush.vapid.subject'),
-                'publicKey' => config('webpush.vapid.public_key'),
-                'privateKey' => config('webpush.vapid.private_key'),
-            ]);
-            
             $webPush = new WebPush($auth);
 
             // ambil subscription dari DB
