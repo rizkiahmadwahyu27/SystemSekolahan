@@ -69,27 +69,53 @@ window.urlBase64ToUint8Array = function(base64String) {
 }
 </script>
 <script>
-window.aktifkanNotif = async function () {
+let swReg = null;
 
+// helper wajib
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+    const raw = atob(base64);
+    return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+
+// register service worker
+async function initSW() {
+    if (!('serviceWorker' in navigator)) {
+        alert('Browser tidak support SW');
+        return null;
+    }
+
+    if (!swReg) {
+        swReg = await navigator.serviceWorker.register('/sw.js');
+        console.log('SW ready');
+    }
+
+    return swReg;
+}
+
+// fungsi utama
+window.aktifkanNotif = async function () {
     try {
         let nis = document.getElementById('siswaSearch').value;
         if (!nis) return alert("Pilih siswa dulu!");
 
         if (Notification.permission === 'denied') {
-            return alert('Notifikasi diblokir, aktifkan di setting browser');
+            return alert('Notifikasi diblokir di browser');
         }
 
         const permission = await Notification.requestPermission();
-        if (permission !== "granted") return alert("Izin ditolak");
-
-        const key = "{{ $vapidKey }}";
-
-        if (!key) {
-            alert('VAPID key kosong!');
-            return;
+        if (permission !== "granted") {
+            return alert("Izin ditolak");
         }
 
-        const reg = await getSW();
+        const reg = await initSW();
+        if (!reg) return;
+
+        const key = "{{ $vapidKey }}";
 
         let existing = await reg.pushManager.getSubscription();
         if (existing) await existing.unsubscribe();
@@ -98,8 +124,6 @@ window.aktifkanNotif = async function () {
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(key)
         });
-
-        console.log('SUBSCRIPTION:', subscription);
 
         await fetch('/save-subscription', {
             method: 'POST',
@@ -114,10 +138,9 @@ window.aktifkanNotif = async function () {
         });
 
         alert("Notifikasi aktif!");
-
     } catch (err) {
-        console.error('ERROR NOTIF:', err);
-        alert('Terjadi error, cek console');
+        console.error("ERROR NOTIF:", err);
+        alert("Gagal aktifkan notif");
     }
 };
 </script>
