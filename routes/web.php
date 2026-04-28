@@ -9,8 +9,12 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\DevController;
 use App\Http\Controllers\DataPegawaiController;
 use App\Http\Controllers\DataKelasController;
+use App\Http\Controllers\DevPushController;
+use App\Http\Controllers\FcmtokenController;
+use App\Jobs\KirimNotifJob;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\AbsenSiswa;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +29,16 @@ use App\Livewire\AbsenSiswa;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/notif', [FcmtokenController::class, 'index_token'])->name('index_token');
+Route::post('/save-token', [FcmtokenController::class, 'saveToken'])->name('saveToken');
+Route::get('/generate-vapid', [DevPushController::class, 'generateVapid']);
+Route::post('/save-subscription', [DevPushController::class, 'saveSubscription']);
+Route::get('/test-notif', function () {
+
+     KirimNotifJob::dispatch('23', 'Test', 'Hello dari Queue');
+    return 'Job dikirim!';
 });
 
 Route::get('/spmb/daftar', function () {

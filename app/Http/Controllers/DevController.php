@@ -6,6 +6,7 @@ use App\Exports\AbsensiExport;
 use App\Imports\DataKelasImport;
 use App\Imports\DataPegawaiImport;
 use App\Imports\DataSiswaImport;
+use App\Jobs\KirimNotifJob;
 use Illuminate\Http\Request;
 use App\Models\DataSiswa;
 use App\Models\DataKelas;
@@ -20,6 +21,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Minishlink\WebPush\VAPID;
+use Minishlink\WebPush\WebPush;
+use Minishlink\WebPush\Subscription;
 use App\Jobs\KirimWaWali;
 
 class DevController extends Controller
@@ -115,18 +119,18 @@ class DevController extends Controller
         
     // }
 
-    public function scan_post($nis)
+     public function scan_post($nis)
 {
     $nis = preg_replace('/[^0-9.]/', '', $nis);
     $siswa = DataSiswa::join('siswa_kelas', 'siswa_kelas.nis', '=', 'data_siswas.nis')
         ->where('data_siswas.nis', $nis)
         ->first();
     if (!$siswa) {
-    return response()->json([
-        'status' => false,
-        'message' => 'Data Siswa Tidak Ada',
-    ]);
-}
+        return response()->json([
+            'status' => false,
+            'message' => 'Data Siswa Tidak Ada',
+        ]);
+    }
 
     $data_kelas = DB::table('data_kelas')
         ->where('kode_kelas', $siswa->kode_kelas)
@@ -177,7 +181,13 @@ class DevController extends Controller
             'id_wali_kelas' => $data_kelas->id_wali_kelas,
             'id_kelas' => $data_kelas->id,
         ]);
-        //  KirimWaWali::dispatch($siswa, $absen);
+        KirimWaWali::dispatch($absen->id);
+        KirimNotifJob::dispatch(
+            $siswa->nis,
+            "Absensi Siswa",
+            "Diinformasikan kepada bapak/ibu wali dari ". $siswa->nama ." telah hadir pukul " . now()->format('H:i')
+        );
+        
         return response()->json([
             'status' => true,
             'message' => 'Absensi berhasil'
@@ -189,6 +199,66 @@ class DevController extends Controller
             'message' => 'Sudah absen hari ini'
         ]);
     }
+}
+
+public function kirimNotif($nis, $title, $body)
+{
+    try {
+
+       $auth = [
+            'VAPID' => [
+                'subject' => config('webpush.vapid.subject'),
+                'publicKey' => config('webpush.vapid.publicKey'),
+                'privateKey' => config('webpush.vapid.privateKey'),
+            ],
+        ];
+        Log::info('VAPID CHECK', config('webpush.vapid'));
+        $webPush = new WebPush($auth);
+
+        $subs = DB::table('web_push_tokens')
+            ->where('nis', $nis)
+            ->get();
+
+        if ($subs->isEmpty()) {
+            Log::warning("Tidak ada subscription untuk NIS: $nis");
+            return;
+        }
+
+        foreach ($subs as $sub) {
+
+            $subscription = Subscription::create([
+                'endpoint' => $sub->endpoint,
+                'keys' => [
+                    'p256dh' => $sub->p256dh,
+                    'auth' => $sub->auth,
+                ],
+            ]);
+
+            $webPush->queueNotification(
+                $subscription,
+                json_encode([
+                    'title' => $title,
+                    'body' => $body
+                ])
+            );
+        }
+
+        foreach ($webPush->flush() as $report) {
+            Log::info("WEBPUSH RESULT", [
+                'success' => $report->isSuccess(),
+                'reason' => $report->getReason(),
+            ]);
+        }
+
+    } catch (\Throwable $e) {
+        Log::error("kirimNotif ERROR: " . $e->getMessage());
+    }
+    Log::info('SUB DEBUG', [
+        'p256dh_len' => strlen($sub->p256dh),
+        'auth_len' => strlen($sub->auth),
+        'p256dh' => $sub->p256dh,
+        'auth' => $sub->auth,
+    ]);
 }
 
     public function data_absen(){
