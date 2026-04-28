@@ -37,7 +37,7 @@ Route::get('/generate-vapid', [DevPushController::class, 'generateVapid']);
 Route::post('/save-subscription', [DevPushController::class, 'saveSubscription']);
 Route::get('/test-notif', function () {
 
-     KirimNotifJob::dispatch('23', 'Test', 'Hello dari Queue');
+     KirimNotifJob::dispatch('23', 'Test', 'Hello dari Queue')->onQueue('notif');
     return 'Job dikirim!';
 });
 
