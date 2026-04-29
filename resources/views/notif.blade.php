@@ -13,24 +13,24 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 </head>
 
-<body class="bg-gradient-to-br from-blue-500 to-indigo-600 min-h-screen w-full p-2 flex justify-center items-center">
+<body class="bg-gradient-to-br from-blue-500 to-indigo-600 min-h-screen p-2 flex justify-center items-center">
 
-<div class="bg-white shadow-xl p-6 w-full md:w-96 h-[50vh] flex flex-col rounded-2xl">
+<div class="bg-white shadow-xl p-6 w-full rounded-2xl">
 
-    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+    <h2 class="text-4xl font-bold text-center text-gray-800 mb-6">
         🔔 Aktifkan Notifikasi
     </h2>
 
-    <p class="text-center text-gray-500 mb-6 text-lg">
+    <p class="text-center text-gray-500 mb-6 text-3xl">
         Pilih nama siswa untuk menerima notifikasi kehadiran
     </p>
 
-    <div class="mb-5">
-        <label class="block text-md font-semibold mb-2 text-gray-700">
+    <div class="mb-24 text-2xl w-full">
+        <label class="block font-semibold mb-2 text-gray-700">
             Pilih Siswa
         </label>
 
-        <select id="siswaSearch" class="w-full text-md">
+        <select id="siswaSearch" class="w-full">
             <option value="">Cari nama siswa...</option>
             @foreach ($data_siswa as $siswa)
                 <option value="{{$siswa->nis}}">
