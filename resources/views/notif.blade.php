@@ -13,25 +13,24 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 </head>
 
-<body class="bg-gradient-to-br from-blue-500 to-indigo-600 min-h-screen flex items-center justify-center">
+<body class="bg-gradient-to-br from-blue-500 to-indigo-600 min-h-screen w-full p-2 flex justify-center items-center">
 
-<div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+<div class="bg-white shadow-xl p-6 w-full md:w-96 h-[50vh] flex flex-col rounded-2xl">
 
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
         🔔 Aktifkan Notifikasi
     </h2>
 
-    <p class="text-center text-gray-500 mb-6 text-sm">
+    <p class="text-center text-gray-500 mb-6 text-lg">
         Pilih nama siswa untuk menerima notifikasi kehadiran
     </p>
 
-    <!-- 🔍 Pilih siswa -->
     <div class="mb-5">
-        <label class="block text-sm font-semibold mb-2 text-gray-700">
+        <label class="block text-md font-semibold mb-2 text-gray-700">
             Pilih Siswa
         </label>
 
-        <select id="siswaSearch" class="w-full">
+        <select id="siswaSearch" class="w-full text-md">
             <option value="">Cari nama siswa...</option>
             @foreach ($data_siswa as $siswa)
                 <option value="{{$siswa->nis}}">
@@ -41,9 +40,8 @@
         </select>
     </div>
 
-    <!-- 🔔 Button -->
     <button onclick="aktifkanNotif()"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300 shadow-md">
+        class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-auto">
         Aktifkan Notifikasi
     </button>
 
