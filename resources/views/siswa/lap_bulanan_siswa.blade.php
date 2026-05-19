@@ -35,6 +35,9 @@
             $show = true;
             $show1 = false;
         }
+
+        // dd($dataAbsensi);
+        // dd($siswaKelas);
         
     @endphp
     <div class="overflow-x-auto">
@@ -63,43 +66,54 @@
             </thead>
             <tbody>
                 @php $no = 1; @endphp
-                @foreach ($dataAbsensi as $nis => $listAbsensi)
+                @foreach ($siswaKelas as $siswa)
                     @php
-                        $nama = $listAbsensi->first()->nama;
-                        // bikin array tanggal -> status
-                        $statusByTanggal = $listAbsensi->keyBy(function($item) {
+                        // ambil data absensi per siswa
+                        $absensiSiswa = $dataAbsensi[$siswa->nis] ?? collect();
+
+                        // mapping tanggal => status
+                        $statusByTanggal = $absensiSiswa->keyBy(function($item) {
                             return \Carbon\Carbon::parse($item->tanggal)->day;
                         });
-                        $hadir = 0;
-                        $alpa = 0;
-                        $sakit = 0;
-                        $izin = 0;
+
+                        // hitung jumlah
+                        $jumlah = [
+                            'hadir' => 0,
+                            'alpa' => 0,
+                            'sakit' => 0,
+                            'izin' => 0,
+                        ];
                     @endphp
+
                     <tr>
                         <td class="border px-3 py-2 sticky left-0 bg-gray-50 z-10">{{ $no++ }}</td>
-                        <td class="border px-3 py-2 sticky left-12 bg-gray-50 z-10">{{ $nis }}</td>
-                        <td class="border px-3 py-2 sticky left-36 bg-gray-50 z-10">{{ $nama }}</td>
+                        <td class="border px-3 py-2 sticky left-12 bg-gray-50 z-10">{{ $siswa->nis }}</td>
+                        <td class="border px-3 py-2 sticky left-24 bg-gray-50 z-10">{{ $siswa->nama }}</td>
 
+                        {{-- Loop tanggal --}}
                         @for ($d = 1; $d <= $jumlahHari; $d++)
                             @php
                                 $status = $statusByTanggal[$d]->status ?? null;
-                                $label  = $mapStatus[$status]['label'] ?? '-';
-                                $color  = $mapStatus[$status]['color'] ?? 'text-white';
-                                // Jumlahkan kolom jumlah
-                                if ($label == 'h') $hadir++;
-                                if ($label == 'a') $alpa++;
-                                if ($label == 's') $sakit++;
-                                if ($label == 'i') $izin++;
+
+                                if ($status && isset($jumlah[$status])) {
+                                    $jumlah[$status]++;
+                                }
                             @endphp
 
-                            <td class="border px-3 py-2 text-center {{ $color }}">
-                                {{ $label }}
+                            <td class="border text-center px-1 py-1">
+                                @if ($status)
+                                    <span class="px-1 rounded {{ $mapStatus[$status]['color'] }}">
+                                        {{ strtoupper($mapStatus[$status]['label']) }}
+                                    </span>
+                                @endif
                             </td>
                         @endfor
-                        <td class="border px-3 py-2 sticky left-36 bg-gray-50 z-10">{{$hadir}}</td>
-                        <td class="border px-3 py-2 sticky left-36 bg-gray-50 z-10">{{$alpa}}</td>
-                        <td class="border px-3 py-2 sticky left-36 bg-gray-50 z-10">{{$sakit}}</td>
-                        <td class="border px-3 py-2 sticky left-36 bg-gray-50 z-10">{{$izin}}</td>
+
+                        {{-- Rekap --}}
+                        <td class="border text-center bg-white">{{ $jumlah['hadir'] }}</td>
+                        <td class="border text-center bg-white">{{ $jumlah['alpa'] }}</td>
+                        <td class="border text-center bg-white">{{ $jumlah['sakit'] }}</td>
+                        <td class="border text-center bg-white">{{ $jumlah['izin'] }}</td>
                     </tr>
                 @endforeach
             </tbody>

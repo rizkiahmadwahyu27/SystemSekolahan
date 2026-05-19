@@ -120,7 +120,7 @@
                                         <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
                                             <div class="w-1/6 leading-tight">Kelas</div>
                                             <div class="mx-2 leading-tight">:</div>
-                                            <div class="flex-1 break-words leading-tight">X {{$siswa->agama}}</div>
+                                            <div class="flex-1 break-words leading-tight">X {{$siswa->kode_kelas}}</div>
                                         </div>
                                         <div class="col-span-3 text-[7.5px] pb-1 flex -mt-1 leading-tight">
                                             <div class="w-1/6 leading-tight">Alamat</div>

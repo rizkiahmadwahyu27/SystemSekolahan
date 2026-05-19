@@ -151,7 +151,9 @@ class DevController extends Controller
     ];
 
     $today = date('Y-m-d');
-
+    $ket = now()->gte(now()->setTime(6, 55, 0)) 
+    ? 'terlambat' 
+    : 'tepat waktu';
     $absensi = Absensi::where('nis', $nis)
         ->where('tanggal', $today)
         ->first();
@@ -169,7 +171,7 @@ class DevController extends Controller
             'hari' => $hari[date('l')],
             'tanggal' => $today,
             'status' => 'Hadir',
-            'keterangan' => 'Hadir di Kelas',
+            'keterangan' => $ket,
             'is_sent' => 0,
             'status_sent' => 'pending',
             'user_input' => $userEdit,
@@ -201,65 +203,6 @@ class DevController extends Controller
     }
 }
 
-public function kirimNotif($nis, $title, $body)
-{
-    try {
-
-       $auth = [
-            'VAPID' => [
-                'subject' => config('webpush.vapid.subject'),
-                'publicKey' => config('webpush.vapid.publicKey'),
-                'privateKey' => config('webpush.vapid.privateKey'),
-            ],
-        ];
-        Log::info('VAPID CHECK', config('webpush.vapid'));
-        $webPush = new WebPush($auth);
-
-        $subs = DB::table('web_push_tokens')
-            ->where('nis', $nis)
-            ->get();
-
-        if ($subs->isEmpty()) {
-            Log::warning("Tidak ada subscription untuk NIS: $nis");
-            return;
-        }
-
-        foreach ($subs as $sub) {
-
-            $subscription = Subscription::create([
-                'endpoint' => $sub->endpoint,
-                'keys' => [
-                    'p256dh' => $sub->p256dh,
-                    'auth' => $sub->auth,
-                ],
-            ]);
-
-            $webPush->queueNotification(
-                $subscription,
-                json_encode([
-                    'title' => $title,
-                    'body' => $body
-                ])
-            );
-        }
-
-        foreach ($webPush->flush() as $report) {
-            Log::info("WEBPUSH RESULT", [
-                'success' => $report->isSuccess(),
-                'reason' => $report->getReason(),
-            ]);
-        }
-
-    } catch (\Throwable $e) {
-        Log::error("kirimNotif ERROR: " . $e->getMessage());
-    }
-    Log::info('SUB DEBUG', [
-        'p256dh_len' => strlen($sub->p256dh),
-        'auth_len' => strlen($sub->auth),
-        'p256dh' => $sub->p256dh,
-        'auth' => $sub->auth,
-    ]);
-}
 
     public function data_absen(){
         $data_absen = Absensi::all();
@@ -322,66 +265,94 @@ public function kirimNotif($nis, $title, $body)
         return view('dev.data_absen', compact('data_absen', 'mapel_pegawai', 'p_jenis', 'p_mapel', 'p_kelas', 'p_guru', 'p_tgl', 'absen_siswa', 'update_absen', 'data_kelas', 'data_pegawai'));
     }
 
-    public function create_data_absen(Request $request){
-        $nises   = $request->nis;
-        $nama   = $request->nama;
-        $status   = $request->status;
-        $kelas    = $request->s_kelas;
-        $jenis    = $request->s_jenis;
-        
-        $tgl      = $request->s_tgl;
-        $keterangan   = $request->keterangan;
-        $hariInggris = date('l', strtotime($tgl));
-        $hariIndonesia = [
-            'Sunday'    => 'Minggu',
-            'Monday'    => 'Senin',
-            'Tuesday'   => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday'  => 'Kamis',
-            'Friday'    => 'Jumat',
-            'Saturday'  => 'Sabtu'
-        ];
-        $conf = Configurasi::where('status', 'aktif')->first();
+    public function create_data_absen(Request $request)
+{
+    $request->validate([
+        'nis' => 'required|array',
+        'nama' => 'required|array',
+        'status' => 'required|array',
+        's_kelas' => 'required',
+        's_jenis' => 'required',
+        's_tgl' => 'required|date',
+    ]);
 
-        if ($jenis == 'mapel') {
-            $guru     = $request->s_guru . ', ' . $request->s_mapel;
-            $data_kelas = DataKelas::where('nama_kelas', $kelas)->first();
-        }else {
-            $data_kelas = DataKelas::where('nama_kelas', $kelas)->first();
-            $guru     = $data_kelas->nama_wali_kelas;
-        }
-        foreach ($nises as $key => $nis) {
-            $siswa = DataSiswa::where('nis', $nis)->first();
-            $nis_siswa = Absensi::where('nis', $nis)->where('tanggal', $tgl)->where('guru', $guru)->where('jenis_absen', $jenis)->first();
-            if (!$nis_siswa) {
-                $absen = Absensi::create([
-                    'nis' => $nis,
-                    'nama' => $nama[$key],
-                    'kelas'=> $kelas,
-                    'guru' => $guru,
-                    'jenis_absen' => $jenis,
-                    'hari' => $hariIndonesia[$hariInggris],
-                    'tanggal' => $tgl,
-                    'status'  => $status[$key],
-                    'keterangan' => $keterangan[$key],
-                    'is_sent' => 0,
-                    'status_sent' => 'pending',
-                    'user_input' => Auth::user()->name,
-                    'user_edit' => 'Null',
-                    'id_conf' => $conf->id,
-                    'id_user_input' => Auth::user()->id,
-                    'id_user_edit' => null,
-                    'id_siswa' => $siswa->id,
-                    'id_wali_kelas' => $data_kelas->id_wali_kelas,
-                    'id_kelas' => $data_kelas->id,
-                ]);
+    $nisList   = $request->nis;
+    $nama      = $request->nama;
+    $status    = $request->status;
+    $kelas     = $request->s_kelas;
+    $jenis     = $request->s_jenis;
+    $tgl       = $request->s_tgl;
+    $keterangan= $request->keterangan;
 
-                
-            }
-        }
-        
-        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+    $hariMap = [
+        'Sunday'=>'Minggu','Monday'=>'Senin','Tuesday'=>'Selasa',
+        'Wednesday'=>'Rabu','Thursday'=>'Kamis','Friday'=>'Jumat','Saturday'=>'Sabtu'
+    ];
+
+    $hariInggris = \Carbon\Carbon::parse($tgl)->format('l');
+
+    $conf = Configurasi::where('status', 'aktif')->first();
+    $data_kelas = DataKelas::where('nama_kelas', $kelas)->first();
+
+    if (!$conf || !$data_kelas) {
+        return back()->with('error', 'Konfigurasi atau kelas tidak ditemukan');
     }
+
+    $guru = $jenis == 'mapel'
+        ? $request->s_guru . ', ' . $request->s_mapel
+        : $data_kelas->nama_wali_kelas;
+
+    $siswas = DataSiswa::whereIn('nis', $nisList)->get()->keyBy('nis');
+
+    foreach ($nisList as $key => $nis) {
+
+        $siswa = $siswas[$nis] ?? null;
+        if (!$siswa) continue;
+
+        $cek = Absensi::where([
+            'nis' => $nis,
+            'tanggal' => $tgl,
+            'guru' => $guru,
+            'jenis_absen' => $jenis
+        ])->exists();
+
+        if ($cek) continue;
+
+        $absen = Absensi::create([
+            'nis' => $nis,
+            'nama' => $nama[$key],
+            'kelas'=> $kelas,
+            'guru' => $guru,
+            'jenis_absen' => $jenis,
+            'hari' => $hariMap[$hariInggris] ?? '-',
+            'tanggal' => $tgl,
+            'status'  => $status[$key],
+            'keterangan' => $keterangan[$key] ?? null,
+            'is_sent' => 0,
+            'status_sent' => 'pending',
+            'user_input' => auth()->user()->name,
+            'user_edit' => 'null',
+            'id_conf' => $conf->id,
+            'id_user_input' => auth()->id(),
+            'id_user_edit' => '0',
+            'id_siswa' => $siswa->id,
+            'id_wali_kelas' => $data_kelas->id_wali_kelas,
+            'id_kelas' => $data_kelas->id,
+        ]);
+
+        if ($jenis == 'harian') {
+            KirimWaWali::dispatch($absen->id)->onQueue('wa');
+        }
+
+        KirimNotifJob::dispatch(
+            $siswa->nis,
+            "Absensi Siswa",
+            "Diinformasikan kepada bapak/ibu wali dari {$siswa->nama} telah hadir pukul " . now()->format('H:i')
+        )->onQueue('notif');
+    }
+
+    return back()->with('success', 'Data Berhasil Disimpan');
+}
 
     public function update_data_absen(Request $request, $id){
         $update_absen = Absensi::where('id', $id)->first();
@@ -575,4 +546,63 @@ public function kirimNotif($nis, $title, $body)
             return redirect()->back()->with('success', 'Terimakasih Pendaftaran Kamu Sudah Kami Simpan');
         }
     }
+    public function kirimNotif($nis, $title, $body)
+{
+    try {
+
+       $auth = [
+            'VAPID' => [
+                'subject' => config('webpush.vapid.subject'),
+                'publicKey' => config('webpush.vapid.publicKey'),
+                'privateKey' => config('webpush.vapid.privateKey'),
+            ],
+        ];
+        Log::info('VAPID CHECK', config('webpush.vapid'));
+        $webPush = new WebPush($auth);
+
+        $subs = DB::table('web_push_tokens')
+            ->where('nis', $nis)
+            ->get();
+
+        if ($subs->isEmpty()) {
+            Log::warning("Tidak ada subscription untuk NIS: $nis");
+            return;
+        }
+
+        foreach ($subs as $sub) {
+
+            $subscription = Subscription::create([
+                'endpoint' => $sub->endpoint,
+                'keys' => [
+                    'p256dh' => $sub->p256dh,
+                    'auth' => $sub->auth,
+                ],
+            ]);
+
+            $webPush->queueNotification(
+                $subscription,
+                json_encode([
+                    'title' => $title,
+                    'body' => $body
+                ])
+            );
+        }
+
+        foreach ($webPush->flush() as $report) {
+            Log::info("WEBPUSH RESULT", [
+                'success' => $report->isSuccess(),
+                'reason' => $report->getReason(),
+            ]);
+        }
+
+    } catch (\Throwable $e) {
+        Log::error("kirimNotif ERROR: " . $e->getMessage());
+    }
+    Log::info('SUB DEBUG', [
+        'p256dh_len' => strlen($sub->p256dh),
+        'auth_len' => strlen($sub->auth),
+        'p256dh' => $sub->p256dh,
+        'auth' => $sub->auth,
+    ]);
+}
 }

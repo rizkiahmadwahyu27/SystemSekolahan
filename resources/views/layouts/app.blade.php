@@ -113,7 +113,7 @@
                     @if (Auth::user()->level == 'siswa')
                         <a href="{{ route('siswa.profile_siswa') }}" class="block py-1 text-sm hover:text-orange-500">Profile Murid</a>
                     @endif
-                    @if (Auth::user()->level == 'guru' || Auth::user()->level == 'dev' || Auth::user()->level == 'admin')
+                    @if (Auth::user()->level != 'siswa')
                         <a href="{{ route('data_absen') }}" class="block py-1 text-sm hover:text-orange-500">Absensi</a>
                         <a href="{{ route('lap_absen_siswa') }}" class="block py-1 text-sm hover:text-orange-500">Data Absen</a>
                     @endif

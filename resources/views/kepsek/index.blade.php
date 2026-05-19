@@ -103,6 +103,13 @@
         </div>
     </div>
     @php
+        $data_absen = DB::table('absensis')
+    ->where(function ($q) {
+        $q->where('keterangan', 'terlambat')
+          ->orWhereTime('created_at', '>', '07:00:00');
+    })->where('jenis_absen', 'harian')
+    ->whereDate('tanggal', date('Y-m-d'))
+    ->get();
         $hariInggris = date('l');
         $hariIndonesia = [
             'Sunday'    => 'Minggu',
@@ -129,19 +136,49 @@
             'December'  => 'Desember'
         ];
     @endphp
-    <div class="w-full p-10">
-        <div class="w-full h-24 p-2 bg-white rounded-md flex justify-center items-center">
-            <p class="text-lg text-slate-500">Indramayu, {{$hariIndonesia[$hariInggris]}} {{date('d')}} {{$monthIndonesia[$monthInggris]}} {{date('Y')}}</p>
+    <div class="w-full p-2">
+        <div class="w-full h-12 p-2 bg-white rounded-md flex justify-center items-center">
+            <p class="text-lg md:text-2xl font-bold text-slate-500">Indramayu, {{$hariIndonesia[$hariInggris]}} {{date('d')}} {{$monthIndonesia[$monthInggris]}} {{date('Y')}}</p>
         </div>
     </div>
-    <div class="p-6 bg-white rounded-lg shadow-xl m-4">
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Rekapitulasi Absensi Murid</h2>
+    <div class="p-1 block bg-white md:flex md:justify-between md:items-center rounded-lg shadow-xl">
 
         {{-- Kontainer Grafik dengan Styling Tailwind CSS --}}
         <div class="relative w-full md:w-1/2 mx-auto" style="height: 400px;">
             <canvas id="absensiChart"></canvas>
         </div>
-
+        <div class="mt-2">
+              <div class="w-full overflow-x-auto overflow-y-scroll max-h-[570px]">
+                <table class="table-auto text-xs" id="data_pegawai">
+                    <thead class="bg-gray-100 sticky top-0">
+                    <tr>
+                        <th class="px-3 py-2 font-medium border">No</th>
+                        <th class="px-3 py-2 font-medium border">NIS</th>
+                        <th class="px-3 py-2 font-medium border">Nama Lengkap</th>
+                        <th class="px-3 py-2 font-medium border">Kelas</th>
+                        <th class="px-3 py-2 font-medium border">Datang Pukul</th>
+                        <th class="px-3 py-2 font-medium border">Keterangan</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                    @php
+                        $no = 1;
+                    @endphp
+                    @foreach ($data_absen as $absen)
+                        <tr>
+                            <td class="px-3 py-2 border">{{$no++}}</td>
+                            <td class="px-3 py-2 border">{{$absen->nis}}</td>
+                            <td class="px-3 py-2 border">{{$absen->nama}}</td>
+                            <td class="px-3 py-2 border">{{$absen->kelas}}</td>
+                            <td class="px-3 py-2 border">{{$absen->created_at}}</td>
+                            <td class="px-3 py-2 border">{{$absen->keterangan}}</td>
+                        </tr>
+                    @endforeach
+                    <!-- Duplikasikan baris di atas sesuai kebutuhan -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <script>
     // 1. Definisikan Data dari PHP dan parse JSON

@@ -9,6 +9,7 @@ use App\Models\Absensi;
 use App\Models\Configurasi;
 use App\Models\DataKelas;
 use App\Models\DataPegawai;
+use App\Models\SiswaKelas;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Dflydev\DotAccessData\Data;
@@ -347,12 +348,11 @@ class SiswaController extends Controller
 
             // Ambil absensi untuk bulan & tahun sekarang
             $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
-            $absensi = Absensi::where('guru', $data_guru->nama_pegawai)->whereYear('tanggal', $tahun)
+            $siswaKelas = SiswaKelas::where('nama_kelas', 'X PEMASARAN 1')->get();
+            $dataAbsensi = Absensi::where('guru', $data_guru->nama_pegawai)->whereYear('tanggal', $tahun)
                 ->whereMonth('tanggal', $bulan)
-                ->get(['nis', 'nama', 'tanggal', 'status']);
+                ->get(['nis', 'nama', 'tanggal', 'status'])->groupBy('nis');
 
-            // Grouping berdasarkan NIS
-            $dataAbsensi = $absensi->groupBy('nis');
 
             $jumlahHari = Carbon::createFromDate($tahun, $bulan, 1)->daysInMonth;
             $update_absen = [];
@@ -383,12 +383,11 @@ class SiswaController extends Controller
             $bulan = date('m');
 
             // Ambil absensi untuk bulan & tahun sekarang
-            $absensi = Absensi::where('nis', Auth::user()->id_user)->where('jenis_absen', 'harian')->whereYear('tanggal', $tahun)
+            $siswaKelas = SiswaKelas::where('nis', Auth::user()->id_user)->first();
+            $dataAbsensi = Absensi::where('nis', Auth::user()->id_user)->where('jenis_absen', 'harian')->whereYear('tanggal', $tahun)
                 ->whereMonth('tanggal', $bulan)
-                ->get(['nis', 'nama', 'tanggal', 'status']);
+                ->get(['nis', 'nama', 'tanggal', 'status'])->groupBy('nis');
 
-            // Grouping berdasarkan NIS
-            $dataAbsensi = $absensi->groupBy('nis');
 
             $jumlahHari = Carbon::createFromDate($tahun, $bulan, 1)->daysInMonth;
             $update_absen = [];
@@ -416,14 +415,12 @@ class SiswaController extends Controller
          else {
             $tahun = date('Y');
             $bulan = date('m');
-
+            $siswaKelas = SiswaKelas::where('nama_kelas', 'X PEMASARAN 1')->get();
             // Ambil absensi untuk bulan & tahun sekarang
-            $absensi = Absensi::whereYear('tanggal', $tahun)
+            $dataAbsensi = Absensi::where('kelas', 'X PEMASARAN 1')->where('jenis_absen', 'harian')->whereYear('tanggal', $tahun)
                 ->whereMonth('tanggal', $bulan)
-                ->get(['nis', 'nama', 'tanggal', 'status']);
-
-            // Grouping berdasarkan NIS
-            $dataAbsensi = $absensi->groupBy('nis');
+                ->get(['nis', 'nama', 'tanggal', 'status'])->groupBy('nis');
+            
 
             $jumlahHari = Carbon::createFromDate($tahun, $bulan, 1)->daysInMonth;
             $update_absen = [];
@@ -446,36 +443,36 @@ class SiswaController extends Controller
                 return $mapel;
             });
 
-            return view('siswa.lap_bulanan_siswa', compact('dataAbsensi', 'tahun', 'bulan', 'jumlahHari', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai'));
+            return view('siswa.lap_bulanan_siswa', compact('dataAbsensi', 'siswaKelas', 'tahun', 'bulan', 'jumlahHari', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai'));
         }
         
     }
 
     public function filter_lap_bulanan_siswa(Request $request){
+        $tahun = $request->tahun;
+        $bulan = $request->bulan;
+        $kelas = $request->kelas;
         if (Auth::user()->level == 'guru') {
-            $tahun = $request->tahun;
-            $bulan = $request->bulan;
-
+         
+            $siswaKelas = SiswaKelas::where('nama_kelas', $kelas)->get();
             // Ambil absensi untuk bulan & tahun sekarang
             $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
             if ($request->jenis_absen == 'harian') {
-                    $absensi = Absensi::where('kelas', $request->kelas)->whereYear('tanggal', $tahun)
+                    $dataAbsensi = Absensi::where('kelas', $request->kelas)->whereYear('tanggal', $tahun)
                     ->whereMonth('tanggal', $bulan)
-                    ->get(['nis', 'nama', 'tanggal', 'status']);
+                    ->get(['nis', 'nama', 'tanggal', 'status'])->groupBy('nis');
             } else {
                 $guru = $request->guru . ', ' . $request->mapel;
-                $absensi = Absensi::where(function ($q) use ($request, $guru) {
+                $dataAbsensi = Absensi::where(function ($q) use ($request, $guru) {
                     $q->where('kelas', $request->kelas)
                     ->where('guru', $guru)
                     ->where('jenis_absen', $request->jenis_absen);
                 })
                 ->whereYear('tanggal', $tahun)
                 ->whereMonth('tanggal', $bulan)
-                ->get(['nis', 'nama', 'tanggal', 'status', 'kelas', 'guru', 'jenis_absen']);
+                ->get(['nis', 'nama', 'tanggal', 'status', 'kelas', 'guru', 'jenis_absen'])->groupBy('nis');
             }
 
-            // Grouping berdasarkan NIS
-            $dataAbsensi = $absensi->groupBy('nis');
 
             $jumlahHari = Carbon::createFromDate($tahun, $bulan, 1)->daysInMonth;
             $update_absen = [];
@@ -501,27 +498,26 @@ class SiswaController extends Controller
 
             return view('siswa.lap_bulanan_siswa', compact('dataAbsensi', 'tahun', 'bulan', 'jumlahHari', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai'));
         } else {
-            $tahun = $request->tahun;
-            $bulan = $request->bulan;
-
+            
+            $siswaKelas = SiswaKelas::where('nama_kelas', $kelas)->get();
             if ($request->jenis_absen == 'harian') {
-                    $absensi = Absensi::where('kelas', $request->kelas)->whereYear('tanggal', $tahun)
+                    $dataAbsensi = Absensi::where('kelas', $kelas)
+                    ->whereYear('tanggal', $tahun)
                     ->whereMonth('tanggal', $bulan)
-                    ->get(['nis', 'nama', 'tanggal', 'status']);
+                    ->get(['nis', 'nama', 'tanggal', 'status'])
+                    ->groupBy('nis'); // 🔥 penting
             } else {
                 $guru = $request->guru . ', ' . $request->mapel;
-                $absensi = Absensi::where(function ($q) use ($request, $guru) {
+                $dataAbsensi = Absensi::where(function ($q) use ($request, $guru) {
                     $q->where('kelas', $request->kelas)
                     ->where('guru', $guru)
                     ->where('jenis_absen', $request->jenis_absen);
                 })
                 ->whereYear('tanggal', $tahun)
                 ->whereMonth('tanggal', $bulan)
-                ->get(['nis', 'nama', 'tanggal', 'status', 'kelas', 'guru', 'jenis_absen']);
+                ->get(['nis', 'nama', 'tanggal', 'status', 'kelas', 'guru', 'jenis_absen'])->groupBy('nis');;
             }
 
-            // Grouping berdasarkan NIS
-            $dataAbsensi = $absensi->groupBy('nis');
 
             $jumlahHari = Carbon::createFromDate($tahun, $bulan, 1)->daysInMonth;
             $update_absen = [];
@@ -544,7 +540,7 @@ class SiswaController extends Controller
                 return $mapel;
             });
 
-            return view('siswa.lap_bulanan_siswa', compact('dataAbsensi', 'tahun', 'bulan', 'jumlahHari', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai'));
+            return view('siswa.lap_bulanan_siswa', compact('dataAbsensi', 'siswaKelas', 'tahun', 'bulan', 'jumlahHari', 'update_absen', 'data_kelas', 'data_guru', 'mapel_pegawai'));
         }
     }
 
