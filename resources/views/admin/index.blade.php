@@ -107,8 +107,8 @@
         ->where(function ($q) {
             $q->where('keterangan', 'terlambat')
             ->orWhereTime('created_at', '>', '07:00:00');
-        })
-        ->whereDate('created_at', date('Y-m-d'))
+        })->where('jenis_absen', 'harian')
+        ->whereDate('tanggal', date('Y-m-d'))
         ->get();
         // dd($data_absen);
         $hariInggris = date('l');

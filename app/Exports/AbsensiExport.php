@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Models\Absensi;
 use App\Models\DataPegawai;
 use App\Models\DataKelas;
+use App\Models\SiswaKelas;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class AbsensiExport implements FromView
         
         $tahun = $request->tahun;
         $bulan = $request->bulan;
-
+        $siswaKelas = SiswaKelas::where('nama_kelas', $request->kelas)->get();
         if (Auth::user()->level == 'guru') {
 
             $data_guru = DataPegawai::where('id_pegawai', Auth::user()->id_user)->first();
@@ -74,6 +75,7 @@ class AbsensiExport implements FromView
 
         return view('dev.export_absensi', compact(
             'dataAbsensi',
+            'siswaKelas',
             'tahun',
             'bulan',
             'jumlahHari',

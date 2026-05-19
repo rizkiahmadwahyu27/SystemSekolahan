@@ -1,11 +1,10 @@
 <table border="1" cellspacing="0" cellpadding="4">
     @php
-        $mapStatus = [
-            'hadir' => 'H',
-            'sakit' => 'S',
-            'izin'  => 'I',
-            'alpa'  => 'A',
-            'dispen'  => 'D',
+         $mapStatus = [
+            'hadir' => ['label' => 'h'],
+            'sakit' => ['label' => 's'],
+            'izin'  => ['label' => 'i'],
+            'alpa'  => ['label' => 'a'],
         ];
     @endphp
 
@@ -35,39 +34,58 @@
 
     <tbody>
         @php $no = 1; @endphp
-        @foreach ($dataAbsensi as $nis => $listAbsensi)
+        @foreach ($siswaKelas as $siswa)
             @php
-                $nama = $listAbsensi->first()->nama;
+                // ambil data absensi per siswa
+                $absensiSiswa = $dataAbsensi[$siswa->nis] ?? collect();
 
-                $statusByTanggal = $listAbsensi->keyBy(function($item) {
+                // mapping tanggal => status
+                $statusByTanggal = $absensiSiswa->keyBy(function($item) {
                     return \Carbon\Carbon::parse($item->tanggal)->day;
                 });
-                $hadir = 0;
-                $alpa = 0;
-                $sakit = 0;
-                $izin = 0;
+
+                // hitung jumlah
+                $jumlah = [
+                    'hadir' => 0,
+                    'alpa' => 0,
+                    'sakit' => 0,
+                    'izin' => 0,
+                ];
             @endphp
 
             <tr>
                 <td>{{ $no++ }}</td>
-                <td>{{ $nis }}</td>
-                <td>{{ $nama }}</td>
+                <td>{{ $siswa->nis }}</td>
+                <td>{{ $siswa->nama }}</td>
 
+                {{-- Loop tanggal --}}
                 @for ($d = 1; $d <= $jumlahHari; $d++)
                     @php
                         $status = $statusByTanggal[$d]->status ?? null;
-                        $label  = $mapStatus[$status] ?? '-';
-                        if ($label == 'H') $hadir++;
-                        if ($label == 'A') $alpa++;
-                        if ($label == 'S') $sakit++;
-                        if ($label == 'I') $izin++;
+
+                        if ($status && isset($jumlah[$status])) {
+                            $jumlah[$status]++;
+                        }
                     @endphp
-                    <td align="center">{{ $label }}</td>
+
+                    <td>
+                        @if ($status)
+                            <span>
+                                {{ strtoupper($mapStatus[$status]['label']) }}
+                            </span>
+                        @else
+                            <span>
+                                -
+                            </span>
+                        @endif
+                    </td>
                 @endfor
-                <td>{{$hadir}}</td>
-                <td>{{$alpa}}</td>
-                <td>{{$sakit}}</td>
-                <td>{{$izin}}</td>
+
+                {{-- Rekap --}}
+                <td>{{ $jumlah['hadir'] }}</td>
+                <td>{{ $jumlah['alpa'] }}</td>
+                <td>{{ $jumlah['sakit'] }}</td>
+                <td>{{ $jumlah['izin'] }}</td>
             </tr>
         @endforeach
     </tbody>
