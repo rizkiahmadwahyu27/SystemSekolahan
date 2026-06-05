@@ -198,7 +198,7 @@ class DevController extends Controller
     } else {
         return response()->json([
             'status' => false,
-            'message' => $absen->nama . ' Sudah absen hari ini'
+            'message' => $absensi->nama . ' Sudah absen hari ini'
         ]);
     }
 }
