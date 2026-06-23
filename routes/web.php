@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AppUjianController;
+use App\Http\Controllers\Auth\UserUjianAuthController;
 use App\Http\Controllers\ConfigurasiController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KepsekController;
@@ -56,6 +58,14 @@ Route::get('/cek-zip', function () {
 //SPMB
 Route::get('/daftar/online/spmb', [DevController::class, 'daftar_online'])->name('daftar_online');
 Route::post('/daftar/online/spmb/created', [DevController::class, 'created_spmb'])->name('created_spmb');
+
+//aplikasi ujian
+Route::get('/app/ujian/online', [AppUjianController::class, 'login'])->name('ujian.login');
+Route::post('/ujian/login', [UserUjianAuthController::class, 'login'])->name('login.user.ujian');
+Route::post('/ujian/logout', [UserUjianAuthController::class, 'logout'])->name('logout.user.ujian');
+
+Route::get('/ujian/dashboard', [AppUjianController::class, 'dashboard'])->name('dashboard.ujian')
+    ->middleware('auth:user_ujian');
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.index');
@@ -152,6 +162,31 @@ Route::middleware('auth')->group(function () {
     Route::post('/import/data/siswa', [DevController::class, 'import_siswa'])->name('import_siswa');
     Route::post('/import/data/pegawai', [DevController::class, 'import_pegawai'])->name('import_pegawai');
     Route::post('/import/data/kelas', [DevController::class, 'import_kelas'])->name('import_kelas');
+
+    //aplikasi ujian
+    Route::get('/dashboard/aplikasi/ujian/admin', [AppUjianController::class, 'dashboard_ujian_admin'])->name('dashboard_ujian_admin');
+    Route::post('/admin/buat/ujian', [AppUjianController::class, 'store_ujian'])->name('store_ujian');
+    Route::put('/admin/update/ujian/{id}', [AppUjianController::class, 'update_ujian'])->name('update_ujian');
+    Route::delete('/admin/delete/ujian/{id}', [AppUjianController::class, 'destroy_ujian'])->name('destroy_ujian');
+
+    //crud kategori soal
+    Route::post('/admin/kategori', [AppUjianController::class, 'store_kategori'])->name('store_kategori');
+    Route::put('/admin/kategori/{id}', [AppUjianController::class, 'update_kategori'])->name('update_kategori');
+    Route::delete('/admin/kategori/{id}', [AppUjianController::class, 'destroy_kategori'])->name('destroy_kategori');
+    //crud kelas
+    Route::post('/admin/kelas', [AppUjianController::class, 'store_kelas'])->name('store_kelas');
+    Route::put('/admin/kelas/{id}', [AppUjianController::class, 'update_kelas'])->name('update_kelas');
+    Route::delete('/admin/kelas/{id}', [AppUjianController::class, 'destroy_kelas'])->name('destroy_kelas');
+    //crud mapel
+    Route::post('/admin/mapel', [AppUjianController::class, 'store_mapel'])->name('store_mapel');
+    Route::put('/admin/mapel/{id}', [AppUjianController::class, 'update_mapel'])->name('update_mapel');
+    Route::delete('/admin/mapel/{id}', [AppUjianController::class, 'destroy_mapel'])->name('destroy_mapel');
+
+    //soal ujian
+    Route::get('/admin/soal/ujian', [AppUjianController::class, 'index_soal'])->name('index_soal');
+    Route::post('/admin/store/soal', [AppUjianController::class, 'store_soal'])->name('store_soal');
+    Route::post('/admin/soal/import', [AppUjianController::class, 'import_soal'])->name('import_soal');
+    Route::delete('/admin/soal/{id}', [AppUjianController::class, 'destroy_soal'])->name('destroy_soal');
 });
 
 

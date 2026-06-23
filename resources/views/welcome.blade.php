@@ -138,6 +138,199 @@
 
   </section>
 
+  <section class="py-20">
+    <div class="max-w-6xl mx-auto px-4">
+
+      <!-- Wrapper scroll horizontal -->
+      <div class="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x">
+
+        <!-- Card Item -->
+        <a href="{{route('ujian.login')}}" target="_blank" rel="noopener noreferrer">
+          <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+            <!-- Logo -->
+            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+              <span class="text-sm font-semibold text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+            </div>
+
+            <!-- Text -->
+            <div>
+              <h2 class="text-lg md:text-xl font-bold text-gray-700">
+                Aplikasi Ujian
+              </h2>
+              <p class="text-sm text-gray-500">
+                Kunjungi Aplikasi Ujian SMK Pelita Jatibarang
+              </p>
+            </div>
+
+          </div>
+        </a>
+
+        <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+          <!-- Logo -->
+          <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+            <span class="text-sm font-semibold text-gray-500"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-gray-700">
+              PPDB {{ date('Y') }}
+            </h2>
+            <p class="text-sm text-gray-500">
+              Penerimaan Peserta Didik Baru
+            </p>
+          </div>
+
+        </div>
+
+        <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+          <!-- Logo -->
+          <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+            <span class="text-sm font-semibold text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-newspaper-icon lucide-newspaper"><path d="M15 18h-5"/><path d="M18 14h-8"/><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></svg>  
+            </span>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-gray-700">
+              News
+            </h2>
+            <p class="text-sm text-gray-500">
+              Berita Terbaru SMK Pelita Jatibarang
+            </p>
+          </div>
+
+        </div>
+
+        <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+          <!-- Logo -->
+          <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+            <span class="text-sm font-semibold text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images-icon lucide-images"><path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/><path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/><circle cx="13" cy="7" r="1" fill="currentColor"/><rect x="8" y="2" width="14" height="14" rx="2"/></svg>  
+            </span>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-gray-700">
+                Gallery
+            </h2>
+            <p class="text-sm text-gray-500">
+              Kegiatan SMK Pelita Jatibarang
+            </p>
+          </div>
+
+        </div>
+        <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+          <!-- Logo -->
+          <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+            <span class="text-sm font-semibold text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-school-icon lucide-school"><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M18 4.933V21"/><path d="m4 6 7.106-3.79a2 2 0 0 1 1.788 0L20 6"/><path d="m6 11-3.52 2.147a1 1 0 0 0-.48.854V19a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a1 1 0 0 0-.48-.853L18 11"/><path d="M6 4.933V21"/><circle cx="12" cy="9" r="2"/></svg>  
+            </span>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-gray-700">
+                Fasilitas
+            </h2>
+            <p class="text-sm text-gray-500">
+              Fasilitas di SMK Pelita Jatibarang
+            </p>
+          </div>
+
+        </div>
+        <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+          <!-- Logo -->
+          <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+            <span class="text-sm font-semibold text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-podium-icon lucide-podium"><path d="M12 6V2h-1"/><path d="M9 15a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1"/><path d="M9 21V11a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v10"/></svg>  
+            </span>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-gray-700">
+                Ekstrakurikuler
+            </h2>
+            <p class="text-sm text-gray-500">
+              Ekstrakurikuler Siswa SMK Pelita Jatibarang
+            </p>
+          </div>
+
+        </div>
+        <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+          <!-- Logo -->
+          <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+            <span class="text-sm font-semibold text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-star-icon lucide-circle-star"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>  
+            </span>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-gray-700">
+                Beasiswa
+            </h2>
+            <p class="text-sm text-gray-500">
+              Beasiswa SMK Pelita Jatibarang
+            </p>
+          </div>
+
+        </div>
+        <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+          <!-- Logo -->
+          <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+            <span class="text-sm font-semibold text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-check-icon lucide-book-open-check"><path d="M12 21V7"/><path d="m16 12 2 2 4-4"/><path d="M22 6V4a1 1 0 0 0-1-1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h6a3 3 0 0 1 3 3 3 3 0 0 1 3-3h6a1 1 0 0 0 1-1v-1.3"/></svg>  
+            </span>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-gray-700">
+                Testimoni
+            </h2>
+            <p class="text-sm text-gray-500">
+              Testimoni SMK Pelita Jatibarang
+            </p>
+          </div>
+
+        </div>
+        <div class="min-w-[250px] h-36 bg-slate-200 rounded-2xl shadow-lg p-4 flex items-center gap-4 snap-start hover:scale-105 transition duration-300">
+
+          <!-- Logo -->
+          <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow">
+            <span class="text-sm font-semibold text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contact-icon lucide-contact"><path d="M16 2v2"/><path d="M7 22v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><path d="M8 2v2"/><circle cx="12" cy="11" r="3"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>  
+            </span>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class="text-lg md:text-xl font-bold text-gray-700">
+                Kontak
+            </h2>
+            <p class="text-sm text-gray-500">
+              Hubungi SMK Pelita Jatibarang
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
   <!-- Tentang -->
   <section class="py-20 bg-white">
     <div class="max-w-screen-md mx-auto px-4">

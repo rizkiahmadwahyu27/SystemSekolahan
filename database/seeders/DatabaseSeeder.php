@@ -61,5 +61,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('kepsektest'),
             'level' => 'kepsek'
         ]);
+
+        $this->call(UserUjianSeeder::class);
     }
 }

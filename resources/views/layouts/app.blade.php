@@ -153,7 +153,7 @@
                     </svg>
                 </button>
                 <div id="panel4" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out pl-4">
-                    <a href="#" class="block py-1 text-sm hover:text-orange-500">Link A</a>
+                    <a href="{{route('dashboard_ujian_admin')}}" class="block py-1 text-sm hover:text-orange-500">App Ujian</a>
                     <a href="#" class="block py-1 text-sm hover:text-orange-500">Link B</a>
                 </div>
             </div>

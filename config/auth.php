@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'user_ujian' => [
+            'driver' => 'session',
+            'provider' => 'user_ujian',
+        ],
     ],
 
     /*
@@ -69,6 +73,11 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+        'user_ujian' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\UserUjian::class,
+        ],
     ],
 
     /*
