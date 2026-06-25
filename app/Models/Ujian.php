@@ -22,7 +22,12 @@ class Ujian extends Model
         'token',             // Tambahkan ini
         'token_updated_at',  // Tambahkan ini
     ];
-
+// --- PERIKSA BAGIAN INI ---
+    protected $casts = [
+        'mulai' => 'datetime',
+        'selesai' => 'datetime',
+        'token_updated_at' => 'datetime', // <-- WAJIB ADA BARIS INI
+    ];
     public function kategoris()
 {
     return $this->belongsToMany(

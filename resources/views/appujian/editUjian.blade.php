@@ -150,10 +150,6 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 flex gap-2">
-                                    <a href="{{ route('admin.ujian.report-keahlian', $ujian->id) }}" 
-                                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-200 transition text-sm">
-                                        <i class="fa-solid fa-file-excel text-base"></i> Export Laporan Pemetaan Jurusan
-                                    </a>
                                     <a href="{{ route('admin.ujian.edit', $ujian->id) }}" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
@@ -191,7 +187,7 @@
 
             <div>
                 <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Nama Ujian</label>
-                <input type="text" name="nama_ujian" placeholder="Contoh: Ujian Akhir Semester Ganjil" required
+                <input type="text" name="nama_ujian" value="{{$ujian->nama_ujian}}" placeholder="Contoh: Ujian Akhir Semester Ganjil" required
                     class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all placeholder:text-gray-400 text-sm text-gray-700">
             </div>
 
@@ -200,7 +196,7 @@
                     <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Mata Pelajaran</label>
                     <select name="mata_pelajaran_id" required
                         class="w-full p-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-700">
-                        <option value="" disabled selected>-- Pilih Mapel --</option>
+                        <option value="{{$ujian->mapel}}">{{$ujian->mapel}}</option>
                         @foreach($mapels as $m)
                             <option value="{{ $m->id }}">{{ $m->nama_mapel }}</option>
                         @endforeach
@@ -211,7 +207,7 @@
                     <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Tipe Ujian</label>
                     <select name="tipe" required
                         class="w-full p-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-700">
-                        <option value="" disabled selected>-- Pilih Tipe --</option>
+                        <option value="{{$ujian->tipe}}">{{$ujian->tipe}}</option>
                         <option value="sekolah">Sekolah</option>
                         <option value="cat">CAT (Computer Assisted Test)</option>
                     </select>
@@ -221,7 +217,7 @@
             <div>
                 <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Durasi Ujian</label>
                 <div class="relative rounded-lg shadow-sm">
-                    <input type="number" name="durasi" placeholder="60" min="1" required
+                    <input type="number" name="durasi" {{$ujian->durasi}} placeholder="60" min="1" required
                         class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-700 pr-16">
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400 text-sm">
                         Menit
@@ -232,13 +228,13 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Waktu Mulai</label>
-                    <input type="datetime-local" name="mulai" required
+                    <input type="datetime-local" name="mulai" required value="{{$ujian->mulai}}"
                         class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-700">
                 </div>
 
                 <div>
                     <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Waktu Selesai</label>
-                    <input type="datetime-local" name="selesai" required
+                    <input type="datetime-local" name="selesai" value="{{$ujian->selesai}}" required
                         class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-700">
                 </div>
             </div>
@@ -268,7 +264,9 @@
             <div>
                 <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Deskripsi / Petunjuk Ujian</label>
                 <textarea name="deskripsi" placeholder="Tuliskan petunjuk pengerjaan ujian di sini..." rows="3"
-                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all placeholder:text-gray-400 text-sm text-gray-700"></textarea>
+                    class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all placeholder:text-gray-400 text-sm text-gray-700">
+                    {{$ujian->selesai}}
+                </textarea>
             </div>
 
             <div class="flex space-x-2 pt-2">

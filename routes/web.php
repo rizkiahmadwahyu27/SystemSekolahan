@@ -60,12 +60,44 @@ Route::get('/daftar/online/spmb', [DevController::class, 'daftar_online'])->name
 Route::post('/daftar/online/spmb/created', [DevController::class, 'created_spmb'])->name('created_spmb');
 
 //aplikasi ujian
+// Halaman Tampilan Form Login (GET)
 Route::get('/app/ujian/online', [AppUjianController::class, 'login'])->name('ujian.login');
-Route::post('/ujian/login', [UserUjianAuthController::class, 'login'])->name('login.user.ujian');
+
+// Proses Validasi Form Login (POST)
+Route::post('/ujian/login', [UserUjianAuthController::class, 'showLogin'])->name('login.user.ujian');
+
+// Proses Logout (POST)
 Route::post('/ujian/logout', [UserUjianAuthController::class, 'logout'])->name('logout.user.ujian');
 
+
+// dashbord aplikasi ujian untuk siswa
 Route::get('/ujian/dashboard', [AppUjianController::class, 'dashboard'])->name('dashboard.ujian')
     ->middleware('auth:user_ujian');
+// 1. Halaman untuk input token
+Route::get('/ujian/konfirmasi/{id}', [AppUjianController::class, 'konfirmasiUjian'])->name('ujian.konfirmasi')->middleware('auth:user_ujian');;
+    
+    // 2. Proses pengecekan token saat tombol "Mulai" diklik
+Route::post('/ujian/validasi-token/{id}', [AppUjianController::class, 'validasiToken'])->name('ujian.validasi-token')->middleware('auth:user_ujian');;
+// 🔴 TAMBAHKAN BARIS INI: Route untuk memuat lembar pengerjaan soal
+Route::get('/ujian/kerjakan/{id}', [AppUjianController::class, 'kerjakanSoal'])->name('ujian.kerjakan')->middleware('auth:user_ujian');
+    
+    // (Opsional tapi wajib nanti) Route untuk menyimpan jawaban via AJAX
+Route::post('/ujian/simpan-jawaban/{id}', [AppUjianController::class, 'simpanJawaban'])->name('ujian.simpan-jawaban')->middleware('auth:user_ujian');
+    
+    // 3. Selesai Ujian & Hitung Nilai
+Route::post('/ujian/selesai/{id}', [AppUjianController::class, 'selesaiUjian'])->name('ujian.selesai')->middleware('auth:user_ujian');
+// Proses kirim jawaban akhir (POST)
+Route::post('/ujian/{id}/selesai', [AppUjianController::class, 'selesaiUjian'])->name('ujian.selesai')->middleware('auth:user_ujian');
+
+// Proses cetak hasil ujian (GET)
+Route::get('/ujian/{id}/cetak-skor', [AppUjianController::class, 'cetakSkor'])->name('ujian.cetak-skor')->middleware('auth:user_ujian');
+
+
+
+
+
+
+
 
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.index');
@@ -166,8 +198,9 @@ Route::middleware('auth')->group(function () {
     //aplikasi ujian
     Route::get('/dashboard/aplikasi/ujian/admin', [AppUjianController::class, 'dashboard_ujian_admin'])->name('dashboard_ujian_admin');
     Route::post('/admin/buat/ujian', [AppUjianController::class, 'store_ujian'])->name('store_ujian');
-    Route::put('/admin/update/ujian/{id}', [AppUjianController::class, 'update_ujian'])->name('update_ujian');
-    Route::delete('/admin/delete/ujian/{id}', [AppUjianController::class, 'destroy_ujian'])->name('destroy_ujian');
+    Route::get('/ujian/{id}/edit', [AppUjianController::class, 'edit_ujian'])->name('admin.ujian.edit');
+    Route::put('/ujian/{id}/update', [AppUjianController::class, 'update_ujian'])->name('admin.ujian.update');
+    Route::delete('/ujian/{id}/delete', [AppUjianController::class, 'destroy_ujian'])->name('admin.ujian.delete');
 
     //crud kategori soal
     Route::post('/admin/kategori', [AppUjianController::class, 'store_kategori'])->name('store_kategori');
@@ -187,6 +220,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/store/soal', [AppUjianController::class, 'store_soal'])->name('store_soal');
     Route::post('/admin/soal/import', [AppUjianController::class, 'import_soal'])->name('import_soal');
     Route::delete('/admin/soal/{id}', [AppUjianController::class, 'destroy_soal'])->name('destroy_soal');
+
+    //peserta ujian 
+    Route::get('/admin/peserta/ujian', [AppUjianController::class, 'index_peserta'])->name('index_peserta');
+    Route::post('/admin/store/peserta', [AppUjianController::class, 'store_peserta'])->name('store_peserta');
+    Route::post('/admin/peserta/import', [AppUjianController::class, 'import_peserta'])->name('import_peserta');
+    Route::delete('/admin/peserta/{id}', [AppUjianController::class, 'destroy_peserta'])->name('destroy_peserta');
+    
+    // monitor peserta
+
+    Route::get('/monitor-peserta', [AppUjianController::class, 'monitor_peserta'])->name('monitor_peserta');
+    Route::post('/peserta/reset-login/peserta/{id}', [AppUjianController::class, 'resetLoginPeserta'])->name('resetLoginPeserta');
+
+    // Route untuk download laporan pemetaan jurusan siswa (Format Excel/CSV)
+    Route::get('/admin/ujian/{id}/report-keahlian', [AppUjianController::class, 'downloadReport'])->name('admin.ujian.report-keahlian');
 });
 
 

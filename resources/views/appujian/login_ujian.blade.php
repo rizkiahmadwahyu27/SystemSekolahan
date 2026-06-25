@@ -26,8 +26,9 @@
             </div>
         @endif
 
-        <form id="loginForm" action="{{route('login.user.ujian')}}" method="POST" class="space-y-5">
-            @csrf <div>
+        <form id="loginForm" action="{{ route('login.user.ujian') }}" method="POST" class="space-y-5">
+            @csrf 
+            <div>
                 <label for="nama" class="block text-sm font-semibold text-slate-700 mb-2">Nama Lengkap</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">

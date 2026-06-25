@@ -21,7 +21,6 @@ class UserUjian extends Authenticatable
     // status
     'is_active',
     'is_login',
-    'is_finished',
 
     // device tracking
     'device_id',

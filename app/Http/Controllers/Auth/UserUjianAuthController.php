@@ -5,40 +5,32 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserUjianAuthController extends Controller
 {
     
-    public function showLogin()
-    {
-        return view('appujian.login_ujian');
-    }
 
-    public function login(Request $request)
+    public function showLogin(Request $request)
     {
         $request->validate([
-            'no_peserta' => 'required',
-            'password' => 'required',
+            'no_peserta' => 'required|string',
+            'password'   => 'required',
         ]);
 
-        if (Auth::guard('user_ujian')->attempt([
-            'no_peserta' => $request->no_peserta,
-            'password' => $request->password,
-        ])) {
+        $siswa = \App\Models\UserUjian::where('no_peserta', $request->no_peserta)->first();
 
-            $user = Auth::guard('user_ujian')->user();
-
-            $user->update([
-                'is_login' => true,
-                'last_login' => now(),
-                'session_id' => session()->getId(),
-                'device_id' => request()->userAgent(),
-            ]);
-
-            return redirect('/ujian/dashboard');
+        if (!$siswa || !Hash::check($request->password, $siswa->password)) {
+            // Dipastikan kembali ke halaman tampilan login (GET)
+            return redirect()->route('ujian.login')
+                ->withInput($request->only('no_peserta'))
+                ->withErrors(['no_peserta' => 'Nomor peserta atau password salah!']);
         }
 
-        return back()->with('error', 'No peserta atau password salah');
+        Auth::guard('user_ujian')->login($siswa);
+        $siswa->update(['session_id' => session()->getId()]);
+
+        return redirect()->route('dashboard.ujian');
     }
 
     public function logout()
@@ -53,7 +45,7 @@ class UserUjianAuthController extends Controller
 
         Auth::guard('user_ujian')->logout();
 
-        return redirect('/ujian/login');
+        // 🟢 PERBAIKAN: Lempar ke nama route halaman login (GET), bukan URL POST
+        return redirect()->route('ujian.login')->with('success', 'Anda telah berhasil keluar dari sistem ujian.');
     }
-
 }
