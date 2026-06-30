@@ -7,7 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans antialiased">
-
+@if ($errors->any())
+    <div style="background: red; color: white; padding: 10px; margin-bottom: 20px;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <div class="min-h-screen flex flex-col md:flex-row">
 
     <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/40 z-40 hidden md:hidden"></div>
@@ -232,13 +240,13 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Waktu Mulai</label>
-                    <input type="datetime-local" name="mulai" required
+                    <input type="datetime-local" name="mulai" required value="{{ old('mulai') }}"
                         class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-700">
                 </div>
 
                 <div>
                     <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Waktu Selesai</label>
-                    <input type="datetime-local" name="selesai" required
+                    <input type="datetime-local" name="selesai" required value="{{ old('selesai') }}"
                         class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-700">
                 </div>
             </div>
@@ -623,6 +631,13 @@ tipe.addEventListener('change', function() {
         mapel.removeAttribute('disabled');
     }
 });
+</script>
+
+<script>
+    document.getElementById('formUjian').addEventListener('submit', function() {
+        document.getElementById('btnSimpan').disabled = true;
+        document.getElementById('btnSimpan').innerText = 'Menyimpan...';
+    });
 </script>
 
 @if ($errors->any())

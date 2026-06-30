@@ -91,6 +91,7 @@ Route::post('/ujian/{id}/selesai', [AppUjianController::class, 'selesaiUjian'])-
 
 // Proses cetak hasil ujian (GET)
 Route::get('/ujian/{id}/cetak-skor', [AppUjianController::class, 'cetakSkor'])->name('ujian.cetak-skor')->middleware('auth:user_ujian');
+Route::post('/ujian/{id}/simpan-jurusan', [AppUjianController::class, 'simpanJurusan'])->name('ujian.simpan-jurusan')->middleware('auth:user_ujian');
 
 
 

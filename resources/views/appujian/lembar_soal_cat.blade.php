@@ -18,20 +18,47 @@
 </head>
 <body class="bg-slate-100 min-h-screen flex flex-col font-sans">
 
-    <div id="cheatOverlay" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-6 text-white text-center transition-all duration-300">
-        <div class="bg-slate-800 border border-slate-700 p-8 rounded-3xl max-w-md shadow-2xl">
-            <div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-                <i class="fa-solid fa-triangle-exclamation text-2xl animate-pulse"></i>
-            </div>
-            <h1 id="cheatTitle" class="text-2xl font-black text-red-500 mb-2">MODE AMAN AKTIF</h1>
-            <p id="cheatDesc" class="mb-6 text-sm text-slate-400 leading-relaxed">
-                Ujian harus dikerjakan dalam mode Layar Penuh (Fullscreen). Membuka tab baru, meminimalkan browser, atau berpindah ke aplikasi lain dilarang keras!
-            </p>
-            <button onclick="aktifkanFullscreen()" class="w-full px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 cursor-pointer transition">
-                <i class="fa-solid fa-expand mr-1.5"></i> Masuk Fullscreen & Mulai
-            </button>
+    @if(!$hasilUjian->exists || empty($hasilUjian->pilihan_1))
+<div id="cheatOverlay" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-6 text-white text-center transition-all duration-300">
+    <form id="formJurusan" action="{{ route('ujian.simpan-jurusan', $ujian->id) }}" method="POST" class="bg-slate-800 border border-slate-700 p-8 rounded-3xl max-w-md w-full shadow-2xl text-left">
+        @csrf
+        <div class="w-14 h-14 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
+            <i class="fa-solid fa-user-graduate text-2xl"></i>
         </div>
-    </div>
+        
+        <h1 class="text-xl font-black text-center text-white mb-1">KONFIRMASI DATA PESERTA</h1>
+        <p class="mb-6 text-xs text-slate-400 text-center leading-relaxed">Silakan pilih pemetaan jurusan yang Anda minati sebelum memulai ujian.</p>
+
+        <div class="space-y-4 mb-6 text-sm">
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Pilihan Jurusan 1</label>
+                <select id="select_pilihan_1" name="pilihan_1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 cursor-pointer">
+                    <option value="">-- Pilih Jurusan Utama --</option>
+                    <option value="Pemasaran (PM)">Pemasaran (PM)</option>
+                    <option value="Manajemen Perkantoran & Layanan Bisnis (MPLB)">Manajemen Perkantoran & Layanan Bisnis (MPLB)</option>
+                    <option value="Teknik Jaringan Komputer dan Telekomunikasi (TJKT)">Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</option>
+                    <option value="Desain Komunikasi Visual (DKV)">Desain Komunikasi Visual (DKV)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Pilihan Jurusan 2</label>
+                <select id="select_pilihan_2" name="pilihan_2" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 cursor-pointer">
+                    <option value="">-- Pilih Jurusan Cadangan --</option>
+                    <option value="Pemasaran (PM)">Pemasaran (PM)</option>
+                    <option value="Manajemen Perkantoran & Layanan Bisnis (MPLB)">Manajemen Perkantoran & Layanan Bisnis (MPLB)</option>
+                    <option value="Teknik Jaringan Komputer dan Telekomunikasi (TJKT)">Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</option>
+                    <option value="Desain Komunikasi Visual (DKV)">Desain Komunikasi Visual (DKV)</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="button" onclick="simpanJurusanDanMulai()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 cursor-pointer transition text-center text-sm flex items-center justify-center gap-2">
+            <i class="fa-solid fa-expand"></i> Simpan & Mulai Ujian Fullscreen
+        </button>
+    </form>
+</div>
+@endif
 
     <header class="bg-white border-b border-slate-200 p-4 sticky top-0 z-30 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-3">
@@ -48,11 +75,9 @@
     </header>
 
     <div class="flex-1 flex relative">
-        
         <main class="flex-1 p-4 md:p-6 max-w-4xl mx-auto w-full transition-all duration-300">
             @forelse($soals as $index => $soal)
                 <div id="box-soal-{{ $index }}" class="soal-card bg-white rounded-2xl shadow-sm border border-slate-200 p-6 {{ $index == 0 ? '' : 'hidden' }}">
-                    
                     <div class="text-sm font-bold text-blue-600 border-b border-slate-100 pb-3 mb-4 flex justify-between items-center">
                         <span>SOAL NOMOR {{ $index + 1 }}</span>
                         <span class="text-xs bg-slate-100 text-slate-500 py-1 px-2.5 rounded-md uppercase">{{ $soal->tipe }}</span>
@@ -61,6 +86,19 @@
                     <div class="text-slate-800 text-base md:text-lg leading-relaxed mb-6 font-medium">
                         {!! $soal->pertanyaan !!}
                     </div>
+
+                    @if (!empty($soal->gambar))
+                        <div class="my-6 flex justify-center lg:justify-start">
+                            <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-2 shadow-sm transition-all duration-300 hover:shadow-md max-w-full sm:max-w-md md:max-w-lg">
+                                <img 
+                                    src="{{ asset('storage/' . $soal->gambar) }}" 
+                                    alt="Gambar Soal {{ $soal->id ?? '' }}" 
+                                    class="w-full h-auto object-contain rounded-xl transition-transform duration-500 hover:scale-[1.03] cursor-zoom-in"
+                                    loading="lazy"
+                                >
+                            </div>
+                        </div>
+                    @endif
 
                     <div class="space-y-3">
                         @foreach($soal->jawabans as $jawaban)
@@ -96,7 +134,6 @@
                             @endif
                         </div>
                     </div>
-
                 </div>
             @empty
                 <div class="bg-white rounded-2xl border p-8 text-center text-slate-500">
@@ -108,7 +145,7 @@
 
         <aside id="sidebarNav" class="fixed inset-y-0 right-0 z-40 w-72 bg-white border-l border-slate-200 p-5 shadow-xl lg:shadow-none lg:static lg:block transform translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
             <div class="flex justify-between items-center mb-4 lg:mb-6">
-                <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-th mr-1.5 text-blue-600"></i> Navigasi Nomor</h3>
+                <h3><i class="fa-solid fa-th mr-1.5 text-blue-600"></i> Navigasi Nomor</h3>
                 <button onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
@@ -135,20 +172,17 @@
                 <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded-md bg-white border border-slate-200"></span> Belum Diisi (Putih)</div>
             </div>
         </aside>
-
     </div>
 
     <script>
         let currentIdx = 0;
         let totalSoal = {{ count($soals) }};
-
-        // 🟢 PERBAIKAN: Mengambil sisa detik akurat dari database backend
         let timeLeft = {{ $sisaDetik }}; 
-        let isExamActive = false;
+        let isExamActive = false; // Dikunci mati di awal agar input select bebas di-klik
 
         // 1. TIMER ENGINE
         const timerCount = setInterval(() => {
-            if (!isExamActive) return; // Kunci timer jika mode cheat aktif
+            if (!isExamActive) return; 
             let h = Math.floor(timeLeft / 3600);
             let m = Math.floor((timeLeft % 3600) / 60);
             let s = timeLeft % 60;
@@ -157,56 +191,115 @@
             timeLeft--;
         }, 1000);
 
-        // 2. CONTROLLER FULLSCREEN API (Paksa Mengunci Layar)
-        function aktifkanFullscreen() {
-            let elem = document.documentElement;
-            if (elem.requestFullscreen) { elem.requestFullscreen(); } 
-            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } 
-            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
-            
-            // Sembunyikan layar hitam blokir
-            document.getElementById('cheatOverlay').classList.add('hidden');
-            isExamActive = true;
+        // 2. CONTROLLER JURUSAN & FULLSCREEN ENTRY
+        // ========================================================
+// CONTROLLER JURUSAN & ENGINE ENTRY (PERBAIKAN TOTAL)
+// ========================================================
+
+function simpanJurusanDanMulai() {
+    let p1 = document.getElementById('select_pilihan_1').value;
+    let p2 = document.getElementById('select_pilihan_2').value;
+
+    // 1. Validasi Input kosong
+    if (!p1 || !p2) {
+        alert("⚠️ Anda wajib memilih Pilihan Jurusan 1 dan Pilihan Jurusan 2 terlebih dahulu!");
+        return;
+    }
+
+    // 2. Validasi Pilihan ganda sama
+    if (p1 === p2) {
+        alert("⚠️ Pilihan Jurusan 1 dan Pilihan Jurusan 2 tidak boleh sama!");
+        return;
+    }
+
+    // 3. Ambil Form berdasarkan ID lalu paksa Submit secara native HTML
+    const formElement = document.getElementById('formJurusan');
+    if (formElement) {
+        formElement.submit(); // 🟢 Ini akan memaksa halaman melakukan reload POST ke Laravel
+    } else {
+        alert("Sistem Error: Form data tidak ditemukan.");
+    }
+}
+
+// Logika otomatis saat halaman selesai dimuat ulang (Setelah POST simpanJurusan)
+window.addEventListener('DOMContentLoaded', () => {
+    
+    // Periksa apakah siswa SUDAH memiliki data jurusan di database
+    // Kita gunakan check exists secara aman dari laravel
+    @if($hasilUjian->exists && !empty($hasilUjian->pilihan_1))
+        
+        // 1. Sembunyikan paksa overlay pemilihan jurusan
+        const overlay = document.getElementById('cheatOverlay');
+        if(overlay) {
+            overlay.classList.add('hidden');
         }
 
-        // ==========================================
-        // 🟢 KODE BARU: ENGINE ANTI-CHEAT SANGAT SENSITIF
-        // ==========================================
+        // 2. Tampilkan soal nomor pertama (index 0) yang tadinya tersembunyi
+        const soalPertama = document.getElementById('box-soal-0');
+        if (soalPertama) {
+            soalPertama.classList.remove('hidden');
+        }
+        
+        // 3. Munculkan tombol klik aman pemicu Fullscreen browser
+        let pemicuAwal = document.createElement('div');
+        pemicuAwal.className = "fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center text-white font-bold cursor-pointer";
+        pemicuAwal.innerHTML = `
+            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 text-center max-w-sm shadow-2xl">
+                <div class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-expand text-xl animate-pulse"></i>
+                </div>
+                <h3 class="text-lg font-bold mb-1">DATA TERKONFIRMASI</h3>
+                <p class="mb-5 text-xs text-slate-400 leading-relaxed">Silakan klik tombol di bawah untuk membuka lembar soal dan mengaktifkan Mode Aman Ujian.</p>
+                <button class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-xl text-sm font-bold shadow-lg transition">Buka Lembar Soal</button>
+            </div>
+        `;
+        document.body.appendChild(pemicuAwal);
 
-        // 1. Deteksi Keluar dari Mode Fullscreen
+        // Ketika tombol "Buka Lembar Soal" diklik, layar menjadi fullscreen dan soal siap dikerjakan
+        pemicuAwal.addEventListener('click', () => {
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) { elem.requestFullscreen(); }
+            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
+            
+            pemicuAwal.remove();
+            
+            // Hidupkan sistem pertahanan anti-cheat & timer
+            setTimeout(() => {
+                isExamActive = true; 
+            }, 500);
+        });
+    @endif
+});
+
+        // ==========================================
+        // 🛡️ ENGINE SENSITIF ANTI-CHEAT
+        // ==========================================
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement && isExamActive) {
-                pemicuBlokirLayar("KECURANGAN TERDETEKSI!", "Anda dilarang keras keluar dari mode Layar Penuh (Fullscreen) selama ujian!");
+                pemicuBlokirLayar("KECURANGAN TERDETEKSI!", "Anda dilarang keras keluar dari mode Fullscreen!");
             }
         });
 
-        // 2. Deteksi Pindah Tab, Minimize, Buka Aplikasi Lain (Paling Akurat)
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden' && isExamActive) {
-                pemicuBlokirLayar("PELANGGARAN TERDETEKSI!", "Sistem mencatat Anda meninggalkan halaman ujian (Membuka tab baru, meminimalkan browser, atau membuka aplikasi lain)!");
+                pemicuBlokirLayar("PELANGGARAN TERDETEKSI!", "Sistem mencatat Anda meninggalkan halaman ujian!");
             }
         });
 
-        // 3. Backup tambahan jika fokus jendela hilang
         window.addEventListener('blur', () => {
             if (isExamActive) {
-                pemicuBlokirLayar("PERINGATAN SISTEM!", "Fokus browser hilang! Jangan mencoba membuka jendela atau aplikasi lain.");
+                pemicuBlokirLayar("PERINGATAN SISTEM!", "Fokus browser hilang!");
             }
         });
 
         function pemicuBlokirLayar(judul, deskripsi) {
-            // 1. Matikan status aktif agar tidak memicu loop deteksi ganda
             isExamActive = false; 
-            
-            // 2. Berikan notifikasi singkat sebelum halaman dialihkan
-            alert("UJIAN DIHENTIKANSecara Otomatis!\n\nAlasan: " + deskripsi + "\n\nSistem akan langsung menyimpan jawaban terakhir Anda dan mengalihkan ke halaman nilai.");
+            alert("UJIAN DIHENTIKAN!\n\nAlasan: " + deskripsi + "\n\nJawaban Anda disimpan otomatis.");
 
-            // 3. Paksa submit ujian saat itu juga (menggunakan fungsi yang sudah kita buat sebelumnya)
             let form = document.createElement('form');
             form.method = 'POST';
             form.action = "{{ route('ujian.selesai', $ujian->id) }}";
-            
-            // Kita sisipkan input hidden tambahan untuk menandai bahwa siswa ini selesai karena DISKUALIFIKASI / CURANG
             form.innerHTML = `
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="status_catatan" value="Terdeteksi Kecurangan">
@@ -215,19 +308,17 @@
             form.submit();
         }
 
-        // 5. BLOKIR FITUR BROWSER (Klik Kanan, Copy, Paste, Inspect Element)
-        document.addEventListener('contextmenu', e => e.preventDefault()); // Mati klik kanan
+        // 3. PROTEKSI KEYBOARD & KLIK KANAN
+        document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
-            // Blokir F12
             if (e.key === 'F12') e.preventDefault();
-            // Blokir Ctrl+C, Ctrl+V, Ctrl+U, Ctrl+S
             if (e.ctrlKey && ['c', 'v', 'u', 's', 'p'].includes(e.key.toLowerCase())) {
                 e.preventDefault();
                 alert('Fitur ini dinonaktifkan demi keamanan ujian.');
             }
         });
 
-        // 6. FUNGSI NAVIGASI DAN INTERAKSI SOAL
+        // 4. NAVIGASI NOMOR SOAL
         function navigasi(targetIdx, isSkipped = false) {
             if (targetIdx < 0 || targetIdx >= totalSoal) return;
 
@@ -270,7 +361,6 @@
         function toggleSidebar() { document.getElementById('sidebarNav').classList.toggle('translate-x-full'); }
         function closeSidebarOnMobile() { if (window.innerWidth < 1024) { toggleSidebar(); } }
 
-        // 7. FINISH EXAM CONTROLLER
         function submitSelesai() {
             if (confirm("Apakah Anda yakin ingin mengakhiri ujian? Semua jawaban akan dikunci.")) {
                 forceSubmitSelesai();
@@ -278,7 +368,7 @@
         }
 
         function forceSubmitSelesai() {
-            isExamActive = false; // Matikan anti-cheat sebelum lompat halaman
+            isExamActive = false; 
             let form = document.createElement('form');
             form.method = 'POST';
             form.action = "{{ route('ujian.selesai', $ujian->id) }}";

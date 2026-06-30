@@ -14,8 +14,16 @@ return new class extends Migration
         Schema::create('hasil_ujians', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            // 🟢 PERBAIKAN 1: Paksa foreign key mengarah secara spesifik ke tabel 'user_ujians'
+            $table->foreignId('user_id')
+                  ->constrained('user_ujians') 
+                  ->cascadeOnDelete();
+
             $table->foreignId('ujian_id')->constrained()->cascadeOnDelete();
+
+            // 🟢 PERBAIKAN 2: Tambahkan kolom pilihan jurusan agar data bisa tersimpan
+            $table->string('pilihan_1')->nullable();
+            $table->string('pilihan_2')->nullable();
 
             $table->timestamp('mulai')->nullable();
             $table->timestamp('selesai')->nullable();

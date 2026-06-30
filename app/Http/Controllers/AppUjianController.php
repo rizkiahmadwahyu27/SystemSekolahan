@@ -37,9 +37,11 @@ public function dashboard()
     $kelasSiswa = $siswa->kelas; 
 
     // 3. Tarik data ujian yang terhubung ke kelas siswa tersebut
-    $ujians = Ujian::with('kelas')->whereHas('kelas', function($query) use ($kelasSiswa) {
-        // PENTING: Ganti 'nama_kelas' di bawah ini dengan nama kolom nama kelas 
-        // yang ada di dalam tabel `kelas` kamu (misal: 'nama_kelas', 'id', atau 'name')
+    // 🟢 PERBAIKAN: Ditambahkan relasi hasilUjians yang difilter khusus untuk siswa ini
+    $ujians = Ujian::with(['kelas', 'hasilUjians' => function($query) use ($siswa) {
+        $query->where('user_id', $siswa->id);
+    }])->whereHas('kelas', function($query) use ($kelasSiswa) {
+        // PENTING: Ganti 'nama_kelas' dengan nama kolom nama kelas di tabel `kelas` kamu
         $query->where('nama_kelas', $kelasSiswa); 
     })->latest()->get();
 
@@ -50,7 +52,7 @@ public function dashboard()
 
     $now = Carbon::now();
 
-    // 4. Kirim data ke view dashboard siswa
+    // 5. Kirim data ke view dashboard siswa
     return view('appujian.dashboard', compact('ujians', 'now', 'siswa'));
 }
 
@@ -91,8 +93,6 @@ public function validasiToken(Request $request, $id)
     return redirect()->route('ujian.kerjakan', $ujian->id);
 }
 
-
-
 public function kerjakanSoal($id)
 {
     $ujian = Ujian::with('soals.jawabans')->findOrFail($id);
@@ -103,7 +103,7 @@ public function kerjakanSoal($id)
         return redirect()->route('ujian.login')->with('error', 'Akses ilegal. Token diperlukan.');
     }
 
-    // 2. DETEKSI DOUBLE DEVICE
+    // 2. DETEKSI DOUBLE DEVICE (Sudah disinkronkan dengan perubahan session ID)
     if ($siswa->session_id !== session()->getId()) {
         Auth::guard('user_ujian')->logout();
         session()->invalidate();
@@ -111,32 +111,45 @@ public function kerjakanSoal($id)
         return redirect()->route('ujian.login')->with('error', 'Akun Anda terdeteksi login di perangkat atau browser lain!');
     }
 
-    // 3. Ambil atau buat sesi ujian di hasil_ujians
-    $hasilUjian = \App\Models\HasilUjian::firstOrCreate(
-        ['user_id' => $siswa->id, 'ujian_id' => $id],
-        ['mulai' => now()]
-    );
+    // 3. Ambil data hasil ujian (bisa null jika siswa baru pertama kali masuk)
+    $hasilUjian = \App\Models\HasilUjian::where('user_id', $siswa->id)
+                                        ->where('ujian_id', $id)
+                                        ->first();
 
-    // 🟢 PERBAIKAN UTAMA: Hitung sisa waktu dalam satuan detik
-    $totalDurasiDetik = $ujian->durasi * 60; // Durasi dalam menit dikali 60 detik
+    // 🟢 PERBAIKAN 1: Jangan langsung kick ke login jika data null.
+    // Buat objek kosong sementara di memori agar hitungan durasi di bawah tidak error.
+    $isBaru = false;
+    if (!$hasilUjian) {
+        $isBaru = true;
+        $hasilUjian = new \App\Models\HasilUjian();
+        $hasilUjian->mulai = now(); // Set waktu mulai dummy untuk kalkulasi sisa waktu awal
+    }
+
+    // 4. Hitung sisa waktu dalam satuan detik
+    $totalDurasiDetik = $ujian->durasi * 60; 
     $waktuMulai = \Carbon\Carbon::parse($hasilUjian->mulai);
-    $detikBerjalan = now()->diffInSeconds($waktuMulai); // Detik yang sudah terpakai
+    $detikBerjalan = now()->diffInSeconds($waktuMulai); 
     
-    // Hitung sisa detik (Gunakan max 0 agar tidak bernilai negatif jika waktu habis)
+    // Hitung sisa detik
     $sisaDetik = max(0, $totalDurasiDetik - $detikBerjalan);
 
-    // Jika sisa waktu sudah habis tetapi siswa baru meresfresh, otomatis lempar ke method selesai
-    if ($sisaDetik <= 0) {
+    // Jika waktu habis DAN data memang sudah ada di DB, otomatis selesaikan
+    if ($sisaDetik <= 0 && !$isBaru) {
         return $this->selesaiUjian($id);
     }
 
     $soals = $ujian->soals; 
-    $jawabanSiswa = \App\Models\JawabanSiswa::where('hasil_ujian_id', $hasilUjian->id)
-                                            ->pluck('jawaban_id', 'soal_id') 
-                                            ->toArray();
+    
+    // Ambil jawaban jika data hasil ujian sudah resmi tersimpan di DB
+    $jawabanSiswa = [];
+    if (!$isBaru) {
+        $jawabanSiswa = \App\Models\JawabanSiswa::where('hasil_ujian_id', $hasilUjian->id)
+                                                ->pluck('jawaban_id', 'soal_id') 
+                                                ->toArray();
+    }
 
-    // Kirim variabel $sisaDetik ke dalam view Blade
-    return view('appujian.lembar_soal_cat', compact('ujian', 'soals', 'siswa', 'jawabanSiswa', 'sisaDetik'));
+    // 🟢 PERBAIKAN 2: Pastikan variabel $hasilUjian ikut dikirim ke View Blade
+    return view('appujian.lembar_soal_cat', compact('ujian', 'soals', 'siswa', 'jawabanSiswa', 'sisaDetik', 'hasilUjian'));
 }
 
 public function simpanJawaban(Request $request, $id)
@@ -225,6 +238,33 @@ public function selesaiUjian(Request $request, $id)
     ]);
 }
 
+
+public function simpanJurusan(Request $request, $id)
+{
+    $siswa = Auth::guard('user_ujian')->user();
+    
+    if (!$siswa) {
+        return redirect()->route('ujian.login')->with('error', 'Sesi habis, silakan login kembali.');
+    }
+
+    // Validasi data di backend
+    if (!$request->pilihan_1 || !$request->pilihan_2 || $request->pilihan_1 == $request->pilihan_2) {
+        return redirect()->back()->with('error', 'Pilihan jurusan tidak valid.');
+    }
+
+    // Simpan ke database
+    \App\Models\HasilUjian::updateOrCreate(
+        ['user_id' => $siswa->id, 'ujian_id' => $id],
+        [
+            'pilihan_1' => $request->pilihan_1,
+            'pilihan_2' => $request->pilihan_2,
+            'mulai'     => now()
+        ]
+    );
+
+    // 🟢 REFRESH HALAMAN: Kembali ke halaman kerjakanSoal dengan data yang sudah siap
+    return redirect()->route('ujian.kerjakan', $id)->with('start_fullscreen', true);
+}
 
 //  ini batasnya 
 
@@ -353,8 +393,7 @@ public function dashboard_ujian_admin()
         'tipe' => 'required|in:sekolah,cat',
         'durasi' => 'required|integer|min:1',
         'mulai' => 'required|date',
-        'selesai' => 'required|date|after:mulai',
-
+        'selesai' => 'required|date|after_or_equal:mulai', // Ganti 'after' menjadi 'after_or_equal'
         'mata_pelajaran_id' => $request->tipe == 'sekolah'
             ? 'required'
             : 'nullable',
@@ -364,26 +403,25 @@ public function dashboard_ujian_admin()
     ]);
 
     // handle mapel
-    $mataPelajaranId = $request->tipe == 'cat'
-        ? null
-        : $request->mata_pelajaran_id;
+    return DB::transaction(function () use ($request) {
+        
+        $mataPelajaranId = $request->tipe == 'cat' ? null : $request->mata_pelajaran_id;
 
-    // simpan ujian
-    $ujian = Ujian::create([
-        'nama_ujian' => $request->nama_ujian,
-        'mata_pelajaran_id' => $mataPelajaranId,
-        'durasi' => $request->durasi,
-        'mulai' => $request->mulai,
-        'selesai' => $request->selesai,
-        'tipe' => $request->tipe,
-        'deskripsi' => $request->deskripsi,
-    ]);
+        $ujian = Ujian::create([
+            'nama_ujian' => $request->nama_ujian,
+            'mata_pelajaran_id' => $mataPelajaranId,
+            'durasi' => $request->durasi,
+            'mulai' => $request->mulai,
+            'selesai' => $request->selesai,
+            'tipe' => $request->tipe,
+            'deskripsi' => $request->deskripsi,
+        ]);
 
-    // relasi (pakai sync)
-    $ujian->kategoris()->sync($request->kategori_id);
-    $ujian->kelas()->sync($request->kelas_id);
+        $ujian->kategoris()->sync($request->kategori_id);
+        $ujian->kelas()->sync($request->kelas_id);
 
-    return back()->with('success','Ujian berhasil dibuat');
+        return back()->with('success', 'Ujian berhasil dibuat');
+    });
 }
 
 public function edit_ujian($id)
@@ -478,53 +516,62 @@ public function index_soal()
 
 
     public function store_soal(Request $request)
-    {
-        DB::beginTransaction();
+{
+    DB::beginTransaction();
 
-        try {
-            // upload gambar soal
-            $gambar = null;
-            if ($request->hasFile('gambar')) {
-                $gambar = $request->file('gambar')->store('soal', 'public');
-            }
-
-            $soal = Soal::create([
-                'ujian_id' => $request->ujian_id,
-                'kategori_id' => $request->kategori_id,
-                'pertanyaan' => $request->pertanyaan,
-                'gambar' => $gambar,
-                'tipe' => $request->tipe,
-                'kunci_jawaban' => $request->kunci_jawaban,
-                'bobot' => $request->bobot ?? 1,
-            ]);
-
-            // kalau PG
-            if ($request->tipe == 'pg') {
-                foreach ($request->opsi as $key => $opsi) {
-
-                    $gambarOpsi = null;
-                    if (isset($request->gambar_opsi[$key])) {
-                        $gambarOpsi = $request->file('gambar_opsi')[$key]->store('jawaban', 'public');
-                    }
-
-                    Jawaban::create([
-                        'soal_id' => $soal->id,
-                        'opsi' => $key,
-                        'isi_jawaban' => $opsi,
-                        'gambar' => $gambarOpsi,
-                        'is_benar' => ($request->jawaban_benar == $key)
-                    ]);
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('soal.index')->with('success', 'Soal berhasil ditambah');
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', $e->getMessage());
+    try {
+        // upload gambar soal
+        $gambar = null;
+        if ($request->hasFile('gambar')) {
+            $gambar = $request->file('gambar')->store('soal', 'public');
         }
+
+        // 🟢 PERBAIKAN LOGIKA: Tentukan kunci jawaban berdasarkan tipe soal yang dipilih
+        $kunciJawaban = null;
+        if ($request->tipe === 'pg') {
+            $kunciJawaban = $request->kunci_jawaban; // Mengambil pilihan A, B, C, D, E
+        } elseif ($request->tipe === 'essay') {
+            $kunciJawaban = $request->jawaban_esay;  // Mengambil teks pedoman essay
+        }
+
+        $soal = Soal::create([
+            'ujian_id' => $request->ujian_id,
+            'kategori_id' => $request->kategori_id,
+            'pertanyaan' => $request->pertanyaan,
+            'gambar' => $gambar,
+            'tipe' => $request->tipe,
+            'kunci_jawaban' => $kunciJawaban, // 🟢 Sekarang dinamis mengikuti jenis soal
+            'bobot' => $request->bobot ?? 1,
+        ]);
+
+        // kalau PG
+        if ($request->tipe == 'pg' && is_array($request->opsi)) {
+            foreach ($request->opsi as $key => $opsi) {
+
+                $gambarOpsi = null;
+                // Proteksi pengecekan file gambar_opsi agar tidak memicu error undefined index
+                if ($request->hasFile('gambar_opsi') && isset($request->file('gambar_opsi')[$key])) {
+                    $gambarOpsi = $request->file('gambar_opsi')[$key]->store('jawaban', 'public');
+                }
+
+                Jawaban::create([
+                    'soal_id' => $soal->id,
+                    'opsi' => $key,
+                    'isi_jawaban' => $opsi,
+                    'gambar' => $gambarOpsi,
+                    'is_benar' => ($request->kunci_jawaban == $key)
+                ]);
+            }
+        }
+
+        DB::commit();
+        return redirect()->route('soal.index')->with('success', 'Soal berhasil ditambah');
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        return back()->with('error', $e->getMessage());
     }
+}
 
     public function edit_soal($id)
     {
@@ -679,68 +726,99 @@ public function monitor_peserta()
     
 public function downloadReport($ujianId)
 {
-    // 1. Ambil data peserta dari tabel 'user_ujians' berdasarkan ujian yang diikuti
-    $reports = DB::table('hasil_ujians')
-        ->join('user_ujians', 'hasil_ujians.user_id', '=', 'user_ujians.id') // 🟢 DISESUAIKAN: Menggunakan user_ujians
+    // A. DEFINISI KUOTA
+    $maksKuota = ['DKV' => 30, 'TJKT' => 30, 'MPLB' => 80, 'PM' => 80];
+    $kuotaTerpakai = ['DKV' => 0, 'TJKT' => 0, 'MPLB' => 0, 'PM' => 0];
+
+    // B. AMBIL DATA SISWA & URUTKAN BERDASARKAN NILAI (PENTING!)
+    $peserta = DB::table('hasil_ujians')
+        ->join('user_ujians', 'hasil_ujians.user_id', '=', 'user_ujians.id')
         ->where('hasil_ujians.ujian_id', $ujianId)
-        ->select(
-            'user_ujians.id as siswa_id',
-            'user_ujians.no_peserta', // Pastikan kolom ini ada di tabel user_ujians Anda
-            'user_ujians.nama',       // Pastikan kolom ini ada di tabel user_ujians Anda
-            'hasil_ujians.nilai_akhir'
-        )
+        ->select('user_ujians.id as siswa_id', 'user_ujians.no_peserta', 'user_ujians.nama', 
+                 'hasil_ujians.pilihan_1', 'hasil_ujians.pilihan_2', 'hasil_ujians.nilai_akhir')
+        ->orderBy('hasil_ujians.nilai_akhir', 'desc') // Urutkan nilai tertinggi duluan
         ->get();
 
-    // 2. Format data ke dalam bentuk CSV untuk Google Sheets / Excel
-    $csvData = "No;No Peserta;Nama;Skor Akhir;Kategori Nilai Terbesar;Rekomendasi Jurusan\n";
-    
-    foreach ($reports as $index => $row) {
-        // Cari kategori soal dengan jumlah bobot jawaban benar terbanyak untuk peserta ini
-        $kategoriTerbesar = DB::table('jawaban_siswas')
-            ->join('hasil_ujians', 'jawaban_siswas.hasil_ujian_id', '=', 'hasil_ujians.id')
-            ->join('soals', 'jawaban_siswas.soal_id', '=', 'soals.id')
-            ->join('kategori_soals', 'soals.kategori_id', '=', 'kategori_soals.id')
-            ->where('hasil_ujians.ujian_id', $ujianId)
-            ->where('hasil_ujians.user_id', $row->siswa_id)
-            ->where('jawaban_siswas.is_benar', true)
-            ->select('kategori_soals.nama', DB::raw('SUM(soals.bobot) as total_bobot'))
-            ->groupBy('kategori_soals.nama')
-            ->orderByDesc('total_bobot')
-            ->first();
+    // C. AMBIL SKOR PER KATEGORI
+    $nilaiSiswa = DB::table('jawaban_siswas')
+        ->join('hasil_ujians', 'jawaban_siswas.hasil_ujian_id', '=', 'hasil_ujians.id')
+        ->join('soals', 'jawaban_siswas.soal_id', '=', 'soals.id')
+        ->join('kategori_soals', 'soals.kategori_id', '=', 'kategori_soals.id')
+        ->where('hasil_ujians.ujian_id', $ujianId)
+        ->where('jawaban_siswas.is_benar', true)
+        ->select('hasil_ujians.user_id', 'kategori_soals.nama as nama_kategori', DB::raw('SUM(soals.bobot) as skor'))
+        ->groupBy('hasil_ujians.user_id', 'kategori_soals.nama')
+        ->get()
+        ->groupBy('user_id');
 
-        $namaKategori = $kategoriTerbesar ? $kategoriTerbesar->nama : 'Tidak Ada Data';
-    
-        // LOGIKA PEMETAKAN JURUSAN
-        $rekomendasiJurusan = 'Umum / Belum Ditentukan';
-        $kategoriClean = strtolower($namaKategori);
-
-        if (str_contains($kategoriClean, 'numerik') || str_contains($kategoriClean, 'matematika')) {
-            $rekomendasiJurusan = 'Pemasaran / Akuntansi';
-        } elseif (str_contains($kategoriClean, 'umum') || str_contains($kategoriClean, 'bahasa') || str_contains($kategoriClean, 'verbal')) {
-            $rekomendasiJurusan = 'Manajemen Perkantoran';
-        } elseif (str_contains($kategoriClean, 'logika') || str_contains($kategoriClean, 'it') || str_contains($kategoriClean, 'spasial')) {
-            $rekomendasiJurusan = 'Teknik Komputer Jaringan (TKJ)';
+    // D. PROSES PEMETAAN
+    $laporanFinal = [];
+    foreach ($peserta as $p) {
+        $skor = isset($nilaiSiswa[$p->siswa_id]) ? $nilaiSiswa[$p->siswa_id]->pluck('skor', 'nama_kategori')->toArray() : [];
+        arsort($skor);
+        $kategoriPrioritas = array_keys($skor);
+        
+        // Prioritas: Pilihan 1 -> Pilihan 2 -> Kategori dengan skor tertinggi
+        $urutanJurusan = array_unique(array_merge([$p->pilihan_1, $p->pilihan_2], $kategoriPrioritas));
+        
+        $diterimaDi = 'Belum Terpetakan';
+        foreach ($urutanJurusan as $j) {
+            // Pastikan jurusan yang dipilih ada dalam daftar kuota
+            if (isset($maksKuota[$j]) && $kuotaTerpakai[$j] < $maksKuota[$j]) {
+                $diterimaDi = $j;
+                $kuotaTerpakai[$j]++;
+                break;
+            }
         }
 
-        $namaSiswa = str_replace([';', ','], ' ', $row->nama); // Bersihkan juga dari tanda titik koma
-        $nilaiAkhirClean = (int) $row->nilai_akhir;
-        // 2. Ubah bagian baris data (Ganti koma menjadi titik koma)
-        $csvData .= ($index + 1) . ";" . 
-                    $row->no_peserta . ";" . 
-                    $namaSiswa . ";" . 
-                    $nilaiAkhirClean . ";" . 
-                    $namaKategori . ";" . 
-                    $rekomendasiJurusan . "\n";
+        // Distribusi Kelas (MPLB 1 / MPLB 2)
+        // Catatan: Jika kuota 80, maka ada 40 siswa per kelas
+        $kelasDiterima = '-';
+        if ($diterimaDi != 'Belum Terpetakan') {
+            // Menggunakan ceil untuk membagi dua kelas
+            $nomorKelas = ($kuotaTerpakai[$diterimaDi] <= ($maksKuota[$diterimaDi] / 2)) ? 1 : 2;
+            $kelasDiterima = $diterimaDi . " " . $nomorKelas;
+        }
+
+        $laporanFinal[] = [
+            'no' => $p->no_peserta, 'nama' => $p->nama,
+            'p1' => $p->pilihan_1, 'p2' => $p->pilihan_2,
+            'skor' => $skor, 'jurusan' => $diterimaDi, 'kelas' => $kelasDiterima
+        ];
     }
 
-    // 3. Nama file CSV yang diunduh
-    $fileName = "Laporan_Pemetaan_Bakat_Ujian_" . $ujianId . "_" . date('Ymd_His') . ".csv";
-
-    // 4. Return response download langsung
-    return response($csvData)
-        ->header('Content-Type', 'text/csv')
-        ->header('Content-Disposition', "attachment; filename=\"{$fileName}\"")
-        ->header('Pragma', 'no-cache')
-        ->header('Expires', '0');
+    return $this->exportToCSV($laporanFinal);
 }
+
+/**
+     * Pastikan fungsi ini ada di dalam class AppUjianController
+     */
+    private function exportToCSV($data) 
+    {
+        $header = "No Peserta;Nama;Pilihan 1;Pilihan 2;Nilai DKV;Nilai TJKT;Nilai MPLB;Nilai PM;Jurusan;Kelas\n";
+        $csvData = $header;
+        
+        foreach ($data as $row) {
+            // Mengambil nilai skor dari array dengan aman
+            $skorDKV  = $row['skor']['DKV'] ?? 0;
+            $skorTJKT = $row['skor']['TJKT'] ?? 0;
+            $skorMPLB = $row['skor']['MPLB'] ?? 0;
+            $skorPM   = $row['skor']['PM'] ?? 0;
+
+            $csvData .= $row['no'] . ";" . 
+                        $row['nama'] . ";" . 
+                        $row['p1'] . ";" . 
+                        $row['p2'] . ";" .
+                        $skorDKV . ";" . 
+                        $skorTJKT . ";" . 
+                        $skorMPLB . ";" . 
+                        $skorPM . ";" . 
+                        $row['jurusan'] . ";" . 
+                        $row['kelas'] . "\n";
+        }
+
+        return response($csvData)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename="Laporan_Pemetaan_Siswa_' . date('Ymd_His') . '.csv"');
+    }
 }

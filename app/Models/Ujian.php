@@ -65,9 +65,9 @@ class Ujian extends Model
         return $this->hasMany(Soal::class);
     }
 
-    public function hasilUjian()
+    public function hasilUjians()
     {
-        return $this->hasMany(HasilUjian::class);
+        return $this->hasMany(\App\Models\HasilUjian::class, 'ujian_id');
     }
     public function mataPelajaran()
     {

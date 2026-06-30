@@ -239,7 +239,7 @@
 
                 <div class="pt-2 max-w-xs">
                     <label class="text-xs font-semibold text-gray-600 uppercase block mb-1 tracking-wide">Jawaban yang Benar</label>
-                    <select name="jawaban_benar"
+                    <select name="kunci_jawaban"
                         class="w-full p-2.5 bg-green-50 border border-green-300 text-green-800 font-bold rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-all text-sm">
                         @foreach(['A', 'B', 'C', 'D', 'E'] as $opsi)
                             <option value="{{ $opsi }}">Pilihan {{ $opsi }}</option>
@@ -250,7 +250,7 @@
 
             <div id="essay-form" class="hidden space-y-2">
                 <label class="text-xs font-bold text-gray-700 uppercase block mb-1 tracking-wide text-amber-600">Kunci Jawaban Essay</label>
-                <textarea name="kunci_jawaban" placeholder="Tuliskan pedoman atau kata kunci jawaban benar di sini..." rows="4"
+                <textarea name="jawaban_esay" placeholder="Tuliskan pedoman atau kata kunci jawaban benar di sini..." rows="4"
                     class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none transition-all placeholder:text-gray-400 text-sm text-gray-700 bg-amber-50/30"></textarea>
             </div>
 
@@ -417,23 +417,43 @@
     function hadleTipeSoal(tipe) {
         const pgForm = document.getElementById('pg-form');
         const essayForm = document.getElementById('essay-form');
+        
+        // Ambil element input internal untuk diatur validasinya
+        const kunciPg = document.querySelector('select[name="kunci_jawaban"]');
+        const kunciEssay = document.querySelector('textarea[name="jawaban_esay"]');
+        const inputsOpsi = document.querySelectorAll('input[name^="opsi"]');
 
-        if (tipe === 'essay') {
-            // Sembunyikan Pilihan Ganda, Munculkan Essay
-            pgForm.classList.remove('block');
-            pgForm.classList.add('hidden');
-            
-            essayForm.classList.remove('hidden');
-            essayForm.classList.add('block');
-        } else {
-            // Sembunyikan Essay, Munculkan Pilihan Ganda
-            essayForm.classList.remove('block');
-            essayForm.classList.add('hidden');
-            
+        if (tipe === 'pg') {
+            // Tampilkan PG, sembunyikan Essay
             pgForm.classList.remove('hidden');
             pgForm.classList.add('block');
+            essayForm.classList.remove('block');
+            essayForm.classList.add('hidden');
+
+            // Atur status wajib isi
+            if(kunciPg) kunciPg.required = true;
+            if(kunciEssay) { kunciEssay.required = false; kunciEssay.value = ""; }
+            inputsOpsi.forEach(input => input.required = true);
+
+        } else if (tipe === 'essay') {
+            // Tampilkan Essay, sembunyikan PG
+            essayForm.classList.remove('hidden');
+            essayForm.classList.add('block');
+            pgForm.classList.remove('block');
+            pgForm.classList.add('hidden');
+
+            // Atur status wajib isi
+            if(kunciEssay) kunciEssay.required = true;
+            if(kunciPg) kunciPg.required = false;
+            inputsOpsi.forEach(input => { input.required = false; input.value = ""; });
         }
     }
+
+    // Jalankan inisialisasi awal saat halaman pertama kali terbuka
+    document.addEventListener('DOMContentLoaded', () => {
+        const tipeAwal = document.getElementById('tipe').value;
+        hadleTipeSoal(tipeAwal);
+    });
 </script>
 
 <script>
